@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from 'axios';
-import { SignUpOutput } from 'src/interfaces/interface';
+import { LoginOutput, SignUpOutput } from 'src/interfaces/interface';
 
 class UserService {
   constructor() {}
@@ -29,7 +29,7 @@ class UserService {
   }
 
   async login(data) {
-    let response;
+    let response: AxiosResponse<LoginOutput>;
     try {
       response = await this.api.post('/login', {
         data,

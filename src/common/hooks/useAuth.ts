@@ -21,7 +21,7 @@ const useAuth = () => {
     ...currentUser,
     authenticateUser,
     unAuthenticateUser,
-    isAuthenticated: !!currentUser.token && !!currentUser.csrf,
+    isAuthenticated: !!currentUser.token,
   };
 };
 

@@ -69,6 +69,26 @@ const SignUpPage = ({ usersService, f7router, f7route }: SignUpPageProps) => {
     bio: '',
   };
 
+  const handleSignUp = async (values, setSubmitting) => {
+    await sleep(400);
+    setSubmitting(false);
+    f7.dialog.preloader('잠시만 기다려주세요...');
+    try {
+      const { ok, error } = await usersService.signup({ ...values });
+
+      if (ok) {
+        f7.dialog.alert('계정이 성공적으로 생성되었습니다.');
+        f7router.navigate('/users/sign_in');
+      } else {
+        f7.dialog.alert(error);
+      }
+      f7.dialog.close();
+    } catch (error) {
+      f7.dialog.close();
+      f7.dialog.alert(error?.response?.data || error?.message);
+    }
+  };
+
   return (
     <Page>
       <Navbar title="회원가입" backLink sliding={false} />
@@ -76,25 +96,7 @@ const SignUpPage = ({ usersService, f7router, f7route }: SignUpPageProps) => {
       <Formik
         initialValues={initialValues}
         validationSchema={SignUpSchema}
-        onSubmit={async (values, { setSubmitting }: FormikHelpers<SignUpInput>) => {
-          await sleep(400);
-          setSubmitting(false);
-          f7.dialog.preloader('잠시만 기다려주세요...');
-          try {
-            const { ok, error } = await usersService.signup({ ...values });
-
-            if (ok) {
-              f7.dialog.alert('계정이 성공적으로 생성되었습니다.');
-              f7router.navigate('/users/sign_in');
-            } else {
-              f7.dialog.alert(error);
-            }
-            f7.dialog.close();
-          } catch (error) {
-            f7.dialog.close();
-            f7.dialog.alert(error?.response?.data || error?.message);
-          }
-        }}
+        onSubmit={(values, { setSubmitting }: FormikHelpers<SignUpInput>) => handleSignUp(values, setSubmitting)}
         validateOnMount
       >
         {({ handleChange, handleBlur, values, errors, touched, isSubmitting, isValid }) => (
