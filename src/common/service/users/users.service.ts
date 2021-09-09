@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from 'axios';
-import { LoginOutput, SignUpOutput } from 'src/interfaces/interface';
+import { LoginOutput, SignUpOutput } from 'src/interfaces/user.interface';
 
 class UserService {
   constructor() {}
