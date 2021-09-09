@@ -1,10 +1,12 @@
+import React from 'react';
+import * as Yup from 'yup';
+import { Form, Formik, FormikHelpers } from 'formik';
+import i18next from 'i18next';
+
 import { signupAPI } from '@api';
 import useAuth from '@hooks/useAuth';
 import { sleep } from '@utils';
-import { Form, Formik, FormikHelpers } from 'formik';
 import { f7, List, ListInput, Navbar, Page } from 'framework7-react';
-import React from 'react';
-import * as Yup from 'yup';
 
 interface FormValues {
   name: string;
@@ -15,10 +17,10 @@ interface FormValues {
 
 const SignUpSchema = Yup.object().shape({
   name: Yup.string().required('필수 입력사항 입니다'),
-  email: Yup.string().email().required('필수 입력사항 입니다'),
-  password: Yup.string().min(4, '길이가 너무 짧습니다').max(50, '길이가 너무 깁니다').required('필수 입력사항 입니다'),
-  password_confirmation: Yup.string()
-    .min(4, '길이가 너무 짧습니다')
+  email: Yup.string().email('이메일을 입력하세요').required('필수 입력사항 입니다'),
+  password: Yup.string().min(8, '길이가 너무 짧습니다').max(50, '길이가 너무 깁니다').required('필수 입력사항 입니다'),
+  password_verification: Yup.string()
+    .min(8, '길이가 너무 짧습니다')
     .max(50, '길이가 너무 깁니다')
     .required('필수 입력사항 입니다'),
 });
@@ -59,7 +61,7 @@ const SignUpPage = () => {
             <List noHairlinesMd>
               <div className="p-3 font-semibold bg-white">기본 정보</div>
               <ListInput
-                label={i18next.t('login.name')}
+                label={i18next.t('login.name') as string}
                 type="text"
                 name="name"
                 placeholder="이름을 입력해주세요"
@@ -71,7 +73,7 @@ const SignUpPage = () => {
                 errorMessage={touched.name && errors.name}
               />
               <ListInput
-                label={i18next.t('login.email')}
+                label={i18next.t('login.email') as string}
                 type="email"
                 name="email"
                 placeholder="이메일을 입력해주세요"
@@ -83,7 +85,7 @@ const SignUpPage = () => {
                 errorMessage={touched.email && errors.email}
               />
               <ListInput
-                label={i18next.t('login.password')}
+                label={i18next.t('login.password') as string}
                 type="password"
                 name="password"
                 placeholder="비밀번호를 입력해주세요"
@@ -95,7 +97,7 @@ const SignUpPage = () => {
                 errorMessage={touched.password && errors.password}
               />
               <ListInput
-                label={i18next.t('login.password_confirmation')}
+                label={i18next.t('login.password_confirmation') as string}
                 type="password"
                 name="password_confirmation"
                 placeholder="비밀번호를 확인해주세요"

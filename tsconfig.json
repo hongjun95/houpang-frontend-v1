@@ -23,13 +23,14 @@
       "@hooks/*": ["src/common/hooks/*"],
       "@atoms": ["src/common/atoms/index"],
       "@api": ["src/common/api/index"],
+      "@service/*": ["src/common/service/*"],
       "@config": ["src/common/config/index"],
       "@routes": ["src/common/routes/index"],
       "@pages/*": ["src/pages/*"],
       "@js/*": ["src/js/*"],
       "@constants": ["src/common/constants/index"],
       "@store": ["src/common/store/index"],
-      "@selectors": ["src/common/selectors/index"],
+      "@selectors": ["src/common/selectors/index"]
     }
   },
   "include": ["src/**/*"],

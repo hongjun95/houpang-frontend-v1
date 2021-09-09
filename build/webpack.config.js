@@ -39,6 +39,7 @@ module.exports = {
       '@hooks': resolvePath('src/common/hooks/'),
       '@atoms': resolvePath('src/common/atoms/'),
       '@api': resolvePath('src/common/api/'),
+      '@service': resolvePath('src/common/service/'),
       '@selectors': resolvePath('src/common/selectors/'),
       '@config': resolvePath('src/common/config/'),
       '@routes': resolvePath('src/common/routes/'),
@@ -51,7 +52,7 @@ module.exports = {
   devtool: env === 'production' ? 'source-map' : 'eval',
   devServer: {
     hot: true,
-    open: true,
+    open: false,
     compress: true,
     contentBase: '/www/',
     disableHostCheck: true,

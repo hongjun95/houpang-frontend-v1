@@ -1,15 +1,17 @@
-import { RecoilRootPortal } from '@components/RecoilRootPortal';
-import Views from '@components/Views';
-import { IS_PRODUCTION } from '@config';
-import capacitorApp from '@js/capacitor-app';
-import { getDevice } from '@js/framework7-custom';
-import { toast } from '@js/utils';
-import routes from '@routes';
 import { App, f7ready } from 'framework7-react';
 import React, { useEffect } from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import { RecoilRoot } from 'recoil';
+
+import { RecoilRootPortal } from '@components/RecoilRootPortal';
+import Views from '@components/Views';
+import { IS_PRODUCTION, configs } from '@config';
+import capacitorApp from '@js/capacitor-app';
+import { getDevice } from '@js/framework7-custom';
+import { toast } from '@js/utils';
+import routes from '@routes';
+import UserService from '@service/users/users.service';
 
 const F7App = () => {
   const device = getDevice();
@@ -52,11 +54,13 @@ const F7App = () => {
 
   if (!IS_PRODUCTION) console.log(routes);
 
+  const userService = new UserService(configs.API_URL, configs.VERSION);
+
   return (
     <QueryClientProvider client={queryClient}>
       <RecoilRoot>
         <App {...f7params}>
-          <Views />
+          <Views userService={userService} />
         </App>
         {IS_PRODUCTION ? null : <ReactQueryDevtools position="bottom-right" />}
         <RecoilRootPortal />
