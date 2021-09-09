@@ -1,42 +1,44 @@
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
+import { SignUpOutput } from 'src/interfaces/interface';
 
 class UserService {
-  constructor(private readonly url: string, private readonly version: string) {}
+  constructor() {}
 
   private readonly headerConfig = {
-    baseURL: this.url,
+    baseURL: 'http://localhost:4000',
     headers: {
       'Content-Type': 'application/json',
-      'Accept-Version': `v${this.version}`,
+      'Accept-Version': `v1`,
+      withCredentials: true,
     },
   };
 
   private readonly api = axios.create(this.headerConfig);
 
-  async signup(data) {
-    const response = await this.api.post('/signup', {
-      params: {
-        chart: 'mostPopular',
-        maxResults: 25,
-      },
-      data,
-    });
-
+  async signup(body) {
+    let response: AxiosResponse<SignUpOutput>;
+    try {
+      response = await this.api.post<SignUpOutput>('/signup', {
+        data: body,
+      });
+    } catch (error) {
+      console.error(error);
+    }
     const result = response.data;
-    return result.items;
+    return result;
   }
 
   async login(data) {
-    const response = await this.api.post('/login', {
-      params: {
-        chart: 'mostPopular',
-        maxResults: 25,
-      },
-      data,
-    });
-
+    let response;
+    try {
+      response = await this.api.post('/login', {
+        data,
+      });
+    } catch (error) {
+      console.error(error);
+    }
     const result = response.data;
-    return result.items;
+    return result;
   }
 }
 

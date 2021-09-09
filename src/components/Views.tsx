@@ -8,11 +8,7 @@ import { Link, Toolbar, View, Views } from 'framework7-react';
 import React, { useCallback, useEffect, useState } from 'react';
 import UserService from 'src/common/service/users/users.service';
 
-interface F7ViewsProps {
-  userService: UserService;
-}
-
-const F7Views: React.FC<F7ViewsProps> = ({ userService }) => {
+const F7Views = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const { currentUser, isAuthenticated, authenticateUser, unAuthenticateUser } = useAuth();
 

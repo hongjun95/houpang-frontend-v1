@@ -54,13 +54,11 @@ const F7App = () => {
 
   if (!IS_PRODUCTION) console.log(routes);
 
-  const userService = new UserService(configs.API_URL, configs.VERSION);
-
   return (
     <QueryClientProvider client={queryClient}>
       <RecoilRoot>
         <App {...f7params}>
-          <Views userService={userService} />
+          <Views />
         </App>
         {IS_PRODUCTION ? null : <ReactQueryDevtools position="bottom-right" />}
         <RecoilRootPortal />

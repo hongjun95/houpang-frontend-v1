@@ -74,7 +74,7 @@ const IntroPage = (props) => {
       </Toolbar>
       <Swiper
         className="h-full"
-        spaceBetween={30}
+        spaceBetween={1030}
         slidesPerView={1}
         centeredSlides
         pagination={{ clickable: true }}
