@@ -8,3 +8,13 @@ export interface CoreEntity {
   createdAt: Date;
   updatedAt: Date;
 }
+
+export interface PaginationInput {
+  page: number;
+}
+
+export interface PaginationOutput extends CoreOutput {
+  totalPages?: number;
+  totalResults?: number;
+}
+

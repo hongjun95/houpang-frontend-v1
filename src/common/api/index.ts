@@ -1,7 +1,7 @@
-import { Category, Token } from '@constants';
+import { Token } from '@constants';
 import { getToken } from '@store';
 import { AxiosResponse } from 'axios';
-import { GetAllCategoriesOutput } from 'src/interfaces/category.interface';
+import { GetAllCategoriesOutput, GetProductsByCategoryIdOutput } from 'src/interfaces/category.interface';
 import {
   ChangePasswordInput,
   ChangePasswordOutput,
@@ -13,7 +13,6 @@ import {
   SignUpOutput,
 } from 'src/interfaces/user.interface';
 import { PlainAPI, API, VERSION, API_URL } from './api.config';
-import { ApiService } from './api.service';
 
 export const refresh = (): Promise<{ data: Token }> =>
   PlainAPI.post(
@@ -26,7 +25,7 @@ export const refresh = (): Promise<{ data: Token }> =>
 
 export const get = (url: string, params: any) => PlainAPI.get(url, params);
 
-// users API
+// user APIs
 
 export const signupAPI = async (data: SignUpInput) => {
   let response: AxiosResponse<SignUpOutput>;
@@ -82,18 +81,38 @@ export const changePasswordAPI = async (data: ChangePasswordInput) => {
 
 export const logoutAPI = () => API.delete('/logout');
 
-export const {
-  query: getItems,
-  get: getItem,
-  create: createItem,
-  update: updateItem,
-  destroy: destroyItem,
-} = ApiService('items');
+// export const {
+//   query: getItems,
+//   get: getItem,
+//   create: createItem,
+//   update: updateItem,
+//   destroy: destroyItem,
+// } = ApiService('items');
 
 // export const { query: getUsers, get: getUser } = ApiService('users');
 // export const { query: getCategories, get: getCategory } = ApiService('categories');
 
-// export const getItems = (params = null) => API.get<any>('/items', { params });
+// item APIs
+// export const getItemsOnCategory = async (id: string) => {
+//   let response: AxiosResponse<GetProductsOnCategoryOutput>;
+//   try {
+//     response = await API.get<GetProductsOnCategoryOutput>(`/categories/products/${id}`);
+//   } catch (error) {
+//     console.error(error);
+//   }
+//   const result = response.data;
+//   return result;
+// };
+export const getProductsByCategoryId = async (categoryId: string) => {
+  let response: AxiosResponse<GetProductsByCategoryIdOutput>;
+  try {
+    response = await API.get<GetProductsByCategoryIdOutput>(`/categories/${categoryId}`);
+  } catch (error) {
+    console.error(error);
+  }
+  const result = response.data;
+  return result;
+};
 export const getCategories = async () => {
   let response: AxiosResponse<GetAllCategoriesOutput>;
   try {
@@ -103,10 +122,8 @@ export const getCategories = async () => {
   }
   const result = response.data;
   return result;
-
-  // return API.get<Category[]>('/categories');
 };
-export const getCategory = (id, params = null) => API.get<Category>(`/categories/${id}`, { params });
+// export const getCategory = (slug: string) => API.get<GetAllCategoriesOutput>(`/products/${slug}`);
 
 export const getPosts = () => async (params = null) => {
   const { data } = await API.get('/posts', { params });

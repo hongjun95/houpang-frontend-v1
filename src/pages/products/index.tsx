@@ -1,11 +1,12 @@
-import { API_URL, getCategory, getItems } from '@api';
-import { Item } from '@constants';
-import { currency } from '@js/utils';
 import { useFormik } from 'formik';
 import { Link, List, ListInput, ListItem, Navbar, NavRight, NavTitle, Page } from 'framework7-react';
 import { map } from 'lodash';
 import React, { useEffect, useState } from 'react';
+
+import { API_URL, getProductsByCategoryId } from '@api';
+import { currency } from '@js/utils';
 import i18n from '../../assets/lang/i18n';
+import { Product } from '@interfaces/product.interface';
 
 const SortStates = [
   ['created_at desc', '최신순'],
@@ -14,12 +15,12 @@ const SortStates = [
 ] as const;
 type SortState = typeof SortStates[number][0];
 
-interface ItemFilterProps {
+interface ProductFilterProps {
   s: SortState;
   category_id_eq: string;
 }
 
-const ItemIndexPage = ({ f7route }) => {
+const ProductIndexPage = ({ f7route }) => {
   const { is_main, category_id } = f7route.query;
   const [viewType, setViewType] = useState('grid');
   // const queryClient = useQueryClient();
@@ -33,23 +34,26 @@ const ItemIndexPage = ({ f7route }) => {
   // );
   const [category, setCategory] = useState(null);
 
-  const [items, setItems] = useState([]);
+  const [products, setProducts] = useState<Product[]>([]);
   const [totalCount, setTotalCount] = useState(0);
   useEffect(() => {
     // then을 사용
-    if (category_id) {
-      getCategory(category_id).then((resp) => {
-        setCategory(resp.data);
-      });
-    }
+    // if (category_id) {
+    //   getCategory(category_id).then((resp) => {
+    //     setCategory(resp.data);
+    //   });
+    // }
     // async await 을 사용
-    // (async () => {
-    //   const { data } = await getItems();
-    //   setItems(data.items);
-    // })();
+    (async () => {
+      const { ok, error, products, totalPages, totalResults } = await getProductsByCategoryId(category_id);
+      if (ok) {
+        setProducts(products);
+        setTotalCount(totalResults);
+      }
+    })();
   }, []);
 
-  const filterForm = useFormik<ItemFilterProps>({
+  const filterForm = useFormik<ProductFilterProps>({
     initialValues: {
       s: 'created_at desc',
       category_id_eq: category_id,
@@ -76,7 +80,7 @@ const ItemIndexPage = ({ f7route }) => {
   return (
     <Page noToolbar={!is_main} onPtrRefresh={onRefresh} ptr>
       <Navbar backLink={!is_main}>
-        <NavTitle>{(category && category.title) || '쇼핑'}</NavTitle>
+        <NavTitle>{(category && category.name) || '쇼핑'}</NavTitle>
         <NavRight>
           <Link href="/line_items" iconF7="cart" iconBadge={3} badgeColor="red" />
         </NavRight>
@@ -84,7 +88,7 @@ const ItemIndexPage = ({ f7route }) => {
 
       <form onSubmit={filterForm.handleSubmit} className="item-list-form p-3 table w-full border-b">
         <div className="float-left">
-          총 <b>{currency((items && totalCount) || 0)}</b>개 상품
+          총 <b>{currency((products && totalCount) || 0)}</b>개 상품
         </div>
         <ListInput
           type="select"
@@ -116,38 +120,38 @@ const ItemIndexPage = ({ f7route }) => {
         </ListInput>
       </form>
       <List noHairlines className="mt-0 text-sm font-thin ">
-        {items && (
+        {products && (
           <ul>
             {viewType === 'list'
-              ? items.map((item: Item, i) => (
-                  <React.Fragment key={item.id}>
+              ? products.map((product: Product, i) => (
+                  <React.Fragment key={product.id}>
                     <ListItem
-                      key={item.id}
+                      key={product.id}
                       mediaItem
-                      link={`/items/${item.id}`}
-                      title={`${item.id}-${item.name}`}
-                      subtitle={`${currency(item.sale_price)}원`}
+                      link={`/items/${product.id}`}
+                      title={`${product.name}-${product.id}`}
+                      subtitle={`${currency(product.price)}원`}
                       className="w-full"
                     >
-                      <img slot="media" src={API_URL + item.image_path} className="w-20 rounded" alt="" />
+                      <img slot="media" src={product.images[0]} className="w-20 rounded" alt="" />
                     </ListItem>
                   </React.Fragment>
                 ))
-              : items.map((item: Item, i) => (
-                  <React.Fragment key={item.id}>
+              : products.map((product: Product, i) => (
+                  <React.Fragment key={product.id}>
                     <div className="w-1/2 inline-flex grid-list-item relative">
                       <ListItem
                         mediaItem
-                        link={`/items/${item.id}`}
-                        title={`${item.id}-${item.name}`}
-                        subtitle={`${currency(item.sale_price)}원`}
-                        header={category_id ? category?.title : ''}
+                        link={`/items/${product.id}`}
+                        title={`${product.name}-${product.id}`}
+                        subtitle={`${currency(product.price)}원`}
+                        header={category_id ? category?.name : ''}
                         className="w-full"
                       >
                         <img
                           slot="media"
                           alt=""
-                          src={API_URL + item.image_path}
+                          src={product.images[0]}
                           className="w-40 m-auto radius rounded shadow"
                         />
                       </ListItem>
@@ -161,4 +165,4 @@ const ItemIndexPage = ({ f7route }) => {
   );
 };
 
-export default React.memo(ItemIndexPage);
+export default React.memo(ProductIndexPage);

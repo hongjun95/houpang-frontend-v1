@@ -1,4 +1,4 @@
-import { CoreEntity, CoreOutput } from './core.interface';
+import { CoreEntity, CoreOutput, PaginationInput, PaginationOutput } from './core.interface';
 import { Product } from './product.interface';
 
 export interface Category extends CoreEntity {
@@ -10,4 +10,18 @@ export interface Category extends CoreEntity {
 
 export interface GetAllCategoriesOutput extends CoreOutput {
   categories?: Category[];
+}
+
+export interface GetProductsOnCategoryInput extends PaginationInput {
+  slug?: string;
+}
+export interface GetProductsOnCategoryOutput extends PaginationOutput {
+  products?: Product[];
+}
+
+export interface GetProductsByCategoryIdInput extends PaginationInput {
+  categoryId: string;
+}
+export interface GetProductsByCategoryIdOutput extends PaginationOutput {
+  products?: Product[];
 }
