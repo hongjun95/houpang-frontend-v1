@@ -1,4 +1,4 @@
-import { Category, Item, Token } from '@constants';
+import { Category, Token } from '@constants';
 import { getToken } from '@store';
 import { AxiosResponse } from 'axios';
 import { GetAllCategoriesOutput } from 'src/interfaces/category.interface';

@@ -11,4 +11,8 @@ const headerConfig = {
   },
 };
 
-export const useMe = () => axios.get('http://localhost:4000/me', headerConfig);
+export const useMe = () =>
+  axios
+    .get('http://localhost:4000/me', headerConfig) //
+    .then((res) => res.data)
+    .catch((error) => console.error(error));

@@ -7,7 +7,7 @@ import PostIndexPage from '@pages/posts/index';
 import PostShowPage from '@pages/posts/show';
 import PostNewPage from '@pages/posts/new';
 import PostEditPage from '@pages/posts/edit';
-import MyPage from '@pages/mypage';
+import MyPage from '@pages/users/mypage';
 import SignUpPage from '@pages/users/signUp';
 import LoginPage from '@pages/users/signIn';
 import { Router } from 'framework7/types';

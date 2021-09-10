@@ -3,13 +3,15 @@ import { AuthState, Token } from '@constants';
 import { getCurrentUserFromToken } from '@utils';
 import { destroyToken, saveToken } from '@store';
 import { authSelector } from '@selectors';
+import { useMe } from './useMe';
 
 const useAuth = () => {
   const [currentUser, setCurrentUser] = useRecoilState<AuthState>(authSelector);
 
-  const authenticateUser = ({ token, csrf }: Token) => {
+  const authenticateUser = async ({ token, csrf }: Token) => {
+    const user = await useMe();
     saveToken({ token, csrf });
-    setCurrentUser({ token, csrf, currentUser: getCurrentUserFromToken(token) });
+    setCurrentUser({ token, csrf, currentUser: user });
   };
 
   const unAuthenticateUser = () => {
