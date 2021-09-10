@@ -43,5 +43,11 @@ export interface EditProfileInput {
   address: string;
   bio?: string;
 }
-
 export interface EditProfileOutput extends CoreOutput {}
+
+export interface ChangePasswordInput {
+  currentPassword: string;
+  newPassword: string;
+  verifyPassword: string;
+}
+export interface ChangePasswordOutput extends CoreOutput {}

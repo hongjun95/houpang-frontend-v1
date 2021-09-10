@@ -8,6 +8,7 @@ import SignUpPage from '@pages/users/signUp';
 import LoginPage from '@pages/users/signIn';
 import MyPage from '@pages/users/mypage';
 import EditProfilePage from '@pages/users/editProfile';
+import ChangePassword from '@pages/users/changePassword';
 
 import ItemIndexPage from '@pages/items';
 import ItemShowPage from '@pages/items/show';
@@ -32,6 +33,7 @@ const routes: Router.RouteParameters[] = [
   },
   { path: '/mypage', component: MyPage },
   { path: '/users/edit-profile', component: EditProfilePage },
+  { path: '/users/change-password', component: ChangePassword },
   { path: '/items', component: ItemIndexPage },
   { path: '/items/:id', component: ItemShowPage },
   { path: '/posts', component: PostIndexPage },

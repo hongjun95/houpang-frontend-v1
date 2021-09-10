@@ -2,6 +2,8 @@
   "login.username": "이름",
   "login.email": "이메일",
   "login.password": "비밀번호",
+  "login.currentPassword": "현재 비밀번호",
+  "login.newPassword": "새로운 비밀번호",
   "login.verifyPassword": "비밀번호 확인",
   "login.phoneNumber": "휴대폰번호",
   "login.address": "주소",
