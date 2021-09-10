@@ -1,5 +1,5 @@
-import { Link, List, Navbar, Page, PageContent, Panel } from 'framework7-react';
 import React from 'react';
+import { Link, List, Navbar, Page, PageContent, Panel } from 'framework7-react';
 
 const CustomPanel = ({ currentUser, handleLogout, isLoggedIn }) => {
   return (

@@ -19,12 +19,12 @@ const routes: Router.RouteParameters[] = [
     component: SignUpPage,
   },
   {
-    path: '/users/sign_in',
-    component: LoginPage,
-  },
-  {
     path: '/intro', //
     component: IntroPage,
+  },
+  {
+    path: '/users/sign_in',
+    component: LoginPage,
   },
   { path: '/mypage', component: MyPage },
   { path: '/items', component: ItemIndexPage },

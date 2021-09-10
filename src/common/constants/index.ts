@@ -1,6 +1,8 @@
 import React from 'react';
 import { Router } from 'framework7/types';
+
 import packageJson from '../../../package.json';
+import { User } from 'src/interfaces/user.interface';
 export * from './schema';
 
 /** 리터럴 혹은 불변 객체 */
@@ -25,7 +27,7 @@ export interface Token {
 
 export interface AuthState extends Token {
   // isLoading: boolean;
-  currentUser: any; // TODO currentUser 인터페이스화
+  currentUser: User; // TODO currentUser 인터페이스화
 }
 
 export interface TokenPayload {

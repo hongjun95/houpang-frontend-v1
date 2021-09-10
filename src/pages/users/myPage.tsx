@@ -29,8 +29,8 @@ const MyPage = () => {
             <div className="flex-shrink-0">
               <a href={`/users/${currentUser?.id}`}>
                 <div className="relative">
-                  {currentUser?.image_path ? (
-                    <img className="h-24 w-24 rounded-full" src={API_URL + currentUser?.image_path} alt="" />
+                  {currentUser?.username ? (
+                    <img className="h-24 w-24 rounded-full" src={API_URL + currentUser?.username} alt="" />
                   ) : (
                     <i
                       className="h-24 w-24 rounded-full las la-user-circle"
