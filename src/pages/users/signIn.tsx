@@ -6,16 +6,11 @@ import { f7, List, ListInput, Navbar, Page } from 'framework7-react';
 
 import useAuth from '@hooks/useAuth';
 import { PageRouteProps } from '@constants';
-import UserService from '@service/users/users.service';
 import { loginAPI } from '@api';
 
 interface SignInInput {
   email: string;
   password: string;
-}
-
-interface SignInPageProps extends PageRouteProps {
-  usersService: UserService;
 }
 
 const SignInSchema = Yup.object().shape({
@@ -33,7 +28,7 @@ const SignInSchema = Yup.object().shape({
 
 const initialValues: SignInInput = { email: '', password: '' };
 
-const SessionNewPage = ({ f7router }: SignInPageProps) => {
+const SessionNewPage = ({ f7router }: PageRouteProps) => {
   const { authenticateUser } = useAuth();
 
   const handleLogin = async (values: SignInInput, setSubmitting: (isSubmitting: boolean) => void) => {

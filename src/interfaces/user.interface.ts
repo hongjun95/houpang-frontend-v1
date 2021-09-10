@@ -3,12 +3,6 @@ import { Order } from './order.interface';
 import { Product } from './product.interface';
 import { Review } from './review.interface';
 
-export interface SignUpOutput extends CoreOutput {}
-
-export interface LoginOutput extends CoreOutput {
-  token?: string;
-}
-
 export enum Language {
   Korean = 'Korean',
   English = 'English',
@@ -34,3 +28,20 @@ export interface User extends CoreEntity {
   orders: Order[];
   reviews: Review[];
 }
+
+export interface SignUpOutput extends CoreOutput {}
+
+export interface LoginOutput extends CoreOutput {
+  token?: string;
+}
+
+export interface EditProfileInput {
+  email: string;
+  username: string;
+  language: Language;
+  phoneNumber: string;
+  address: string;
+  bio?: string;
+}
+
+export interface EditProfileOutput extends CoreOutput {}

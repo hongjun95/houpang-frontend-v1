@@ -2,7 +2,7 @@ import { Category, Token } from '@constants';
 import { getToken } from '@store';
 import { AxiosResponse } from 'axios';
 import { GetAllCategoriesOutput } from 'src/interfaces/category.interface';
-import { LoginOutput, SignUpOutput } from 'src/interfaces/user.interface';
+import { EditProfileInput, EditProfileOutput, LoginOutput, SignUpOutput } from 'src/interfaces/user.interface';
 import { PlainAPI, API, VERSION, API_URL } from './api.config';
 import { ApiService } from './api.service';
 
@@ -32,6 +32,19 @@ export const loginAPI = async (data: any) => {
   let response: AxiosResponse<LoginOutput>;
   try {
     response = await PlainAPI.post('/login', {
+      data,
+    });
+  } catch (error) {
+    console.error(error);
+  }
+  const result = response.data;
+  return result;
+};
+
+export const editProfileAPI = async (data: EditProfileInput) => {
+  let response: AxiosResponse<EditProfileOutput>;
+  try {
+    response = await API.post('/edit-profile', {
       data,
     });
   } catch (error) {

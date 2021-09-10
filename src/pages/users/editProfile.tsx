@@ -7,37 +7,15 @@ import i18next from 'i18next';
 import { sleep } from '@utils';
 import { f7, List, ListInput, ListItem, Navbar, Page } from 'framework7-react';
 import { PageRouteProps } from '@constants';
-import { signupAPI } from '@api';
+import { editProfileAPI, signupAPI } from '@api';
+import useAuth from '@hooks/useAuth';
+import { EditProfileInput } from 'src/interfaces/user.interface';
 
-type Language = 'Korean' | 'English';
-
-interface SignUpInput {
-  email: string;
-  username: string;
-  password: string;
-  verifyPassword: string;
-  language: Language;
-  phoneNumber: string;
-  address: string;
-  bio?: string;
-}
-
-const SignUpSchema = Yup.object().shape({
+const EditProfileSchema = Yup.object().shape({
   username: Yup.string() //
     .required('필수 입력사항 입니다'),
   email: Yup.string() //
     .email('이메일을 입력하세요')
-    .required('필수 입력사항 입니다'),
-  password: Yup.string()
-    .min(8, '길이가 너무 짧습니다')
-    .max(50, '길이가 너무 깁니다')
-    .matches(/(?=.*[!@#$%^&\*\(\)_\+\-=\[\]\{\};\':\"\\\|,\.<>\/\?]+)(?=.*[a-zA-Z]+)(?=.*\d+)/, {
-      message: '비밀번호는 문자, 숫자, 특수문자를 1개 이상 포함해야 합니다.',
-    })
-    .required('필수 입력사항 입니다'),
-  verifyPassword: Yup.string()
-    .min(8, '길이가 너무 짧습니다')
-    .max(50, '길이가 너무 깁니다')
     .required('필수 입력사항 입니다'),
   language: Yup.mixed()
     .oneOf(['Korean', 'English']) //
@@ -51,29 +29,30 @@ const SignUpSchema = Yup.object().shape({
     .required('필수 입력사항 입니다'),
 });
 
-const SignUpPage = ({ f7router }: PageRouteProps) => {
-  // const { authenticateUser } = useAuth();
-  const initialValues: SignUpInput = {
-    username: '',
-    email: '',
-    password: '',
-    verifyPassword: '',
-    language: 'Korean',
-    address: '',
-    phoneNumber: '',
-    bio: '',
+const EditProfilePage = ({ f7router }: PageRouteProps) => {
+  const {
+    authenticateUser,
+    currentUser: { username, email, language, address, phoneNumber, bio },
+  } = useAuth();
+  const initialValues: EditProfileInput = {
+    username,
+    email,
+    language,
+    address,
+    phoneNumber,
+    bio,
   };
 
-  const handleSignUp = async (values, setSubmitting) => {
+  const handleEditProfile = async (values: EditProfileInput, setSubmitting) => {
     await sleep(400);
     setSubmitting(false);
     f7.dialog.preloader('잠시만 기다려주세요...');
     try {
-      const { ok, error } = await signupAPI({ ...values });
+      const { ok, error } = await editProfileAPI({ ...values });
 
       if (ok) {
-        f7.dialog.alert('계정이 성공적으로 생성되었습니다.');
-        f7router.navigate('/users/sign_in');
+        f7.dialog.alert('계정이 성공적으로 수정되었습니다.');
+        f7router.navigate('/mypage');
       } else {
         f7.dialog.alert(error);
       }
@@ -86,12 +65,14 @@ const SignUpPage = ({ f7router }: PageRouteProps) => {
 
   return (
     <Page>
-      <Navbar title="회원가입" backLink sliding={false} />
+      <Navbar title="회원 정보 수정" backLink sliding={false} />
       <p className="font-semibole text-4xl text-center mt-5">Houpang</p>
       <Formik
         initialValues={initialValues}
-        validationSchema={SignUpSchema}
-        onSubmit={(values, { setSubmitting }: FormikHelpers<SignUpInput>) => handleSignUp(values, setSubmitting)}
+        validationSchema={EditProfileSchema}
+        onSubmit={(values, { setSubmitting }: FormikHelpers<EditProfileInput>) =>
+          handleEditProfile(values, setSubmitting)
+        }
         validateOnMount
       >
         {({ handleChange, handleBlur, values, errors, touched, isSubmitting, isValid }) => (
@@ -121,30 +102,6 @@ const SignUpPage = ({ f7router }: PageRouteProps) => {
                 value={values.email}
                 errorMessageForce
                 errorMessage={touched.email && errors.email}
-              />
-              <ListInput
-                label={i18next.t('login.password') as string}
-                type="password"
-                name="password"
-                placeholder="비밀번호를 입력해주세요"
-                clearButton
-                onChange={handleChange}
-                onBlur={handleBlur}
-                value={values.password}
-                errorMessageForce
-                errorMessage={touched.password && errors.password}
-              />
-              <ListInput
-                label={i18next.t('login.verifyPassword') as string}
-                type="password"
-                name="verifyPassword"
-                placeholder="비밀번호를 확인해주세요"
-                clearButton
-                onChange={handleChange}
-                onBlur={handleBlur}
-                value={values.verifyPassword}
-                errorMessageForce
-                errorMessage={touched.verifyPassword && errors.verifyPassword}
               />
             </List>
             <List noHairlinesMd>
@@ -199,7 +156,7 @@ const SignUpPage = ({ f7router }: PageRouteProps) => {
                 className="button button-fill button-large disabled:opacity-50"
                 disabled={isSubmitting || !isValid}
               >
-                회원가입
+                회원 정보 수정
               </button>
             </div>
           </Form>
@@ -209,4 +166,4 @@ const SignUpPage = ({ f7router }: PageRouteProps) => {
   );
 };
 
-export default React.memo(SignUpPage);
+export default React.memo(EditProfilePage);

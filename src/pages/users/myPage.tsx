@@ -5,8 +5,6 @@ import React, { useCallback } from 'react';
 
 const MyPage = () => {
   const { currentUser, isAuthenticated, unAuthenticateUser } = useAuth();
-  console.log('currentUser');
-  console.log(currentUser);
 
   const logoutHandler = useCallback(async () => {
     try {
@@ -80,7 +78,7 @@ const MyPage = () => {
         <div className="bg-white overflow-hidden sm:rounded-md">
           <ul className="divide-y divide-gray-200">
             <li>
-              <a href="#" className="block hover:bg-gray-50">
+              <a href="/users/edit-profile" className="block hover:bg-gray-50">
                 <div className="flex items-center px-4 py-4 sm:px-6">
                   <div className="min-w-0 flex-1 flex items-center">
                     <div className="min-w-0 flex-1 px-4 md:grid md:grid-cols-2 md:gap-4">
