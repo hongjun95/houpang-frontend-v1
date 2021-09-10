@@ -23,8 +23,10 @@ const Categories = () => {
   const [categories, setCategories] = useState([]);
   useEffect(() => {
     (async () => {
-      const { data } = await getCategories({ q: { s: ['title asc'] } });
-      setCategories(data);
+      const { ok, error, categories } = await getCategories();
+      if (ok) {
+        setCategories(categories);
+      }
     })();
   }, []);
 
@@ -38,15 +40,13 @@ const Categories = () => {
               className="bg-white h-20 flex flex-col items-center justify-center"
               key={category.id}
             >
-              <img src={API_URL + category.image_path} alt="#" className="w-14 h-14 rounded-lg shadow-sm" />
-              <span className="text-gray-500 mt-1">{category.title}</span>
+              <img src={category.coverImg} alt="#" className="w-14 h-14 rounded-lg shadow-sm" />
+              <span className="text-gray-500 mt-1">{category.name}</span>
             </Link>
           ) : (
             <Link href="#" className="bg-white h-20 flex flex-col items-center justify-center" key={i}>
               {/* <SkeletonBlock slot="media" className="w-14 h-14 rounded-lg shadow-sm" effect="fade" /> */}
-              <span className="text-gray-500 mt-1">
-                {/* <SkeletonText>---</SkeletonText> */}
-              </span>
+              <span className="text-gray-500 mt-1">{/* <SkeletonText>---</SkeletonText> */}</span>
             </Link>
           )}
         </div>

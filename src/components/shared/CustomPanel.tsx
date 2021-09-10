@@ -2,7 +2,6 @@ import { Link, List, Navbar, Page, PageContent, Panel } from 'framework7-react';
 import React from 'react';
 
 const CustomPanel = ({ currentUser, handleLogout, isLoggedIn }) => {
-  console.log(currentUser);
   return (
     <Panel left cover className="shadow">
       <Page>

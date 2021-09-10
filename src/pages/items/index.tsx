@@ -43,10 +43,10 @@ const ItemIndexPage = ({ f7route }) => {
       });
     }
     // async await 을 사용
-    (async () => {
-      const { data } = await getItems();
-      setItems(data.items);
-    })();
+    // (async () => {
+    //   const { data } = await getItems();
+    //   setItems(data.items);
+    // })();
   }, []);
 
   const filterForm = useFormik<ItemFilterProps>({

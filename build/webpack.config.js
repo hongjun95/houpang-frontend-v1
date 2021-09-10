@@ -47,6 +47,7 @@ module.exports = {
       '@pages': resolvePath('src/pages/'),
       '@store': resolvePath('src/common/store/'),
       '@js': resolvePath('src/js/'),
+      '@interfaces': resolvePath('src/interfaces/'),
     },
   },
   devtool: env === 'production' ? 'source-map' : 'eval',

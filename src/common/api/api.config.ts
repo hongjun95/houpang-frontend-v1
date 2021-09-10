@@ -100,6 +100,6 @@ const PlainAPI = axios.create(headerConfig);
 const API = axios.create(headerConfig);
 
 API.interceptors.request.use(headerTokenConfig);
-API.interceptors.response.use(null, refreshInterceptor(API));
+// API.interceptors.response.use(null, refreshInterceptor(API));
 
 export { PlainAPI, API, API_URL, VERSION };

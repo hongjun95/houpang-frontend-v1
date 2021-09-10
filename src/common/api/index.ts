@@ -1,5 +1,8 @@
 import { Category, Item, Token } from '@constants';
 import { getToken } from '@store';
+import { AxiosResponse } from 'axios';
+import { GetAllCategoriesOutput } from 'src/interfaces/category.interface';
+import { LoginOutput, SignUpOutput } from 'src/interfaces/user.interface';
 import { PlainAPI, API, VERSION, API_URL } from './api.config';
 import { ApiService } from './api.service';
 
@@ -13,23 +16,56 @@ export const refresh = (): Promise<{ data: Token }> =>
   );
 
 export const get = (url: string, params: any) => PlainAPI.get(url, params);
-export const loginAPI = (params: any) => PlainAPI.post('/login', { user: params });
-export const signupAPI = (params: any) => PlainAPI.post('/signup', { user: params });
+export const signupAPI = async (data: any) => {
+  let response: AxiosResponse<SignUpOutput>;
+  try {
+    response = await PlainAPI.post<SignUpOutput>('/signup', {
+      data,
+    });
+  } catch (error) {
+    console.error(error);
+  }
+  const result = response.data;
+  return result;
+};
+export const loginAPI = async (data: any) => {
+  let response: AxiosResponse<LoginOutput>;
+  try {
+    response = await PlainAPI.post('/login', {
+      data,
+    });
+  } catch (error) {
+    console.error(error);
+  }
+  const result = response.data;
+  return result;
+};
 export const logoutAPI = () => API.delete('/logout');
 
-// export const {
-//   query: getItems,
-//   get: getItem,
-//   create: createItem,
-//   update: updateItem,
-//   destroy: destroyItem,
-// } = ApiService('items');
+export const {
+  query: getItems,
+  get: getItem,
+  create: createItem,
+  update: updateItem,
+  destroy: destroyItem,
+} = ApiService('items');
 
 // export const { query: getUsers, get: getUser } = ApiService('users');
 // export const { query: getCategories, get: getCategory } = ApiService('categories');
 
-export const getItems = (params = null) => API.get<any>('/items', { params });
-export const getCategories = (params = null) => API.get<Category[]>('/categories', { params });
+// export const getItems = (params = null) => API.get<any>('/items', { params });
+export const getCategories = async () => {
+  let response: AxiosResponse<GetAllCategoriesOutput>;
+  try {
+    response = await PlainAPI.get<GetAllCategoriesOutput>('/categories');
+  } catch (error) {
+    console.error(error);
+  }
+  const result = response.data;
+  return result;
+
+  // return API.get<Category[]>('/categories');
+};
 export const getCategory = (id, params = null) => API.get<Category>(`/categories/${id}`, { params });
 
 export const getPosts = () => async (params = null) => {

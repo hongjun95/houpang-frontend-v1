@@ -8,6 +8,7 @@ import { sleep } from '@utils';
 import { f7, List, ListInput, ListItem, Navbar, Page } from 'framework7-react';
 import { PageRouteProps } from '@constants';
 import UserService from '@service/users/users.service';
+import { signupAPI } from '@api';
 
 type Language = 'Korean' | 'English';
 
@@ -55,9 +56,8 @@ const SignUpSchema = Yup.object().shape({
     .required('필수 입력사항 입니다'),
 });
 
-const SignUpPage = ({ usersService, f7router, f7route }: SignUpPageProps) => {
+const SignUpPage = ({ f7router }: SignUpPageProps) => {
   // const { authenticateUser } = useAuth();
-  console.log(f7router);
   const initialValues: SignUpInput = {
     username: '',
     email: '',
@@ -74,7 +74,7 @@ const SignUpPage = ({ usersService, f7router, f7route }: SignUpPageProps) => {
     setSubmitting(false);
     f7.dialog.preloader('잠시만 기다려주세요...');
     try {
-      const { ok, error } = await usersService.signup({ ...values });
+      const { ok, error } = await signupAPI({ ...values });
 
       if (ok) {
         f7.dialog.alert('계정이 성공적으로 생성되었습니다.');

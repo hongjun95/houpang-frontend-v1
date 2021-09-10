@@ -1,12 +1,12 @@
 import { TOKEN_KEY } from '@constants';
+import { getToken } from '@store';
 import axios from 'axios';
 
-const token = localStorage.getItem(TOKEN_KEY);
 const headerConfig = {
   headers: {
     'Content-Type': 'application/json',
     'Accept-Version': `v1`,
-    Authorization: token ? `Bearer ${token}` : '',
+    Authorization: getToken().token ? `Bearer ${getToken().token}` : '',
     withCredentials: true,
   },
 };

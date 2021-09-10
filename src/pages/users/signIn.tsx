@@ -7,6 +7,7 @@ import { f7, List, ListInput, Navbar, Page } from 'framework7-react';
 import useAuth from '@hooks/useAuth';
 import { PageRouteProps } from '@constants';
 import UserService from '@service/users/users.service';
+import { loginAPI } from '@api';
 
 interface SignInInput {
   email: string;
@@ -32,13 +33,13 @@ const SignInSchema = Yup.object().shape({
 
 const initialValues: SignInInput = { email: '', password: '' };
 
-const SessionNewPage = ({ usersService, f7router }: SignInPageProps) => {
+const SessionNewPage = ({ f7router }: SignInPageProps) => {
   const { authenticateUser } = useAuth();
 
   const handleLogin = async (values: SignInInput, setSubmitting: (isSubmitting: boolean) => void) => {
     setSubmitting(true);
     try {
-      const { ok, error, token } = await usersService.login({ ...values });
+      const { ok, error, token } = await loginAPI({ ...values });
       if (ok) {
         authenticateUser({ csrf: '', token });
         f7.dialog.alert('성공적으로 로그인 하였습니다. ');

@@ -1,23 +1,22 @@
-import { AuthState, TOKEN_KEY } from '@constants';
-import { authSelector } from '@selectors';
-import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
+import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
+
 import { LoginOutput, SignUpOutput } from 'src/interfaces/user.interface';
+import { getToken } from '@store';
 
 class UserService {
   constructor() {}
 
-  private token = localStorage.getItem(TOKEN_KEY);
   private readonly headerConfig: AxiosRequestConfig = {
     baseURL: 'http://localhost:4000',
     headers: {
       'Content-Type': 'application/json',
       'Accept-Version': `v1`,
-      Authorization: this.token ? `Bearer ${this.token}` : '',
+      Authorization: getToken().token ? `Bearer ${getToken().token}` : '',
       withCredentials: true,
     },
   };
 
-  private readonly api = axios.create(this.headerConfig);
+  private readonly api: AxiosInstance = axios.create(this.headerConfig);
 
   async signup(body) {
     let response: AxiosResponse<SignUpOutput>;
@@ -34,6 +33,7 @@ class UserService {
 
   async login(data) {
     let response: AxiosResponse<LoginOutput>;
+
     try {
       response = await this.api.post('/login', {
         data,

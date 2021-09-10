@@ -1,4 +1,4 @@
-import { CoreEntity } from './core.interface';
+import { CoreEntity, CoreOutput } from './core.interface';
 import { Product } from './product.interface';
 
 export interface Category extends CoreEntity {
@@ -6,4 +6,8 @@ export interface Category extends CoreEntity {
   coverImg: string;
   slug: string;
   products: Product[];
+}
+
+export interface GetAllCategoriesOutput extends CoreOutput {
+  categories?: Category[];
 }

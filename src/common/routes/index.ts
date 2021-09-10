@@ -21,11 +21,6 @@ const routes: Router.RouteParameters[] = [
   {
     path: '/users/sign_up',
     component: SignUpPage,
-    options: {
-      props: {
-        usersService,
-      },
-    },
   },
   {
     path: '/users/sign_in',
@@ -36,7 +31,11 @@ const routes: Router.RouteParameters[] = [
       },
     },
   },
-  { path: '/intro', component: IntroPage },
+  {
+    path: '/intro', //
+    component: IntroPage,
+    options: { props: { usersService } },
+  },
   { path: '/mypage', component: MyPage },
   { path: '/items', component: ItemIndexPage },
   { path: '/items/:id', component: ItemShowPage },
