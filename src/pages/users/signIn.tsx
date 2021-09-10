@@ -7,13 +7,9 @@ import { f7, List, ListInput, Navbar, Page } from 'framework7-react';
 import useAuth from '@hooks/useAuth';
 import { PageRouteProps } from '@constants';
 import { loginAPI } from '@api';
+import { SignInInput } from 'src/interfaces/user.interface';
 
-interface SignInInput {
-  email: string;
-  password: string;
-}
-
-const SignInSchema = Yup.object().shape({
+const SignInSchema: Yup.SchemaOf<SignInInput> = Yup.object().shape({
   email: Yup.string() //
     .email('이메일을 입력하세요')
     .required('필수 입력사항 입니다'),

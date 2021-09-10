@@ -39,7 +39,7 @@ const ChangePasswordPage = ({ f7router }: PageRouteProps) => {
     verifyPassword: '',
   };
 
-  const handleChangePassword = async (values, setSubmitting) => {
+  const handleChangePassword = async (values: ChangePasswordInput, setSubmitting) => {
     await sleep(400);
     setSubmitting(false);
     f7.dialog.preloader('잠시만 기다려주세요...');

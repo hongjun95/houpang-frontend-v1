@@ -7,7 +7,9 @@ import {
   ChangePasswordOutput,
   EditProfileInput,
   EditProfileOutput,
-  LoginOutput,
+  SignInInput,
+  SignInOutput,
+  SignUpInput,
   SignUpOutput,
 } from 'src/interfaces/user.interface';
 import { PlainAPI, API, VERSION, API_URL } from './api.config';
@@ -23,7 +25,10 @@ export const refresh = (): Promise<{ data: Token }> =>
   );
 
 export const get = (url: string, params: any) => PlainAPI.get(url, params);
-export const signupAPI = async (data: any) => {
+
+// users API
+
+export const signupAPI = async (data: SignUpInput) => {
   let response: AxiosResponse<SignUpOutput>;
   try {
     response = await PlainAPI.post<SignUpOutput>('/signup', {
@@ -35,8 +40,9 @@ export const signupAPI = async (data: any) => {
   const result = response.data;
   return result;
 };
-export const loginAPI = async (data: any) => {
-  let response: AxiosResponse<LoginOutput>;
+
+export const loginAPI = async (data: SignInInput) => {
+  let response: AxiosResponse<SignInOutput>;
   try {
     response = await PlainAPI.post('/login', {
       data,
