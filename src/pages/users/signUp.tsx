@@ -8,7 +8,7 @@ import { sleep } from '@utils';
 import { f7, List, ListInput, ListItem, Navbar, Page } from 'framework7-react';
 import { PageRouteProps } from '@constants';
 import { signupAPI } from '@api';
-import { Language, SignUpInput } from 'src/interfaces/user.interface';
+import { Language, SignUpInput } from '@interfaces/user.interface';
 
 const SignUpSchema: Yup.SchemaOf<SignUpInput> = Yup.object().shape({
   username: Yup.string() //

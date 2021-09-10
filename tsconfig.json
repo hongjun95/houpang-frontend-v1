@@ -31,7 +31,7 @@
       "@constants": ["src/common/constants/index"],
       "@store": ["src/common/store/index"],
       "@selectors": ["src/common/selectors/index"],
-      "@interfaces": ["src/interfaces/"]
+      "@interfaces/*": ["src/interfaces/*"]
     }
   },
   "include": ["src/**/*"],
