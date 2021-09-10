@@ -12,10 +12,6 @@ import SignUpPage from '@pages/users/signUp';
 import LoginPage from '@pages/users/signIn';
 import { Router } from 'framework7/types';
 
-import UserService from '@service/users/users.service';
-
-const usersService = new UserService();
-
 const routes: Router.RouteParameters[] = [
   { path: '/', component: HomePage },
   {
@@ -25,16 +21,10 @@ const routes: Router.RouteParameters[] = [
   {
     path: '/users/sign_in',
     component: LoginPage,
-    options: {
-      props: {
-        usersService,
-      },
-    },
   },
   {
     path: '/intro', //
     component: IntroPage,
-    options: { props: { usersService } },
   },
   { path: '/mypage', component: MyPage },
   { path: '/items', component: ItemIndexPage },
