@@ -7,13 +7,7 @@ const MyPage = () => {
   const { currentUser, isAuthenticated, unAuthenticateUser } = useAuth();
 
   const logoutHandler = useCallback(async () => {
-    try {
-      await logoutAPI();
-    } catch (e) {
-      console.log(e);
-    } finally {
-      unAuthenticateUser();
-    }
+    unAuthenticateUser();
   }, [unAuthenticateUser]);
 
   return (
