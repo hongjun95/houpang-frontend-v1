@@ -21,6 +21,7 @@ export interface GetProductsOnCategoryOutput extends PaginationOutput {
 
 export interface GetProductsByCategoryIdInput extends PaginationInput {
   categoryId: string;
+  order?: string;
 }
 export interface GetProductsByCategoryIdOutput extends PaginationOutput {
   products?: Product[];

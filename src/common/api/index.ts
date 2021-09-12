@@ -1,7 +1,11 @@
 import { Token } from '@constants';
 import { getToken } from '@store';
 import { AxiosResponse } from 'axios';
-import { GetAllCategoriesOutput, GetProductsByCategoryIdOutput } from 'src/interfaces/category.interface';
+import {
+  GetAllCategoriesOutput,
+  GetProductsByCategoryIdInput,
+  GetProductsByCategoryIdOutput,
+} from 'src/interfaces/category.interface';
 import {
   ChangePasswordInput,
   ChangePasswordOutput,
@@ -103,10 +107,19 @@ export const logoutAPI = () => API.delete('/logout');
 //   const result = response.data;
 //   return result;
 // };
-export const getProductsByCategoryId = async (categoryId: string) => {
+export const getProductsByCategoryId = async ({
+  categoryId,
+  order = 'createdAt desc',
+  page = 1,
+}: GetProductsByCategoryIdInput): Promise<GetProductsByCategoryIdOutput> => {
   let response: AxiosResponse<GetProductsByCategoryIdOutput>;
   try {
-    response = await API.get<GetProductsByCategoryIdOutput>(`/categories/${categoryId}`);
+    response = await API.get<GetProductsByCategoryIdOutput>(`/categories/${categoryId}`, {
+      params: {
+        order,
+        page,
+      },
+    });
   } catch (error) {
     console.error(error);
   }

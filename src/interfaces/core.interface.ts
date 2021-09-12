@@ -10,11 +10,10 @@ export interface CoreEntity {
 }
 
 export interface PaginationInput {
-  page: number;
+  page?: number;
 }
 
 export interface PaginationOutput extends CoreOutput {
   totalPages?: number;
   totalResults?: number;
 }
-
