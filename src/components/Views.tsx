@@ -1,7 +1,6 @@
 import { Link, Toolbar, View, Views } from 'framework7-react';
 import React, { useCallback, useEffect, useState } from 'react';
 
-import { logoutAPI } from '@api';
 import CustomPanel from '@components/shared/CustomPanel';
 import useAuth from '@hooks/useAuth';
 import LandingPage from '@pages/landing';
@@ -13,13 +12,7 @@ const F7Views = () => {
   const { currentUser, isAuthenticated, authenticateUser, unAuthenticateUser } = useAuth();
 
   const logoutHandler = useCallback(async () => {
-    try {
-      await logoutAPI();
-    } catch (e) {
-      console.log(e);
-    } finally {
-      unAuthenticateUser();
-    }
+    unAuthenticateUser();
   }, [unAuthenticateUser]);
 
   useEffect(() => {

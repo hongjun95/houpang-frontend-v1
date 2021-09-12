@@ -19,13 +19,9 @@ import {
 import { PlainAPI, API, VERSION, API_URL } from './api.config';
 
 export const refresh = (): Promise<{ data: Token }> =>
-  PlainAPI.post(
-    '/token',
-    {},
-    {
-      headers: { 'X-CSRF-TOKEN': getToken().csrf, Authorization: `Bearer ${getToken().token}` },
-    },
-  );
+  PlainAPI.get('/token', {
+    headers: { 'X-CSRF-TOKEN': getToken().csrf, Authorization: `Bearer ${getToken().token}` },
+  });
 
 export const get = (url: string, params: any) => PlainAPI.get(url, params);
 

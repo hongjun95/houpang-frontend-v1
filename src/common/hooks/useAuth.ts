@@ -1,6 +1,5 @@
 import { useRecoilState } from 'recoil';
 import { AuthState, Token } from '@constants';
-import { getCurrentUserFromToken } from '@utils';
 import { destroyToken, saveToken } from '@store';
 import { authSelector } from '@selectors';
 import { useMe } from './useMe';
@@ -11,7 +10,7 @@ const useAuth = () => {
   const authenticateUser = async ({ token, csrf }: Token) => {
     const user = await useMe();
     saveToken({ token, csrf });
-    setCurrentUser({ token, csrf, currentUser: user });
+    setCurrentUser(() => ({ token, csrf, currentUser: user }));
   };
 
   const unAuthenticateUser = () => {
