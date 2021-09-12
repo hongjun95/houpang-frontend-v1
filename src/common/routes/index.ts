@@ -10,7 +10,7 @@ import MyPage from '@pages/users/myPage';
 import EditProfilePage from '@pages/users/editProfile';
 import ChangePassword from '@pages/users/changePassword';
 
-import ProductIndexPage from '@pages/products';
+import ProductsOnCategoryPage from '@pages/products/products-on-category';
 import ItemShowPage from '@pages/products/show';
 import PostIndexPage from '@pages/posts/index';
 import PostShowPage from '@pages/posts/show';
@@ -40,8 +40,8 @@ const userPages = [
 ];
 
 const itemPages = [
-  { path: '/items', component: ProductIndexPage },
-  { path: '/items/:id', component: ItemShowPage },
+  { path: '/products', component: ProductsOnCategoryPage },
+  { path: '/products/:id', component: ItemShowPage },
 ];
 
 const routes: Router.RouteParameters[] = [

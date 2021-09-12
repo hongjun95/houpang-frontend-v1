@@ -22,7 +22,7 @@ interface ProductFilterProps {
   categoryId: string;
 }
 
-const ProductIndexPage = ({ f7route }) => {
+const ProductsOnCategoryPage = ({ f7route }) => {
   const { is_main, categoryId }: { is_main: boolean; categoryId: string } = f7route.query;
   const [viewType, setViewType] = useState('grid');
   const queryClient = useQueryClient();
@@ -181,4 +181,4 @@ const ProductIndexPage = ({ f7route }) => {
   );
 };
 
-export default React.memo(ProductIndexPage);
+export default React.memo(ProductsOnCategoryPage);

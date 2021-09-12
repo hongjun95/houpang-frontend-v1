@@ -36,7 +36,7 @@ const Categories = () => {
         <div key={category.id}>
           {categories.length ? (
             <Link
-              href={`/items?categoryId=${category.id}`}
+              href={`/products?categoryId=${category.id}`}
               className="bg-white h-20 flex flex-col items-center justify-center"
               key={category.id}
             >
