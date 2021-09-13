@@ -1,14 +1,15 @@
+import React, { useEffect, useState } from 'react';
 import { useFormik } from 'formik';
 import { Link, List, ListInput, ListItem, Navbar, NavRight, NavTitle, Page } from 'framework7-react';
 import { map } from 'lodash';
-import React, { useEffect, useState } from 'react';
+import { useQuery, useQueryClient } from 'react-query';
 
 import { getProductsByCategoryId } from '@api';
 import { currency } from '@js/utils';
 import i18n from '../../assets/lang/i18n';
 import { Product } from '@interfaces/product.interface';
-import { useQuery, useQueryClient } from 'react-query';
 import { GetProductsByCategoryIdOutput } from '@interfaces/category.interface';
+import { productKeys } from '@reactQuery/query-keys';
 
 const OrderStates = [
   ['createdAt desc', '최신순'],
@@ -22,7 +23,7 @@ interface ProductFilterProps {
   categoryId: string;
 }
 
-const ProductsOnCategoryPage = ({ f7route }) => {
+const ProductsOnCategoryPage = ({ f7route, f7router }) => {
   const { is_main, categoryId }: { is_main: boolean; categoryId: string } = f7route.query;
   const [viewType, setViewType] = useState('grid');
   const queryClient = useQueryClient();
@@ -77,7 +78,7 @@ const ProductsOnCategoryPage = ({ f7route }) => {
   // );
 
   const { data, refetch } = useQuery<GetProductsByCategoryIdOutput, Error>(
-    [PRODUCT_KEY, filterForm.values],
+    productKeys.list({ ...filterForm.values }),
     () => getProductsByCategoryId({ ...filterForm.values }),
     {
       enabled: !!categoryId,
@@ -91,6 +92,14 @@ const ProductsOnCategoryPage = ({ f7route }) => {
     setTotalCount(data.totalResults);
     setCategoryName(data.products[0].category.name);
     done();
+  };
+
+  const onClickLink = (e, productId) => {
+    f7router.navigate(`/products/${productId}`, {
+      props: {
+        productQeuryKey: productKeys.list({ ...filterForm.values }),
+      },
+    });
   };
 
   return (
@@ -144,7 +153,8 @@ const ProductsOnCategoryPage = ({ f7route }) => {
                     <ListItem
                       key={product.id}
                       mediaItem
-                      link={`/items/${product.id}`}
+                      onClick={(e) => onClickLink(e, product.id)}
+                      // link={`/products/${product.id}/${categoryId}`}
                       title={`${product.name}-${product.id}`}
                       subtitle={`${currency(product.price)}원`}
                       className="w-full"
@@ -158,7 +168,8 @@ const ProductsOnCategoryPage = ({ f7route }) => {
                     <div className="w-1/2 inline-flex grid-list-item relative">
                       <ListItem
                         mediaItem
-                        link={`/items/${product.id}`}
+                        onClick={(e) => onClickLink(e, product.id)}
+                        // link={`/products/${product.id}/${categoryId}`}
                         title={`${product.name}-${product.id}`}
                         subtitle={`${currency(product.price)}원`}
                         header={categoryId ? categoryName : ''}

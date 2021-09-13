@@ -40,6 +40,10 @@ export interface PageRouteProps {
   f7router: Router.Router;
 }
 
+export interface DetailPageProps extends PageRouteProps {
+  productQeuryKey: Array<string>;
+}
+
 export interface Address {
   zipcode: string;
   address1: string;

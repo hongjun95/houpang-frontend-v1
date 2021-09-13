@@ -11,7 +11,7 @@ import EditProfilePage from '@pages/users/editProfile';
 import ChangePassword from '@pages/users/changePassword';
 
 import ProductsOnCategoryPage from '@pages/products/products-on-category';
-import ItemShowPage from '@pages/products/show';
+import ProductDetailPage from '@pages/products/product-detail';
 import AddProductPage from '@pages/products/add-product';
 import AddProductInfoPage from '@pages/products/add-product-info';
 
@@ -46,7 +46,7 @@ const productPages = [
   { path: '/products', component: ProductsOnCategoryPage },
   { path: '/products/add', component: AddProductPage },
   { path: '/products/add-info', component: AddProductInfoPage },
-  { path: '/products/:id', component: ItemShowPage },
+  { path: '/products/:id', component: ProductDetailPage, },
 ];
 
 const routes: Router.RouteParameters[] = [

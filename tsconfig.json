@@ -31,6 +31,7 @@
       "@constants": ["src/common/constants/index"],
       "@store": ["src/common/store/index"],
       "@selectors": ["src/common/selectors/index"],
+      "@reactQuery/*": ["src/common/react-query/*"],
       "@interfaces/*": ["src/interfaces/*"]
     }
   },
