@@ -24,6 +24,8 @@
   "product.categoryName": "카테고리",
   "product.stock": "재고 개수",
   "product.image": "상품 이미지",
+  "product.infoKey": "상품 정보 이름",
+  "product.infoValue": "상품 정보 내용",
   "date_formats": {
     "month": "YYYY년 MM월",
     "day": "YYYY년 MM월 DD일",

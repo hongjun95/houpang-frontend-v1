@@ -26,13 +26,22 @@ export interface AddProductInput {
   price: number;
   stock: number;
   categoryName: string;
-  images: Array<File>;
-}
-
-export interface AddProductInfoInput {
-  [key: string]: string;
+  images: string[];
+  info: Array<InfoItem>;
 }
 
 export interface AddProductOutput extends CoreOutput {
   product?: Product;
+}
+
+export interface AddProductForm {
+  name: string;
+  price: number;
+  stock: number;
+  categoryName: string;
+  images: Array<File>;
+}
+
+export interface AddProductInfoForm {
+  [key: string]: string;
 }

@@ -7,7 +7,7 @@ import i18next from 'i18next';
 import { List, ListInput, ListItem, Navbar, Page } from 'framework7-react';
 import { PageRouteProps } from '@constants';
 import { getCategories } from '@api';
-import { AddProductInput } from '@interfaces/product.interface';
+import { AddProductForm } from '@interfaces/product.interface';
 import { useQuery } from 'react-query';
 import { GetAllCategoriesOutput } from '@interfaces/category.interface';
 import { useSetRecoilState } from 'recoil';
@@ -19,7 +19,7 @@ import {
   productStockAtom,
 } from '@atoms';
 
-const AddProductSchema: Yup.SchemaOf<AddProductInput> = Yup.object().shape({
+const AddProductSchema: Yup.SchemaOf<AddProductForm> = Yup.object().shape({
   name: Yup.string() //
     .required('필수 입력사항 입니다'),
   price: Yup.number() //
@@ -40,7 +40,7 @@ const AddProductPage = ({ f7router }: PageRouteProps) => {
   const setStockAtom = useSetRecoilState(productStockAtom);
   const setProductImgFile = useSetRecoilState(productImgFilesAtom);
 
-  const initialValues: AddProductInput = {
+  const initialValues: AddProductForm = {
     name: '',
     price: 0,
     categoryName: '패션의류',
@@ -50,7 +50,7 @@ const AddProductPage = ({ f7router }: PageRouteProps) => {
 
   const { data, status } = useQuery<GetAllCategoriesOutput, Error>(['categories_key'], getCategories);
 
-  const handleProductContent = async (values: AddProductInput, setSubmitting) => {
+  const handleProductContent = async (values: AddProductForm, setSubmitting) => {
     setSubmitting(false);
 
     try {
@@ -76,7 +76,7 @@ const AddProductPage = ({ f7router }: PageRouteProps) => {
       <Formik
         initialValues={initialValues}
         validationSchema={AddProductSchema}
-        onSubmit={(values, { setSubmitting }: FormikHelpers<AddProductInput>) =>
+        onSubmit={(values, { setSubmitting }: FormikHelpers<AddProductForm>) =>
           handleProductContent(values, setSubmitting)
         }
         validateOnMount
@@ -108,6 +108,18 @@ const AddProductPage = ({ f7router }: PageRouteProps) => {
                 value={values.price}
                 errorMessageForce
                 errorMessage={touched.price && errors.price}
+              />
+              <ListInput
+                label={i18next.t('product.stock') as string}
+                type="number"
+                name="stock"
+                placeholder="재고를 입력해주세요"
+                clearButton
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.stock}
+                errorMessageForce
+                errorMessage={touched.stock && errors.stock}
               />
               {status === 'success' && (
                 <ListItem title="카테고리" smartSelect>
