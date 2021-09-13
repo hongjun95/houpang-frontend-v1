@@ -19,6 +19,11 @@
   "login.address1": "주소",
   "login.address2": "상세주소",
   "signup.title": "회원가입",
+  "product.name": "상품 이름",
+  "product.price": "상품 가격",
+  "product.categoryName": "카테고리",
+  "product.stock": "재고 개수",
+  "product.image": "상품 이미지",
   "date_formats": {
     "month": "YYYY년 MM월",
     "day": "YYYY년 MM월 DD일",

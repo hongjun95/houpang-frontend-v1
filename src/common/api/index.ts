@@ -1,4 +1,5 @@
 import { Token } from '@constants';
+import { AddProductInput, AddProductOutput } from '@interfaces/product.interface';
 import { getToken } from '@store';
 import { AxiosResponse } from 'axios';
 import {
@@ -92,7 +93,8 @@ export const logoutAPI = () => API.delete('/logout');
 // export const { query: getUsers, get: getUser } = ApiService('users');
 // export const { query: getCategories, get: getCategory } = ApiService('categories');
 
-// item APIs
+// products APIs
+
 // export const getItemsOnCategory = async (id: string) => {
 //   let response: AxiosResponse<GetProductsOnCategoryOutput>;
 //   try {
@@ -122,6 +124,20 @@ export const getProductsByCategoryId = async ({
   const result = response.data;
   return result;
 };
+
+export const addProduct = async (data: AddProductInput): Promise<AddProductOutput> => {
+  let response: AxiosResponse<AddProductOutput>;
+  try {
+    response = await API.post<AddProductOutput>('/products', data);
+  } catch (error) {
+    console.error(error);
+  }
+  const result = response.data;
+  return result;
+};
+
+// category API
+
 export const getCategories = async () => {
   let response: AxiosResponse<GetAllCategoriesOutput>;
   try {
@@ -133,6 +149,19 @@ export const getCategories = async () => {
   return result;
 };
 // export const getCategory = (slug: string) => API.get<GetAllCategoriesOutput>(`/products/${slug}`);
+
+// upload API
+
+export const uploadImages = async (data) => {
+  let response;
+  try {
+    response = await API.post('/uploads', data);
+  } catch (error) {
+    console.error(error);
+  }
+  const result = response.data;
+  return result;
+};
 
 export const getPosts = () => async (params = null) => {
   const { data } = await API.get('/posts', { params });

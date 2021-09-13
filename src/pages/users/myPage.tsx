@@ -1,5 +1,6 @@
-import { API_URL, logoutAPI } from '@api';
+import { API_URL } from '@api';
 import useAuth from '@hooks/useAuth';
+import { UserRole } from '@interfaces/user.interface';
 import { Navbar, NavTitle, Page } from 'framework7-react';
 import React, { useCallback } from 'react';
 
@@ -71,6 +72,21 @@ const MyPage = () => {
         </div>
         <div className="bg-white overflow-hidden sm:rounded-md">
           <ul className="divide-y divide-gray-200">
+            {currentUser.role === UserRole.Provider && (
+              <li>
+                <a href="/products/add" className="block hover:bg-gray-50">
+                  <div className="flex items-center px-4 py-4 sm:px-6">
+                    <div className="min-w-0 flex-1 flex items-center">
+                      <div className="min-w-0 flex-1 px-4 md:grid md:grid-cols-2 md:gap-4">
+                        <div>
+                          <p className="text-sm font-medium text-gray-900 truncate">상품 추가하기</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </a>
+              </li>
+            )}
             <li>
               <a href="/users/edit-profile" className="block hover:bg-gray-50">
                 <div className="flex items-center px-4 py-4 sm:px-6">

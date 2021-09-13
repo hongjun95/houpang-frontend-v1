@@ -12,6 +12,9 @@ import ChangePassword from '@pages/users/changePassword';
 
 import ProductsOnCategoryPage from '@pages/products/products-on-category';
 import ItemShowPage from '@pages/products/show';
+import AddProductPage from '@pages/products/add-product';
+import AddProductInfoPage from '@pages/products/add-product-info';
+
 import PostIndexPage from '@pages/posts/index';
 import PostShowPage from '@pages/posts/show';
 import PostNewPage from '@pages/posts/new';
@@ -39,15 +42,17 @@ const userPages = [
   { path: '/users/change-password', component: ChangePassword },
 ];
 
-const itemPages = [
+const productPages = [
   { path: '/products', component: ProductsOnCategoryPage },
+  { path: '/products/add', component: AddProductPage },
+  { path: '/products/add-info', component: AddProductInfoPage },
   { path: '/products/:id', component: ItemShowPage },
 ];
 
 const routes: Router.RouteParameters[] = [
   ...commonPages,
   ...userPages,
-  ...itemPages,
+  ...productPages,
 
   { path: '/posts', component: PostIndexPage },
   { path: '/posts/new', component: PostNewPage },
