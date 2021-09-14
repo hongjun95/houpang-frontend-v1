@@ -51,7 +51,7 @@ const CustomPanel = ({ currentUser, handleLogout, isLoggedIn }) => {
               게시글
             </Link>
             <Link
-              href="/line_items"
+              href="/shopping-list"
               className="flex justify-start text-gray-900 hover:text-gray-900 hover:bg-gray-50 group px-6 py-4 text-base font-medium rounded-md"
               panelClose
             >

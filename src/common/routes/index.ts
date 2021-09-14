@@ -49,10 +49,16 @@ const productPages = [
   { path: '/products/:id', component: ProductDetailPage, },
 ];
 
+
+const shoppingListPages = [
+  { path: '/shopping-list', component: ProductsOnCategoryPage },
+];
+
 const routes: Router.RouteParameters[] = [
   ...commonPages,
   ...userPages,
   ...productPages,
+  ...shoppingListPages,
 
   { path: '/posts', component: PostIndexPage },
   { path: '/posts/new', component: PostNewPage },

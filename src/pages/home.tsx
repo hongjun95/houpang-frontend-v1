@@ -8,9 +8,9 @@ const HomePage = () => (
       <NavLeft>
         <Link icon="las la-bars" panelOpen="left" />
       </NavLeft>
-      <NavTitle>인썸니아</NavTitle>
+      <NavTitle>Houpang</NavTitle>
       <NavRight>
-        <Link href="/line_items" iconF7="cart" iconBadge={3} badgeColor="red" />
+        <Link href="/shopping-list" iconF7="cart" iconBadge={3} badgeColor="red" />
       </NavRight>
     </Navbar>
     <Categories />
