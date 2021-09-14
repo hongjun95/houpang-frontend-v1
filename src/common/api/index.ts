@@ -31,9 +31,7 @@ export const get = (url: string, params: any) => PlainAPI.get(url, params);
 export const signupAPI = async (data: SignUpInput) => {
   let response: AxiosResponse<SignUpOutput>;
   try {
-    response = await PlainAPI.post<SignUpOutput>('/signup', {
-      data,
-    });
+    response = await PlainAPI.post<SignUpOutput>('/signup', data);
   } catch (error) {
     console.error(error);
   }
@@ -44,9 +42,7 @@ export const signupAPI = async (data: SignUpInput) => {
 export const loginAPI = async (data: SignInInput) => {
   let response: AxiosResponse<SignInOutput>;
   try {
-    response = await PlainAPI.post('/login', {
-      data,
-    });
+    response = await PlainAPI.post('/login', data);
   } catch (error) {
     console.error(error);
   }
@@ -57,9 +53,7 @@ export const loginAPI = async (data: SignInInput) => {
 export const editProfileAPI = async (data: EditProfileInput) => {
   let response: AxiosResponse<EditProfileOutput>;
   try {
-    response = await API.post('/edit-profile', {
-      data,
-    });
+    response = await API.post('/edit-profile', data);
   } catch (error) {
     console.error(error);
   }
@@ -70,9 +64,7 @@ export const editProfileAPI = async (data: EditProfileInput) => {
 export const changePasswordAPI = async (data: ChangePasswordInput) => {
   let response: AxiosResponse<ChangePasswordOutput>;
   try {
-    response = await API.post('/change-password', {
-      data,
-    });
+    response = await API.post('/change-password', data);
   } catch (error) {
     console.error(error);
   }
