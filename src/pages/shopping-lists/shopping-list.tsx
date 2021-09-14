@@ -11,7 +11,6 @@ import {
 } from 'framework7-react';
 import { useQuery } from 'react-query';
 
-import { DetailPageProps } from '@constants';
 import { FindProductByIdOutput } from '@interfaces/product.interface';
 import { productKeys } from '@reactQuery/query-keys';
 import { findProductById } from '@api';

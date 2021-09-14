@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
-import { Navbar, Page, Sheet, Stepper, Swiper, SwiperSlide } from 'framework7-react';
+import { f7, Navbar, Page, Sheet, Stepper, Swiper, SwiperSlide } from 'framework7-react';
 import { useQuery } from 'react-query';
 
-import { PageRouteProps } from '@constants';
+import { PageRouteProps, SHOPPING_LIST } from '@constants';
 import { FindProductByIdOutput } from '@interfaces/product.interface';
 import { productKeys } from '@reactQuery/query-keys';
 import { findProductById } from '@api';
 import { formmatPrice } from '@utils/index';
 import LandingPage from '@pages/landing';
+import { addProductToShoppingList, existedProductOnShoppingList, getShoppingList } from '@store';
 
 const ProductDetailPage = ({ f7route }: PageRouteProps) => {
   const [sheetOpened, setSheetOpened] = useState(false);
@@ -24,6 +25,16 @@ const ProductDetailPage = ({ f7route }: PageRouteProps) => {
   );
 
   if (status === 'success') console.log(data.product);
+
+  const onAddProductToShoppingList = () => {
+    const shoppingList = getShoppingList();
+    if (existedProductOnShoppingList(productId)) {
+      f7.dialog.alert('이미 장바구니에 있습니다.');
+    } else {
+      shoppingList.push(productId);
+      addProductToShoppingList(shoppingList);
+    }
+  };
 
   return (
     <Page noToolbar className="min-h-screen">
@@ -104,10 +115,14 @@ const ProductDetailPage = ({ f7route }: PageRouteProps) => {
               className="my-4 text-gray-300 border-gray-200"
             />
             <div className="flex">
-              <button className="border border-blue-600 text-blue-600 font-bold text-base tracking-normal rounded-md p-2 mr-2">
+              <button
+                className="outline-none border border-blue-600 text-blue-600 font-bold text-base tracking-normal rounded-md p-2 mr-2"
+                onClick={onAddProductToShoppingList}
+                disabled={existedProductOnShoppingList(productId)}
+              >
                 장바구니에 담기
               </button>
-              <button className="border bg-blue-600 text-white font-bold text-base tracking-normal rounded-md p-2 ml-2">
+              <button className="outline-none border bg-blue-600 text-white font-bold text-base tracking-normal rounded-md p-2 ml-2">
                 바로구매
               </button>
             </div>
