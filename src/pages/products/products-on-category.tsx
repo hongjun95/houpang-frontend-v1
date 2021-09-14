@@ -44,11 +44,12 @@ const ProductsOnCategoryPage = ({ f7route, f7router }) => {
   useEffect(() => {
     if (categoryId) {
       (async () => {
-        const { ok, error, products, totalResults } = await getProductsByCategoryId({ categoryId });
+        const { ok, error, products, totalResults, categoryName } = await getProductsByCategoryId({ categoryId });
         if (ok) {
+          console.log(products);
           setProducts(products);
           setTotalCount(totalResults);
-          setCategoryName(products[0].category.name);
+          setCategoryName(categoryName);
         }
       })();
     }
@@ -68,7 +69,7 @@ const ProductsOnCategoryPage = ({ f7route, f7router }) => {
       if (ok) {
         setProducts(products);
         setTotalCount(totalResults);
-        setCategoryName(products[0].category.name);
+        setCategoryName(categoryName);
       }
     },
   });
@@ -90,7 +91,7 @@ const ProductsOnCategoryPage = ({ f7route, f7router }) => {
     const { data } = await refetch();
     setProducts(data.products);
     setTotalCount(data.totalResults);
-    setCategoryName(data.products[0].category.name);
+    setCategoryName(data.categoryName);
     done();
   };
 
