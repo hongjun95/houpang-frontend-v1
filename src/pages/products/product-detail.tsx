@@ -20,7 +20,7 @@ import { findProductById } from '@api';
 import { formmatPrice } from '@utils/index';
 import LandingPage from '@pages/landing';
 
-const ItemShowPage = ({ f7route, f7router, productQeuryKey }: DetailPageProps) => {
+const ProductDetailPage = ({ f7route, f7router, productQeuryKey }: DetailPageProps) => {
   const productId = f7route.params.id;
 
   const { data, status } = useQuery<FindProductByIdOutput, Error>(
@@ -115,4 +115,4 @@ const ItemShowPage = ({ f7route, f7router, productQeuryKey }: DetailPageProps) =
   );
 };
 
-export default ItemShowPage;
+export default ProductDetailPage;
