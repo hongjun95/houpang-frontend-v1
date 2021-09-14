@@ -1,5 +1,10 @@
 import { Token } from '@constants';
-import { AddProductInput, AddProductOutput } from '@interfaces/product.interface';
+import {
+  AddProductInput,
+  AddProductOutput,
+  FindProductByIdInput,
+  FindProductByIdOutput,
+} from '@interfaces/product.interface';
 import { getToken } from '@store';
 import { AxiosResponse } from 'axios';
 import {
@@ -85,18 +90,8 @@ export const logoutAPI = () => API.delete('/logout');
 // export const { query: getUsers, get: getUser } = ApiService('users');
 // export const { query: getCategories, get: getCategory } = ApiService('categories');
 
-// products APIs
+// product APIs
 
-// export const getItemsOnCategory = async (id: string) => {
-//   let response: AxiosResponse<GetProductsOnCategoryOutput>;
-//   try {
-//     response = await API.get<GetProductsOnCategoryOutput>(`/categories/products/${id}`);
-//   } catch (error) {
-//     console.error(error);
-//   }
-//   const result = response.data;
-//   return result;
-// };
 export const getProductsByCategoryId = async ({
   categoryId,
   order = 'createdAt desc',
@@ -110,6 +105,17 @@ export const getProductsByCategoryId = async ({
         page,
       },
     });
+  } catch (error) {
+    console.error(error);
+  }
+  const result = response.data;
+  return result;
+};
+
+export const findProductById = async ({ productId }: FindProductByIdInput): Promise<FindProductByIdOutput> => {
+  let response: AxiosResponse<FindProductByIdOutput>;
+  try {
+    response = await API.get<FindProductByIdOutput>(`/products/${productId}`);
   } catch (error) {
     console.error(error);
   }
