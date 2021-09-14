@@ -23,7 +23,7 @@ const MyPage = () => {
               <a href={`/users/${currentUser?.id}`}>
                 <div className="relative">
                   {currentUser?.username ? (
-                    <img className="h-24 w-24 rounded-full" src={API_URL + currentUser?.username} alt="" />
+                    <img className="h-24 w-24 rounded-full" src={currentUser?.userImg} alt="프로필 이미지" />
                   ) : (
                     <i
                       className="h-24 w-24 rounded-full las la-user-circle"
