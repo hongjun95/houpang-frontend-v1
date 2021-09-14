@@ -10,6 +10,7 @@ import i18n from '../../assets/lang/i18n';
 import { Product } from '@interfaces/product.interface';
 import { GetProductsByCategoryIdOutput } from '@interfaces/category.interface';
 import { productKeys } from '@reactQuery/query-keys';
+import { formmatPrice } from '@utils/index';
 
 const OrderStates = [
   ['createdAt desc', '최신순'],
@@ -44,11 +45,12 @@ const ProductsOnCategoryPage = ({ f7route, f7router }) => {
   useEffect(() => {
     if (categoryId) {
       (async () => {
-        const { ok, error, products, totalResults } = await getProductsByCategoryId({ categoryId });
+        const { ok, error, products, totalResults, categoryName } = await getProductsByCategoryId({ categoryId });
         if (ok) {
+          console.log(products);
           setProducts(products);
           setTotalCount(totalResults);
-          setCategoryName(products[0].category.name);
+          setCategoryName(categoryName);
         }
       })();
     }
@@ -68,7 +70,7 @@ const ProductsOnCategoryPage = ({ f7route, f7router }) => {
       if (ok) {
         setProducts(products);
         setTotalCount(totalResults);
-        setCategoryName(products[0].category.name);
+        setCategoryName(categoryName);
       }
     },
   });
@@ -90,7 +92,7 @@ const ProductsOnCategoryPage = ({ f7route, f7router }) => {
     const { data } = await refetch();
     setProducts(data.products);
     setTotalCount(data.totalResults);
-    setCategoryName(data.products[0].category.name);
+    setCategoryName(data.categoryName);
     done();
   };
 
@@ -144,17 +146,16 @@ const ProductsOnCategoryPage = ({ f7route, f7router }) => {
           ))}
         </ListInput>
       </form>
-      <List noHairlines className="mt-0 text-sm font-thin ">
+      <List noHairlines className="mt-0 text-sm font-thin">
         {products && (
-          <ul>
+          <ul className="flex-wrap grid grid-cols-2">
             {viewType === 'list'
-              ? products.map((product: Product, i) => (
+              ? products.map((product: Product) => (
                   <React.Fragment key={product.id}>
                     <ListItem
                       key={product.id}
                       mediaItem
                       onClick={(e) => onClickLink(e, product.id)}
-                      // link={`/products/${product.id}/${categoryId}`}
                       title={`${product.name}-${product.id}`}
                       subtitle={`${currency(product.price)}원`}
                       className="w-full"
@@ -164,26 +165,23 @@ const ProductsOnCategoryPage = ({ f7route, f7router }) => {
                   </React.Fragment>
                 ))
               : products.map((product: Product, i) => (
-                  <React.Fragment key={product.id}>
-                    <div className="w-1/2 inline-flex grid-list-item relative">
-                      <ListItem
-                        mediaItem
-                        onClick={(e) => onClickLink(e, product.id)}
-                        // link={`/products/${product.id}/${categoryId}`}
-                        title={`${product.name}-${product.id}`}
-                        subtitle={`${currency(product.price)}원`}
-                        header={categoryId ? categoryName : ''}
-                        className="w-full"
-                      >
-                        <img
-                          slot="media"
-                          alt=""
-                          src={product.images[0]}
-                          className="w-40 m-auto radius rounded shadow"
-                        />
-                      </ListItem>
-                    </div>
-                  </React.Fragment>
+                  <div className="relative" key={product.id}>
+                    {/* <div className="absolute bg-gray-600 w-full min-h-full"></div>
+                    <img alt="" src={product.images[0]} className="absolute w-full m-auto radius rounded shadow" /> */}
+                    <Link className="block m-1" onClick={(e) => onClickLink(e, product.id)}>
+                      <div
+                        className="bg-gray-100 py-32 bg-center bg-cover"
+                        style={{
+                          backgroundImage: `url(${product.images[0]})`,
+                        }}
+                      ></div>
+                      <div className="m-1">
+                        <div className="font-bold mt-1">{product.provider.username}</div>
+                        <div className="text-red-700 text-xl font-bold">{formmatPrice(product.price)}원</div>
+                        <div>review stars(review number)</div>
+                      </div>
+                    </Link>
+                  </div>
                 ))}
           </ul>
         )}

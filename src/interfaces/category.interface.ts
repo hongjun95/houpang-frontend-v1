@@ -25,4 +25,5 @@ export interface GetProductsByCategoryIdInput extends PaginationInput {
 }
 export interface GetProductsByCategoryIdOutput extends PaginationOutput {
   products?: Product[];
+  categoryName: string;
 }
