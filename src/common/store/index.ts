@@ -15,10 +15,19 @@ export const destroyToken = () => {
   window.localStorage.removeItem(CSRF_KEY);
 };
 
-export const getShoppingList = () => JSON.parse(localStorage.getItem(SHOPPING_LIST)) || [];
-export const existedProductOnShoppingList = (productId: string) =>
-  getShoppingList().find((aProductId: string) => aProductId === productId);
-export const addProductToShoppingList = (shoppingList: Array<string>) => {
+export interface IShoppingItem {
+  id: string;
+  name: string;
+  price: number;
+  imageUrl: string;
+  orderCount: number;
+}
+export const getShoppingList = (): Array<IShoppingItem> => JSON.parse(localStorage.getItem(SHOPPING_LIST)) || [];
+export const existedProductOnShoppingList = (productId: string): boolean => {
+  const shoppingList = getShoppingList();
+  return !!shoppingList.find((item) => item.id === productId);
+};
+export const addProductToShoppingList = (shoppingList: Array<IShoppingItem>): void => {
   localStorage.setItem(SHOPPING_LIST, JSON.stringify(shoppingList));
 };
 

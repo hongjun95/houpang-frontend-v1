@@ -8,7 +8,7 @@ import { productKeys } from '@reactQuery/query-keys';
 import { findProductById } from '@api';
 import { formmatPrice } from '@utils/index';
 import LandingPage from '@pages/landing';
-import { addProductToShoppingList, existedProductOnShoppingList, getShoppingList } from '@store';
+import { addProductToShoppingList, existedProductOnShoppingList, getShoppingList, IShoppingItem } from '@store';
 
 const ProductDetailPage = ({ f7route }: PageRouteProps) => {
   const [sheetOpened, setSheetOpened] = useState(false);
@@ -31,7 +31,14 @@ const ProductDetailPage = ({ f7route }: PageRouteProps) => {
     if (existedProductOnShoppingList(productId)) {
       f7.dialog.alert('이미 장바구니에 있습니다.');
     } else {
-      shoppingList.push(productId);
+      const shoppingItem: IShoppingItem = {
+        id: productId,
+        name: data.product.name,
+        price: data.product.price,
+        imageUrl: data.product.images[0],
+        orderCount: 1,
+      };
+      shoppingList.push({ ...shoppingItem });
       addProductToShoppingList(shoppingList);
     }
   };
