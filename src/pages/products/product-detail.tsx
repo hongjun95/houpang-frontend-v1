@@ -17,6 +17,7 @@ const ItemShowPage = ({ f7route, f7router, productQeuryKey }: DetailPageProps) =
 
   const productId = f7route.params.id;
   const product = products.find((product) => product.id === productId);
+  console.log(product);
 
   return (
     <Page noToolbar className="min-h-screen">
@@ -30,6 +31,16 @@ const ItemShowPage = ({ f7route, f7router, productQeuryKey }: DetailPageProps) =
             </SwiperSlide>
           ))}
       </Swiper>
+      <div>
+        <div>
+          <div>brand image</div>
+          <div>brand name</div>
+        </div>
+        <div>review stars (review number)</div>
+      </div>
+      <h1>product name</h1>
+      <div>Select info option</div>
+      <div>price</div>
     </Page>
   );
 };
