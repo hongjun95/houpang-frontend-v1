@@ -1,5 +1,10 @@
 import { Token } from '@constants';
-import { AddProductInput, AddProductOutput } from '@interfaces/product.interface';
+import {
+  AddProductInput,
+  AddProductOutput,
+  FindProductByIdInput,
+  FindProductByIdOutput,
+} from '@interfaces/product.interface';
 import { getToken } from '@store';
 import { AxiosResponse } from 'axios';
 import {
@@ -31,9 +36,7 @@ export const get = (url: string, params: any) => PlainAPI.get(url, params);
 export const signupAPI = async (data: SignUpInput) => {
   let response: AxiosResponse<SignUpOutput>;
   try {
-    response = await PlainAPI.post<SignUpOutput>('/signup', {
-      data,
-    });
+    response = await PlainAPI.post<SignUpOutput>('/signup', data);
   } catch (error) {
     console.error(error);
   }
@@ -44,9 +47,7 @@ export const signupAPI = async (data: SignUpInput) => {
 export const loginAPI = async (data: SignInInput) => {
   let response: AxiosResponse<SignInOutput>;
   try {
-    response = await PlainAPI.post('/login', {
-      data,
-    });
+    response = await PlainAPI.post('/login', data);
   } catch (error) {
     console.error(error);
   }
@@ -57,9 +58,7 @@ export const loginAPI = async (data: SignInInput) => {
 export const editProfileAPI = async (data: EditProfileInput) => {
   let response: AxiosResponse<EditProfileOutput>;
   try {
-    response = await API.post('/edit-profile', {
-      data,
-    });
+    response = await API.post('/edit-profile', data);
   } catch (error) {
     console.error(error);
   }
@@ -70,9 +69,7 @@ export const editProfileAPI = async (data: EditProfileInput) => {
 export const changePasswordAPI = async (data: ChangePasswordInput) => {
   let response: AxiosResponse<ChangePasswordOutput>;
   try {
-    response = await API.post('/change-password', {
-      data,
-    });
+    response = await API.post('/change-password', data);
   } catch (error) {
     console.error(error);
   }
@@ -93,18 +90,8 @@ export const logoutAPI = () => API.delete('/logout');
 // export const { query: getUsers, get: getUser } = ApiService('users');
 // export const { query: getCategories, get: getCategory } = ApiService('categories');
 
-// products APIs
+// product APIs
 
-// export const getItemsOnCategory = async (id: string) => {
-//   let response: AxiosResponse<GetProductsOnCategoryOutput>;
-//   try {
-//     response = await API.get<GetProductsOnCategoryOutput>(`/categories/products/${id}`);
-//   } catch (error) {
-//     console.error(error);
-//   }
-//   const result = response.data;
-//   return result;
-// };
 export const getProductsByCategoryId = async ({
   categoryId,
   order = 'createdAt desc',
@@ -118,6 +105,17 @@ export const getProductsByCategoryId = async ({
         page,
       },
     });
+  } catch (error) {
+    console.error(error);
+  }
+  const result = response.data;
+  return result;
+};
+
+export const findProductById = async ({ productId }: FindProductByIdInput): Promise<FindProductByIdOutput> => {
+  let response: AxiosResponse<FindProductByIdOutput>;
+  try {
+    response = await API.get<FindProductByIdOutput>(`/products/${productId}`);
   } catch (error) {
     console.error(error);
   }

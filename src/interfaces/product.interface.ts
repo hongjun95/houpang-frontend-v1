@@ -21,6 +21,8 @@ export interface Product extends CoreEntity {
   reviews: Review[];
 }
 
+// Add product
+
 export interface AddProductInput {
   name: string;
   price: number;
@@ -29,11 +31,9 @@ export interface AddProductInput {
   images: string[];
   info: Array<InfoItem>;
 }
-
 export interface AddProductOutput extends CoreOutput {
   product?: Product;
 }
-
 export interface AddProductForm {
   name: string;
   price: number;
@@ -41,7 +41,15 @@ export interface AddProductForm {
   categoryName: string;
   images: Array<File>;
 }
-
 export interface AddProductInfoForm {
   [key: string]: string;
+}
+
+// Find Product by Id
+
+export interface FindProductByIdInput {
+  productId: string;
+}
+export interface FindProductByIdOutput extends CoreOutput {
+  product?: Product;
 }

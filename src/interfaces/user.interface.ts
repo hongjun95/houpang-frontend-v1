@@ -22,6 +22,7 @@ export interface User extends CoreEntity {
   verified: boolean;
   language: Language;
   bio?: string;
+  userImg?: string;
   phoneNumber: string;
   address: string;
   products: Product[];
