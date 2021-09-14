@@ -7,11 +7,11 @@ import i18next from 'i18next';
 import { sleep } from '@utils';
 import { f7, List, ListInput, ListItem, Navbar, Page } from 'framework7-react';
 import { PageRouteProps } from '@constants';
-import { editProfileAPI, signupAPI } from '@api';
+import { editProfileAPI } from '@api';
 import useAuth from '@hooks/useAuth';
 import { EditProfileInput } from 'src/interfaces/user.interface';
 
-const EditProfileSchema = Yup.object().shape({
+const EditProfileSchema: Yup.SchemaOf<EditProfileInput> = Yup.object().shape({
   username: Yup.string() //
     .required('필수 입력사항 입니다'),
   email: Yup.string() //
@@ -27,6 +27,7 @@ const EditProfileSchema = Yup.object().shape({
       message: "'-'를 포함한 전하번호 11자리를 입력하세요.",
     })
     .required('필수 입력사항 입니다'),
+  bio: Yup.string().optional(),
 });
 
 const EditProfilePage = ({ f7router }: PageRouteProps) => {

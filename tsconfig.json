@@ -25,13 +25,14 @@
       "@api": ["src/common/api/index"],
       "@service/*": ["src/common/service/*"],
       "@config": ["src/common/config/index"],
-      "@routes": ["src/common/routes/index"],
+      "@routes/*": ["src/common/routes/*"],
       "@pages/*": ["src/pages/*"],
       "@js/*": ["src/js/*"],
       "@constants": ["src/common/constants/index"],
       "@store": ["src/common/store/index"],
       "@selectors": ["src/common/selectors/index"],
-      "@interfaces": ["src/interfaces/"]
+      "@reactQuery/*": ["src/common/react-query/*"],
+      "@interfaces/*": ["src/interfaces/*"]
     }
   },
   "include": ["src/**/*"],

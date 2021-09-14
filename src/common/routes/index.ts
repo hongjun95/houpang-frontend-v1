@@ -6,22 +6,29 @@ import IntroPage from '@pages/intro';
 
 import SignUpPage from '@pages/users/signUp';
 import LoginPage from '@pages/users/signIn';
-import MyPage from '@pages/users/mypage';
+import MyPage from '@pages/users/myPage';
 import EditProfilePage from '@pages/users/editProfile';
+import ChangePassword from '@pages/users/changePassword';
 
-import ItemIndexPage from '@pages/items';
-import ItemShowPage from '@pages/items/show';
+import ProductsOnCategoryPage from '@pages/products/products-on-category';
+import ProductDetailPage from '@pages/products/product-detail';
+import AddProductPage from '@pages/products/add-product';
+import AddProductInfoPage from '@pages/products/add-product-info';
+
 import PostIndexPage from '@pages/posts/index';
 import PostShowPage from '@pages/posts/show';
 import PostNewPage from '@pages/posts/new';
 import PostEditPage from '@pages/posts/edit';
 
-const routes: Router.RouteParameters[] = [
+const commonPages = [
   { path: '/', component: HomePage },
   {
     path: '/intro', //
     component: IntroPage,
   },
+];
+
+const userPages = [
   {
     path: '/users/sign_up',
     component: SignUpPage,
@@ -32,8 +39,21 @@ const routes: Router.RouteParameters[] = [
   },
   { path: '/mypage', component: MyPage },
   { path: '/users/edit-profile', component: EditProfilePage },
-  { path: '/items', component: ItemIndexPage },
-  { path: '/items/:id', component: ItemShowPage },
+  { path: '/users/change-password', component: ChangePassword },
+];
+
+const productPages = [
+  { path: '/products', component: ProductsOnCategoryPage },
+  { path: '/products/add', component: AddProductPage },
+  { path: '/products/add-info', component: AddProductInfoPage },
+  { path: '/products/:id', component: ProductDetailPage, },
+];
+
+const routes: Router.RouteParameters[] = [
+  ...commonPages,
+  ...userPages,
+  ...productPages,
+
   { path: '/posts', component: PostIndexPage },
   { path: '/posts/new', component: PostNewPage },
   { path: '/posts/:id', component: PostShowPage },

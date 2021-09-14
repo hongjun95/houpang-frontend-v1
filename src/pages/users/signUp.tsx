@@ -8,21 +8,9 @@ import { sleep } from '@utils';
 import { f7, List, ListInput, ListItem, Navbar, Page } from 'framework7-react';
 import { PageRouteProps } from '@constants';
 import { signupAPI } from '@api';
+import { Language, SignUpInput } from '@interfaces/user.interface';
 
-type Language = 'Korean' | 'English';
-
-interface SignUpInput {
-  email: string;
-  username: string;
-  password: string;
-  verifyPassword: string;
-  language: Language;
-  phoneNumber: string;
-  address: string;
-  bio?: string;
-}
-
-const SignUpSchema = Yup.object().shape({
+const SignUpSchema: Yup.SchemaOf<SignUpInput> = Yup.object().shape({
   username: Yup.string() //
     .required('필수 입력사항 입니다'),
   email: Yup.string() //
@@ -49,6 +37,7 @@ const SignUpSchema = Yup.object().shape({
       message: "'-'를 포함한 전하번호 11자리를 입력하세요.",
     })
     .required('필수 입력사항 입니다'),
+  bio: Yup.string().optional(),
 });
 
 const SignUpPage = ({ f7router }: PageRouteProps) => {
@@ -58,7 +47,7 @@ const SignUpPage = ({ f7router }: PageRouteProps) => {
     email: '',
     password: '',
     verifyPassword: '',
-    language: 'Korean',
+    language: Language.Korean,
     address: '',
     phoneNumber: '',
     bio: '',

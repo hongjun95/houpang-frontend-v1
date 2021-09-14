@@ -1,5 +1,5 @@
 import { Category } from './category.interface';
-import { CoreEntity } from './core.interface';
+import { CoreEntity, CoreOutput } from './core.interface';
 import { OrderItem } from './order.interface';
 import { Review } from './review.interface';
 import { User } from './user.interface';
@@ -19,4 +19,29 @@ export interface Product extends CoreEntity {
   info?: InfoItem[];
   orderItems: OrderItem[];
   reviews: Review[];
+}
+
+export interface AddProductInput {
+  name: string;
+  price: number;
+  stock: number;
+  categoryName: string;
+  images: string[];
+  info: Array<InfoItem>;
+}
+
+export interface AddProductOutput extends CoreOutput {
+  product?: Product;
+}
+
+export interface AddProductForm {
+  name: string;
+  price: number;
+  stock: number;
+  categoryName: string;
+  images: Array<File>;
+}
+
+export interface AddProductInfoForm {
+  [key: string]: string;
 }

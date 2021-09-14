@@ -10,7 +10,7 @@ import { IS_PRODUCTION } from '@config';
 import capacitorApp from '@js/capacitor-app';
 import { getDevice } from '@js/framework7-custom';
 import { toast } from '@js/utils';
-import routes from '@routes';
+import routes from '@routes/index';
 
 const F7App = () => {
   const device = getDevice();

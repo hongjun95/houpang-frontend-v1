@@ -29,9 +29,24 @@ export interface User extends CoreEntity {
   reviews: Review[];
 }
 
+export interface SignUpInput {
+  email: string;
+  username: string;
+  password: string;
+  verifyPassword: string;
+  language: Language;
+  phoneNumber: string;
+  address: string;
+  bio?: string;
+}
 export interface SignUpOutput extends CoreOutput {}
 
-export interface LoginOutput extends CoreOutput {
+export interface SignInInput {
+  email: string;
+  password: string;
+}
+
+export interface SignInOutput extends CoreOutput {
   token?: string;
 }
 
@@ -43,5 +58,11 @@ export interface EditProfileInput {
   address: string;
   bio?: string;
 }
-
 export interface EditProfileOutput extends CoreOutput {}
+
+export interface ChangePasswordInput {
+  currentPassword: string;
+  newPassword: string;
+  verifyPassword: string;
+}
+export interface ChangePasswordOutput extends CoreOutput {}
