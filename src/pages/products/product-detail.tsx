@@ -9,10 +9,14 @@ import { findProductById } from '@api';
 import { formmatPrice } from '@utils/index';
 import LandingPage from '@pages/landing';
 import { addProductToShoppingList, existedProductOnShoppingList, getShoppingList, IShoppingItem } from '@store';
+import useAuth from '@hooks/useAuth';
 
 const ProductDetailPage = ({ f7route }: PageRouteProps) => {
   const [sheetOpened, setSheetOpened] = useState(false);
-  const [orderCount, setOrderCount] = useState<number>(0);
+  const [orderCount, setOrderCount] = useState<number>(1);
+  const { currentUser } = useAuth();
+
+  currentUser.id;
 
   const productId = f7route.params.id;
 
@@ -27,10 +31,11 @@ const ProductDetailPage = ({ f7route }: PageRouteProps) => {
   if (status === 'success') console.log(data.product);
 
   const onAddProductToShoppingList = () => {
-    const shoppingList = getShoppingList();
-    if (existedProductOnShoppingList(productId)) {
+    const shoppingList = getShoppingList(currentUser.id);
+    if (existedProductOnShoppingList(currentUser.id, productId)) {
       f7.dialog.alert('이미 장바구니에 있습니다.');
     } else {
+      f7.dialog.alert('장바구니에 담았습니다.');
       const shoppingItem: IShoppingItem = {
         id: productId,
         name: data.product.name,
@@ -39,7 +44,7 @@ const ProductDetailPage = ({ f7route }: PageRouteProps) => {
         orderCount: 1,
       };
       shoppingList.push({ ...shoppingItem });
-      addProductToShoppingList(shoppingList);
+      addProductToShoppingList(currentUser.id, shoppingList);
     }
   };
 
@@ -125,7 +130,7 @@ const ProductDetailPage = ({ f7route }: PageRouteProps) => {
               <button
                 className="outline-none border border-blue-600 text-blue-600 font-bold text-base tracking-normal rounded-md p-2 mr-2"
                 onClick={onAddProductToShoppingList}
-                disabled={existedProductOnShoppingList(productId)}
+                disabled={existedProductOnShoppingList(currentUser.id, productId)}
               >
                 장바구니에 담기
               </button>

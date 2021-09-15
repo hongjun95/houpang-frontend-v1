@@ -22,13 +22,14 @@ export interface IShoppingItem {
   imageUrl: string;
   orderCount: number;
 }
-export const getShoppingList = (): Array<IShoppingItem> => JSON.parse(localStorage.getItem(SHOPPING_LIST)) || [];
-export const existedProductOnShoppingList = (productId: string): boolean => {
-  const shoppingList = getShoppingList();
+export const getShoppingList = (userId: string): Array<IShoppingItem> =>
+  JSON.parse(localStorage.getItem(`${SHOPPING_LIST}-${userId}`)) || [];
+export const existedProductOnShoppingList = (userId: string, productId: string): boolean => {
+  const shoppingList = getShoppingList(userId);
   return !!shoppingList.find((item) => item.id === productId);
 };
-export const addProductToShoppingList = (shoppingList: Array<IShoppingItem>): void => {
-  localStorage.setItem(SHOPPING_LIST, JSON.stringify(shoppingList));
+export const addProductToShoppingList = (userId: string, shoppingList: Array<IShoppingItem>): void => {
+  localStorage.setItem(`${SHOPPING_LIST}-${userId}`, JSON.stringify(shoppingList));
 };
 
 export default { getToken, saveToken, destroyToken };
