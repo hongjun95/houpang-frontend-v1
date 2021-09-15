@@ -24,14 +24,8 @@ import { formmatPrice } from '@utils/index';
 import LandingPage from '@pages/landing';
 import { addProductToShoppingList, getShoppingList } from '@store';
 
-interface IOrderCount {
-  id: string;
-  count: number;
-}
-
 const ShoppingListPage = ({ f7route }) => {
   const shoppingList = getShoppingList();
-
   const onClickOrderCount = (e, id: string) => {
     shoppingList.forEach((item) => {
       if (item.id == id) {
@@ -39,6 +33,26 @@ const ShoppingListPage = ({ f7route }) => {
       }
     });
     addProductToShoppingList(shoppingList);
+  };
+
+  const [items, setItems] = useState([]);
+  const onItemChange = (e) => {
+    const name = e.target.name;
+
+    if (e.target.checked) {
+      items.push(name);
+    } else {
+      items.splice(items.indexOf(name), 1);
+    }
+    setItems([...items]);
+  };
+  const onItemsChange = () => {
+    if (items.length === 1 || items.length === 0) {
+      const checkedNames = shoppingList.map((item) => `item-${item.id}`);
+      setItems(checkedNames);
+    } else if (items.length === shoppingList.length) {
+      setItems([]);
+    }
   };
 
   return (
@@ -61,7 +75,12 @@ const ShoppingListPage = ({ f7route }) => {
               <img src={item.imageUrl} alt="" className="w-1/4 mr-4" />
               <div>
                 <div className="flex mb-4">
-                  <Checkbox name={`item-${item.id}`} className="mr-2"></Checkbox>
+                  <Checkbox
+                    name={`item-${item.id}`}
+                    className="mr-2"
+                    checked={items.indexOf(`item-${item.id}`) >= 0}
+                    onChange={onItemChange}
+                  ></Checkbox>
                   <div className="font-bold">{item.name}</div>
                 </div>
                 <div className="mb-4">
@@ -80,9 +99,14 @@ const ShoppingListPage = ({ f7route }) => {
             </div>
           </div>
         ))}
-
       <div className="flex fixed bottom-2 border-t-2 botder-gray-600 w-full p-2 bg-white">
-        <i className="f7-icons m-3 text-gray-500">heart</i>
+        <Checkbox
+          name="buy-all"
+          className="mr-2"
+          checked={items.length === shoppingList.length}
+          onChange={onItemsChange}
+        ></Checkbox>
+        <div>Price</div>
         <button
           className="border mr-4 bg-blue-600 text-white font-bold text-base tracking-normal  rounded-md actions-open"
           data-actions="#buy"
@@ -90,14 +114,6 @@ const ShoppingListPage = ({ f7route }) => {
           구매하기
         </button>
       </div>
-      <Actions id="buy">
-        <ActionsGroup>
-          <ActionsLabel>옵션 선택</ActionsLabel>
-          <ActionsButton bold>Button 1</ActionsButton>
-          <ActionsButton>Button 2</ActionsButton>
-          <ActionsButton color="red">Cancel</ActionsButton>
-        </ActionsGroup>
-      </Actions>
     </Page>
   );
 };
