@@ -33,6 +33,11 @@ export const productStockAtom = atom<number>({
 });
 
 export const productImgFilesAtom = atom<File[]>({
-  key: 'productImgFileAtom',
+  key: 'productImgFilesAtom',
+  default: [],
+});
+
+export const orderListAtom = atom({
+  key: 'orderListAtom',
   default: [],
 });
