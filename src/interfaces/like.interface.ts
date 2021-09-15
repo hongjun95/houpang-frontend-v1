@@ -7,7 +7,16 @@ export interface Like extends CoreEntity {
   products: Product[];
 }
 
+export interface FindLikeListOutput extends CoreOutput {
+  likeList?: Like;
+}
+
 export interface LikeProductInput {
   productId: string;
 }
 export interface LikeProductOutput extends CoreOutput {}
+
+export interface UnlikeProductInput {
+  productId: string;
+}
+export interface UnlikeProductOutput extends CoreOutput {}

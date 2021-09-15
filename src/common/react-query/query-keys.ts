@@ -6,3 +6,9 @@ export const productKeys = {
   details: () => [...productKeys.all, 'detail'] as const,
   detail: (id: string) => [...productKeys.details(), id] as const,
 };
+
+export const likeKeys = {
+  all: ['likeLists'] as const,
+  details: () => [...likeKeys.all, 'detail'] as const,
+  detail: (id: string) => [...likeKeys.details(), id] as const,
+};

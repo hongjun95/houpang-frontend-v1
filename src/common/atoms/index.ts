@@ -1,5 +1,6 @@
 import { atom } from 'recoil';
 import { AuthState } from '@constants';
+import { FindLikeListOutput, Like } from '@interfaces/like.interface';
 
 const initialAuthState: AuthState = {
   token: null,
@@ -40,4 +41,15 @@ export const productImgFilesAtom = atom<File[]>({
 export const orderListAtom = atom({
   key: 'orderListAtom',
   default: [],
+});
+
+export const likeListAtom = atom<Like>({
+  key: 'likeListAtom',
+  default: {
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    createdBy: null,
+    id: '',
+    products: [],
+  },
 });

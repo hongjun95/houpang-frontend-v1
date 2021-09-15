@@ -74,15 +74,16 @@ const ShoppingListPage = ({ f7router }: PageRouteProps) => {
     <Page noToolbar className="min-h-screen">
       <Navbar title="장바구니" backLink={true}></Navbar>
       <Toolbar top>
-        {/* <Link tabLink="#view-shopping-list" tabLinkActive icon="las la-home" text="일반구매" /> */}
-        {/* <Link tabLink="#view-users" icon="las la-address-book" text="찜한상품" /> */}
-        <Link href="/" className="font-bold flex px-6 py-4 text-base">
+        <div></div>
+        <Link href="/shopping-list" className="font-bold flex px-6 py-4 text-base">
           일반구매
         </Link>
+        <Link href="/like-list" className="font-bold flex px-6 py-4 text-base">
+          찜한상품
+        </Link>
+        <div></div>
       </Toolbar>
 
-      {/* <View id="view-shopping-list" stackPages name="items" tab url="/shopping-list" /> */}
-      {/* <View id="view-items" stackPages name="items" tab url="/items?is_main=true/" /> */}
       {shoppingList &&
         shoppingList.map((item) => (
           <div className="pb-2 border-b border-gray-400 mx-2 my-4" key={item.id}>

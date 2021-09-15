@@ -15,9 +15,11 @@ import ProductDetailPage from '@pages/products/product-detail';
 import AddProductPage from '@pages/products/add-product';
 import AddProductInfoPage from '@pages/products/add-product-info';
 
+import Order from '@pages/orders/order';
+
 import ShoppingListPage from '@pages/shopping-lists/shopping-list';
 
-import Order from '@pages/orders/order';
+import LikeListPage from '@pages/likes/like-list';
 
 import PostIndexPage from '@pages/posts/index';
 import PostShowPage from '@pages/posts/show';
@@ -53,15 +55,18 @@ const productPages = [
   { path: '/products/:id', component: ProductDetailPage },
 ];
 
-const shoppingListPages = [{ path: '/shopping-list', component: ShoppingListPage }];
-
 const orderPages = [{ path: '/order', component: Order }];
+
+const listPages = [
+  { path: '/shopping-list', component: ShoppingListPage },
+  { path: '/like-list', component: LikeListPage },
+];
 
 const routes: Router.RouteParameters[] = [
   ...commonPages,
   ...userPages,
   ...productPages,
-  ...shoppingListPages,
+  ...listPages,
   ...orderPages,
 
   { path: '/posts', component: PostIndexPage },

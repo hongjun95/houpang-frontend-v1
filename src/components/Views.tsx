@@ -6,10 +6,17 @@ import useAuth from '@hooks/useAuth';
 import LandingPage from '@pages/landing';
 import { destroyToken, getToken } from '@store';
 import { sleep } from '@utils/index';
+import { useQuery } from 'react-query';
+import { likeKeys } from '@reactQuery/query-keys';
+import { FindLikeListOutput, Like } from '@interfaces/like.interface';
+import { findLikeList } from '@api';
+import { useSetRecoilState } from 'recoil';
+import { likeListAtom } from '@atoms';
 
 const F7Views = () => {
-  const [isLoading, setIsLoading] = useState<boolean>(true);
   const { currentUser, isAuthenticated, authenticateUser, unAuthenticateUser } = useAuth();
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const setLikeList = useSetRecoilState<Like>(likeListAtom);
 
   const logoutHandler = useCallback(async () => {
     unAuthenticateUser();
@@ -30,6 +37,11 @@ const F7Views = () => {
       }
     })();
   }, []);
+
+  const { data, status } = useQuery<FindLikeListOutput, Error>(likeKeys.detail(currentUser?.id), findLikeList);
+  if (status === 'success') {
+    setLikeList(data.likeList);
+  }
 
   if (isLoading) {
     return <LandingPage />;

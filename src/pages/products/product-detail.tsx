@@ -2,21 +2,24 @@ import React, { useState } from 'react';
 import { f7, Navbar, Page, Sheet, Stepper, Swiper, SwiperSlide } from 'framework7-react';
 import { useQuery } from 'react-query';
 
-import { PageRouteProps, SHOPPING_LIST } from '@constants';
+import { PageRouteProps } from '@constants';
 import { FindProductByIdOutput } from '@interfaces/product.interface';
 import { productKeys } from '@reactQuery/query-keys';
-import { findProductById, likeProductAPI } from '@api';
+import { findProductById, likeProductAPI, unlikeProductAPI } from '@api';
 import { formmatPrice } from '@utils/index';
 import LandingPage from '@pages/landing';
 import { addProductToShoppingList, existedProductOnShoppingList, getShoppingList, IShoppingItem } from '@store';
 import useAuth from '@hooks/useAuth';
+import { Like } from '@interfaces/like.interface';
+import { useRecoilState } from 'recoil';
+import { likeListAtom } from '@atoms';
 
 const ProductDetailPage = ({ f7route }: PageRouteProps) => {
   const [sheetOpened, setSheetOpened] = useState(false);
+  const [like, setLike] = useState(false);
+  const [likeList, setLikeList] = useRecoilState<Like>(likeListAtom);
   const [orderCount, setOrderCount] = useState<number>(1);
   const { currentUser } = useAuth();
-
-  currentUser.id;
 
   const productId = f7route.params.id;
 
@@ -27,8 +30,6 @@ const ProductDetailPage = ({ f7route }: PageRouteProps) => {
       enabled: !!productId,
     },
   );
-
-  if (status === 'success') console.log(data.product);
 
   const onAddProductToShoppingList = () => {
     const shoppingList = getShoppingList(currentUser.id);
@@ -48,13 +49,39 @@ const ProductDetailPage = ({ f7route }: PageRouteProps) => {
     }
   };
 
-  const likeProduct = async () => {
+  const likeProduct = async (e) => {
     f7.dialog.preloader('잠시만 기다려주세요...');
+    setLike(true);
+    setLikeList((prev) => ({
+      ...prev,
+      products: [...prev.products, { ...data.product }],
+    }));
     try {
       const { ok, error } = await likeProductAPI({ productId });
 
       if (ok) {
         f7.dialog.alert('찜 했습니다.');
+      } else {
+        f7.dialog.alert(error);
+      }
+      f7.dialog.close();
+    } catch (error) {
+      f7.dialog.close();
+      f7.dialog.alert(error?.response?.data || error?.message);
+    }
+  };
+  const unlikeProduct = async (e) => {
+    f7.dialog.preloader('잠시만 기다려주세요...');
+    setLike(false);
+    setLikeList((prev) => ({
+      ...prev,
+      products: [...prev.products.filter((product) => product.id !== productId)],
+    }));
+    try {
+      const { ok, error } = await unlikeProductAPI({ productId });
+
+      if (ok) {
+        f7.dialog.alert('취소 했습니다.');
       } else {
         f7.dialog.alert(error);
       }
@@ -113,10 +140,16 @@ const ProductDetailPage = ({ f7route }: PageRouteProps) => {
           {/* heart_fill */}
           <div className="Review__sector pb-20">Review sector</div>
           <div className="flex fixed bottom-0 border-t-2 botder-gray-600 w-full p-2 bg-white">
-            
-            <i className="f7-icons cursor-pointer m-3 text-gray-500" onClick={likeProduct}>
-              heart
-            </i>
+            {like || likeList.products.find((product) => product.id === productId) ? (
+              <i className="f7-icons cursor-pointer m-3 text-red-500" onClick={unlikeProduct}>
+                heart_fill
+              </i>
+            ) : (
+              <i className="f7-icons cursor-pointer m-3 text-gray-500" onClick={likeProduct}>
+                heart
+              </i>
+            )}
+
             <button
               className="sheet-open border-none focus:outline-none mr-4 bg-blue-600 text-white font-bold text-base tracking-normal  rounded-md actions-open"
               data-sheet=".buy"
