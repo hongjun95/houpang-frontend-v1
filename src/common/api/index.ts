@@ -1,4 +1,5 @@
 import { Token } from '@constants';
+import { LikeProductInput, LikeProductOutput } from '@interfaces/like.interface';
 import { CreateOrderInput, CreateOrderOutput } from '@interfaces/order.interface';
 import {
   AddProductInput,
@@ -168,7 +169,19 @@ export const createOrderAPI = async (data: CreateOrderInput): Promise<CreateOrde
   let response: AxiosResponse<CreateOrderOutput>;
   try {
     response = await API.post<CreateOrderOutput>('/orders', data);
-    console.log(response);
+  } catch (error) {
+    console.error(error);
+  }
+  const result = response.data;
+  return result;
+};
+
+// like api
+
+export const likeProductAPI = async ({ productId }: LikeProductInput): Promise<LikeProductOutput> => {
+  let response: AxiosResponse<LikeProductOutput>;
+  try {
+    response = await API.put<LikeProductOutput>(`/likes/products/${productId}/add`);
   } catch (error) {
     console.error(error);
   }
