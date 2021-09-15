@@ -25,6 +25,8 @@ import LandingPage from '@pages/landing';
 import { addProductToShoppingList, getShoppingList } from '@store';
 
 const ShoppingListPage = ({ f7route }) => {
+  const [items, setItems] = useState([]);
+  const [totalPrice, setTotalPrice] = useState(0);
   const shoppingList = getShoppingList();
   const onClickOrderCount = (e, id: string) => {
     shoppingList.forEach((item) => {
@@ -35,23 +37,44 @@ const ShoppingListPage = ({ f7route }) => {
     addProductToShoppingList(shoppingList);
   };
 
-  const [items, setItems] = useState([]);
-  const onItemChange = (e) => {
-    const name = e.target.name;
+  const plusTotalPrice = (name: string) => {
+    shoppingList.forEach((item) => {
+      if (item.id === name) {
+        setTotalPrice((prev) => prev + item.price);
+      }
+    });
+  };
+  const minusTotalPrice = (name: string) => {
+    shoppingList.forEach((item) => {
+      if (item.id === name) {
+        setTotalPrice((prev) => prev - item.price);
+      }
+    });
+  };
 
+  const onItemChange = (e: any) => {
+    const name = e.target.name;
     if (e.target.checked) {
       items.push(name);
+      plusTotalPrice(name);
     } else {
       items.splice(items.indexOf(name), 1);
+      minusTotalPrice(name);
     }
-    setItems([...items]);
+    setItems(items);
   };
   const onItemsChange = () => {
-    if (items.length === 1 || items.length === 0) {
-      const checkedNames = shoppingList.map((item) => `item-${item.id}`);
+    if (items.length < shoppingList.length) {
+      const checkedNames = shoppingList.map((item) => item.id);
       setItems(checkedNames);
+      let total: number = 0;
+      shoppingList.forEach((item) => {
+        total += item.price;
+      });
+      setTotalPrice(total);
     } else if (items.length === shoppingList.length) {
       setItems([]);
+      setTotalPrice(0);
     }
   };
 
@@ -76,9 +99,9 @@ const ShoppingListPage = ({ f7route }) => {
               <div>
                 <div className="flex mb-4">
                   <Checkbox
-                    name={`item-${item.id}`}
+                    name={item.id}
                     className="mr-2"
-                    checked={items.indexOf(`item-${item.id}`) >= 0}
+                    checked={items.indexOf(item.id) >= 0}
                     onChange={onItemChange}
                   ></Checkbox>
                   <div className="font-bold">{item.name}</div>
@@ -99,19 +122,40 @@ const ShoppingListPage = ({ f7route }) => {
             </div>
           </div>
         ))}
-      <div className="flex fixed bottom-2 border-t-2 botder-gray-600 w-full p-2 bg-white">
-        <Checkbox
+      <div className="flex fixed bottom-0 border-t-2 botder-gray-600 w-full bg-white">
+        {/* <Checkbox
           name="buy-all"
-          className="mr-2"
+          className="mr-2 w-10"
           checked={items.length === shoppingList.length}
           onChange={onItemsChange}
-        ></Checkbox>
-        <div>Price</div>
+          value="전체"
+        >
+          전체
+        </Checkbox> */}
+        <div className="ml-4 mr-2 flex-1 flex justify-between items-center w-full">
+          <label className="flex flex-col items-center checkbox">
+            <input
+              type="checkbox"
+              name="buy-all"
+              value="전체"
+              onChange={onItemsChange}
+              checked={items.length === shoppingList.length}
+            />
+            <i className="icon-checkbox mb-1"></i>
+            <span>전체</span>
+          </label>
+          <div>
+            <span>합계: </span>
+            <span className="font-bold">{formmatPrice(totalPrice)}</span>
+            <span>원</span>
+          </div>
+        </div>
         <button
-          className="border mr-4 bg-blue-600 text-white font-bold text-base tracking-normal  rounded-md actions-open"
+          className="flex-1 py-4 border bg-blue-600 text-white font-bold text-base tracking-normal actions-open"
           data-actions="#buy"
         >
-          구매하기
+          <span>구매하기 </span>
+          <span>({items.length})</span>
         </button>
       </div>
     </Page>
