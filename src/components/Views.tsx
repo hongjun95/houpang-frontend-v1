@@ -6,6 +6,10 @@ import useAuth from '@hooks/useAuth';
 import LandingPage from '@pages/landing';
 import { destroyToken, getToken } from '@store';
 import { sleep } from '@utils/index';
+import { useQuery } from 'react-query';
+import { likeKeys } from '@reactQuery/query-keys';
+import { FindLikeListOutput } from '@interfaces/like.interface';
+import { findLikeList } from '@api';
 
 const F7Views = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -30,6 +34,8 @@ const F7Views = () => {
       }
     })();
   }, []);
+
+  useQuery<FindLikeListOutput, Error>(likeKeys.detail(currentUser?.id), findLikeList);
 
   if (isLoading) {
     return <LandingPage />;

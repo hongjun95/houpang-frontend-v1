@@ -11,3 +11,7 @@ export interface LikeProductInput {
   productId: string;
 }
 export interface LikeProductOutput extends CoreOutput {}
+
+export interface FindLikeListOutput extends CoreOutput {
+  likeList?: Like;
+}

@@ -1,5 +1,5 @@
 import { Token } from '@constants';
-import { LikeProductInput, LikeProductOutput } from '@interfaces/like.interface';
+import { FindLikeListOutput, LikeProductInput, LikeProductOutput } from '@interfaces/like.interface';
 import { CreateOrderInput, CreateOrderOutput } from '@interfaces/order.interface';
 import {
   AddProductInput,
@@ -177,6 +177,17 @@ export const createOrderAPI = async (data: CreateOrderInput): Promise<CreateOrde
 };
 
 // like api
+
+export const findLikeList = async (): Promise<FindLikeListOutput> => {
+  let response: AxiosResponse<FindLikeListOutput>;
+  try {
+    response = await API.get<FindLikeListOutput>('/likes');
+  } catch (error) {
+    console.error(error);
+  }
+  const result = response.data;
+  return result;
+};
 
 export const likeProductAPI = async ({ productId }: LikeProductInput): Promise<LikeProductOutput> => {
   let response: AxiosResponse<LikeProductOutput>;
