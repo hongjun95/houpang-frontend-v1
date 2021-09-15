@@ -1,4 +1,4 @@
-import { CoreEntity } from './core.interface';
+import { CoreEntity, CoreOutput } from './core.interface';
 import { Product } from './product.interface';
 import { User } from './user.interface';
 
@@ -21,4 +21,21 @@ export interface OrderItem extends CoreEntity {
   order: Order;
   product: Product;
   count: number;
+}
+
+export interface OrderForm {
+  deliverRequest?: string;
+}
+
+export interface CreateOrderItemInput {
+  productId: string;
+  count: number;
+}
+export interface CreateOrderInput {
+  createOrderItems: CreateOrderItemInput[];
+  destination: string;
+  deliverRequest: string;
+}
+export interface CreateOrderOutput extends CoreOutput {
+  orderId?: string;
 }

@@ -1,4 +1,5 @@
 import { Token } from '@constants';
+import { CreateOrderInput, CreateOrderOutput } from '@interfaces/order.interface';
 import {
   AddProductInput,
   AddProductOutput,
@@ -160,6 +161,22 @@ export const uploadImages = async (data) => {
   const result = response.data;
   return result;
 };
+
+// order api
+
+export const createOrderAPI = async (data: CreateOrderInput): Promise<CreateOrderOutput> => {
+  let response: AxiosResponse<CreateOrderOutput>;
+  try {
+    response = await API.post<CreateOrderOutput>('/orders', data);
+    console.log(response);
+  } catch (error) {
+    console.error(error);
+  }
+  const result = response.data;
+  return result;
+};
+
+// post api
 
 export const getPosts = () => async (params = null) => {
   const { data } = await API.get('/posts', { params });
