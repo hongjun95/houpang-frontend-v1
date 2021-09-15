@@ -1,30 +1,10 @@
 import React, { useState } from 'react';
-import {
-  Actions,
-  ActionsButton,
-  ActionsGroup,
-  ActionsLabel,
-  Checkbox,
-  Link,
-  Navbar,
-  Page,
-  Stepper,
-  Swiper,
-  SwiperSlide,
-  Toolbar,
-  View,
-  Views,
-} from 'framework7-react';
-import { useQuery } from 'react-query';
+import { Checkbox, Link, Navbar, Page, Stepper, Toolbar } from 'framework7-react';
 
-import { FindProductByIdOutput } from '@interfaces/product.interface';
-import { productKeys } from '@reactQuery/query-keys';
-import { findProductById } from '@api';
 import { formmatPrice } from '@utils/index';
-import LandingPage from '@pages/landing';
 import { addProductToShoppingList, getShoppingList } from '@store';
 
-const ShoppingListPage = ({ f7route }) => {
+const ShoppingListPage = () => {
   const [items, setItems] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
   const shoppingList = getShoppingList();
@@ -123,15 +103,6 @@ const ShoppingListPage = ({ f7route }) => {
           </div>
         ))}
       <div className="flex fixed bottom-0 border-t-2 botder-gray-600 w-full bg-white">
-        {/* <Checkbox
-          name="buy-all"
-          className="mr-2 w-10"
-          checked={items.length === shoppingList.length}
-          onChange={onItemsChange}
-          value="전체"
-        >
-          전체
-        </Checkbox> */}
         <div className="ml-4 mr-2 flex-1 flex justify-between items-center w-full">
           <label className="flex flex-col items-center checkbox">
             <input
