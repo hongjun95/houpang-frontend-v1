@@ -109,7 +109,7 @@ const ProductsOnCategoryPage = ({ f7route, f7router }) => {
       <Navbar backLink={!is_main}>
         <NavTitle>{categoryName || '쇼핑'}</NavTitle>
         <NavRight>
-          <Link href="/line_items" iconF7="cart" iconBadge={3} badgeColor="red" />
+          <Link href="/shopping-list" iconF7="cart" iconBadge={3} badgeColor="red" />
         </NavRight>
       </Navbar>
 

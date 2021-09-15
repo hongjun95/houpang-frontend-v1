@@ -1,26 +1,19 @@
-import React from 'react';
-import {
-  Actions,
-  ActionsButton,
-  ActionsGroup,
-  ActionsLabel,
-  Block,
-  Button,
-  Navbar,
-  Page,
-  Swiper,
-  SwiperSlide,
-} from 'framework7-react';
+import React, { useState } from 'react';
+import { f7, Navbar, Page, Sheet, Stepper, Swiper, SwiperSlide } from 'framework7-react';
 import { useQuery } from 'react-query';
 
-import { DetailPageProps } from '@constants';
+import { PageRouteProps, SHOPPING_LIST } from '@constants';
 import { FindProductByIdOutput } from '@interfaces/product.interface';
 import { productKeys } from '@reactQuery/query-keys';
 import { findProductById } from '@api';
 import { formmatPrice } from '@utils/index';
 import LandingPage from '@pages/landing';
+import { addProductToShoppingList, existedProductOnShoppingList, getShoppingList, IShoppingItem } from '@store';
 
-const ProductDetailPage = ({ f7route, f7router, productQeuryKey }: DetailPageProps) => {
+const ProductDetailPage = ({ f7route }: PageRouteProps) => {
+  const [sheetOpened, setSheetOpened] = useState(false);
+  const [orderCount, setOrderCount] = useState<number>(0);
+
   const productId = f7route.params.id;
 
   const { data, status } = useQuery<FindProductByIdOutput, Error>(
@@ -32,6 +25,23 @@ const ProductDetailPage = ({ f7route, f7router, productQeuryKey }: DetailPagePro
   );
 
   if (status === 'success') console.log(data.product);
+
+  const onAddProductToShoppingList = () => {
+    const shoppingList = getShoppingList();
+    if (existedProductOnShoppingList(productId)) {
+      f7.dialog.alert('이미 장바구니에 있습니다.');
+    } else {
+      const shoppingItem: IShoppingItem = {
+        id: productId,
+        name: data.product.name,
+        price: data.product.price,
+        imageUrl: data.product.images[0],
+        orderCount: 1,
+      };
+      shoppingList.push({ ...shoppingItem });
+      addProductToShoppingList(shoppingList);
+    }
+  };
 
   return (
     <Page noToolbar className="min-h-screen">
@@ -58,17 +68,6 @@ const ProductDetailPage = ({ f7route, f7router, productQeuryKey }: DetailPagePro
               <div className="text-center">review stars (review number)</div>
             </div>
             <h1 className="text-xl my-4">{data.product.name}</h1>
-            {/* <button className="actions-open border border-gray-500 rounded-sm" data-actions="#product-info">
-              One Group
-            </button>
-            <Actions id="product-info">
-              <ActionsGroup>
-                <ActionsLabel>옵션 선택</ActionsLabel>
-                <ActionsButton bold>Button 1</ActionsButton>
-                <ActionsButton>Button 2</ActionsButton>
-                <ActionsButton color="red">Cancel</ActionsButton>
-              </ActionsGroup>
-            </Actions> */}
             <div className="text-red-700 text-xl font-bold">{formmatPrice(data.product.price)}원</div>
           </div>
           <div className="w-full h-3 bg-gray-300"></div>
@@ -93,20 +92,48 @@ const ProductDetailPage = ({ f7route, f7router, productQeuryKey }: DetailPagePro
           <div className="flex fixed bottom-2 border-t-2 botder-gray-600 w-full p-2 bg-white">
             <i className="f7-icons m-3 text-gray-500">heart</i>
             <button
-              className="border mr-4 bg-blue-600 text-white font-bold text-base tracking-normal  rounded-md actions-open"
-              data-actions="#buy"
+              className="sheet-open border mr-4 bg-blue-600 text-white font-bold text-base tracking-normal  rounded-md actions-open"
+              data-sheet=".buy"
             >
               구매하기
             </button>
           </div>
-          <Actions id="buy">
-            <ActionsGroup>
-              <ActionsLabel>옵션 선택</ActionsLabel>
-              <ActionsButton bold>Button 1</ActionsButton>
-              <ActionsButton>Button 2</ActionsButton>
-              <ActionsButton color="red">Cancel</ActionsButton>
-            </ActionsGroup>
-          </Actions>
+          {/* <Toolbar>
+            <div>
+              <Icon f7="heart" className="text-red-500" size="20px" />
+            </div>
+            <Button fill sheetOpen=".buy-option" className="w-11/12">
+              구매하기
+            </Button>
+          </Toolbar> */}
+          <Sheet
+            className="buy p-2 h-52"
+            opened={sheetOpened}
+            closeByOutsideClick
+            onSheetClosed={() => {
+              setSheetOpened(false);
+            }}
+          >
+            <h3 className="text-lg font-bold mt-2">{data.product.name}</h3>
+            <div className="text-red-700 text-sm font-bold my-2">{formmatPrice(data.product.price)}원</div>
+            <Stepper
+              value={orderCount}
+              onStepperChange={setOrderCount}
+              className="my-4 text-gray-300 border-gray-200"
+            />
+            <div className="flex">
+              <button
+                className="outline-none border border-blue-600 text-blue-600 font-bold text-base tracking-normal rounded-md p-2 mr-2"
+                onClick={onAddProductToShoppingList}
+                disabled={existedProductOnShoppingList(productId)}
+              >
+                장바구니에 담기
+              </button>
+              <button className="outline-none border bg-blue-600 text-white font-bold text-base tracking-normal rounded-md p-2 ml-2">
+                바로구매
+              </button>
+            </div>
+          </Sheet>
         </>
       ) : (
         <LandingPage />
@@ -115,4 +142,4 @@ const ProductDetailPage = ({ f7route, f7router, productQeuryKey }: DetailPagePro
   );
 };
 
-export default ProductDetailPage;
+export default React.memo(ProductDetailPage);

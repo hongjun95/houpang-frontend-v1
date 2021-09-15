@@ -15,6 +15,8 @@ import ProductDetailPage from '@pages/products/product-detail';
 import AddProductPage from '@pages/products/add-product';
 import AddProductInfoPage from '@pages/products/add-product-info';
 
+import ShoppingListPage from '@pages/shopping-lists/shopping-list';
+
 import PostIndexPage from '@pages/posts/index';
 import PostShowPage from '@pages/posts/show';
 import PostNewPage from '@pages/posts/new';
@@ -46,13 +48,16 @@ const productPages = [
   { path: '/products', component: ProductsOnCategoryPage },
   { path: '/products/add', component: AddProductPage },
   { path: '/products/add-info', component: AddProductInfoPage },
-  { path: '/products/:id', component: ProductDetailPage, },
+  { path: '/products/:id', component: ProductDetailPage },
 ];
+
+const shoppingListPages = [{ path: '/shopping-list', component: ShoppingListPage }];
 
 const routes: Router.RouteParameters[] = [
   ...commonPages,
   ...userPages,
   ...productPages,
+  ...shoppingListPages,
 
   { path: '/posts', component: PostIndexPage },
   { path: '/posts/new', component: PostNewPage },

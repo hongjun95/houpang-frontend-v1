@@ -8,6 +8,7 @@ export * from './schema';
 /** 리터럴 혹은 불변 객체 */
 export const TOKEN_KEY = `${packageJson.name}_TOKEN`;
 export const CSRF_KEY = `${packageJson.name}_CSRF`;
+export const SHOPPING_LIST = `${packageJson.name}_SHOPPING_LIST`;
 
 export const ACTIONS = {
   NEW: 'new',
@@ -38,10 +39,6 @@ export interface TokenPayload {
 export interface PageRouteProps {
   f7route: Router.Route;
   f7router: Router.Router;
-}
-
-export interface DetailPageProps extends PageRouteProps {
-  productQeuryKey: Array<string>;
 }
 
 export interface Address {
