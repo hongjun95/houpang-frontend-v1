@@ -17,6 +17,8 @@ import AddProductInfoPage from '@pages/products/add-product-info';
 
 import ShoppingListPage from '@pages/shopping-lists/shopping-list';
 
+import Order from '@pages/orders/order';
+
 import PostIndexPage from '@pages/posts/index';
 import PostShowPage from '@pages/posts/show';
 import PostNewPage from '@pages/posts/new';
@@ -53,11 +55,14 @@ const productPages = [
 
 const shoppingListPages = [{ path: '/shopping-list', component: ShoppingListPage }];
 
+const orderPages = [{ path: '/order', component: Order }];
+
 const routes: Router.RouteParameters[] = [
   ...commonPages,
   ...userPages,
   ...productPages,
   ...shoppingListPages,
+  ...orderPages,
 
   { path: '/posts', component: PostIndexPage },
   { path: '/posts/new', component: PostNewPage },

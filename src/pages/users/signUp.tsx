@@ -1,11 +1,10 @@
 import React from 'react';
 import * as Yup from 'yup';
 import { Form, Formik, FormikHelpers } from 'formik';
-import i18next from 'i18next';
-
-// import useAuth from '@hooks/useAuth';
-import { sleep } from '@utils';
 import { f7, List, ListInput, ListItem, Navbar, Page } from 'framework7-react';
+
+import i18next from 'i18next';
+import { sleep } from '@utils';
 import { PageRouteProps } from '@constants';
 import { signupAPI } from '@api';
 import { Language, SignUpInput } from '@interfaces/user.interface';

@@ -15,7 +15,7 @@ const SignInSchema: Yup.SchemaOf<SignInInput> = Yup.object().shape({
     .required('필수 입력사항 입니다'),
   password: Yup.string()
     .min(8, '길이가 너무 짧습니다')
-    .max(50, '길이가 너무 깁니다')
+    .max(20, '길이가 너무 깁니다')
     .matches(/(?=.*[!@#$%^&\*\(\)_\+\-=\[\]\{\};\':\"\\\|,\.<>\/\?]+)(?=.*[a-zA-Z]+)(?=.*\d+)/, {
       message: '비밀번호는 문자, 숫자, 특수문자를 1개 이상 포함해야 합니다.',
     })
@@ -33,14 +33,14 @@ const SessionNewPage = ({ f7router }: PageRouteProps) => {
       const { ok, error, token } = await loginAPI({ ...values });
       if (ok) {
         authenticateUser({ csrf: '', token });
-        f7.dialog.alert('성공적으로 로그인 하였습니다. ');
+        f7.dialog.alert('성공적으로 로그인 하였습니다.');
         f7router.navigate('/');
       } else {
         f7.dialog.alert(error);
       }
     } catch (error) {
       console.error(error);
-      f7.dialog.alert('정보를 확인 해주세요. ');
+      f7.dialog.alert('정보를 확인 해주세요.');
       setSubmitting(false);
     }
   };

@@ -9,6 +9,7 @@ export * from './schema';
 export const TOKEN_KEY = `${packageJson.name}_TOKEN`;
 export const CSRF_KEY = `${packageJson.name}_CSRF`;
 export const SHOPPING_LIST = `${packageJson.name}_SHOPPING_LIST`;
+export const DELIVERY_FEE = 2500;
 
 export const ACTIONS = {
   NEW: 'new',

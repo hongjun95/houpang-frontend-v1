@@ -3,18 +3,21 @@ import { Checkbox, Link, Navbar, Page, Stepper, Toolbar } from 'framework7-react
 
 import { formmatPrice } from '@utils/index';
 import { addProductToShoppingList, getShoppingList } from '@store';
+import { PageRouteProps } from '@constants';
+import useAuth from '@hooks/useAuth';
 
-const ShoppingListPage = () => {
+const ShoppingListPage = ({ f7router }: PageRouteProps) => {
+  const { currentUser } = useAuth();
   const [items, setItems] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
-  const shoppingList = getShoppingList();
+  const shoppingList = getShoppingList(currentUser.id);
   const onClickOrderCount = (e, id: string) => {
     shoppingList.forEach((item) => {
       if (item.id == id) {
         item.orderCount = e;
       }
     });
-    addProductToShoppingList(shoppingList);
+    addProductToShoppingList(currentUser.id, shoppingList);
   };
 
   const plusTotalPrice = (name: string) => {
@@ -56,6 +59,15 @@ const ShoppingListPage = () => {
       setItems([]);
       setTotalPrice(0);
     }
+  };
+
+  const onClickBuy = () => {
+    f7router.navigate('/order', {
+      props: {
+        items,
+        totalPrice,
+      },
+    });
   };
 
   return (
@@ -122,8 +134,8 @@ const ShoppingListPage = () => {
           </div>
         </div>
         <button
-          className="flex-1 py-4 border bg-blue-600 text-white font-bold text-base tracking-normal actions-open"
-          data-actions="#buy"
+          className="flex-1 py-4 border bg-blue-600 text-white font-bold text-base tracking-normal"
+          onClick={onClickBuy}
         >
           <span>구매하기 </span>
           <span>({items.length})</span>

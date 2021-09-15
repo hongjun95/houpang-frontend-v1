@@ -25,7 +25,7 @@ const F7App = () => {
   });
 
   const f7params = {
-    name: 'Practice React',
+    name: '후팡',
     theme: 'ios',
     id: 'com.insomenia.practice',
     routes,

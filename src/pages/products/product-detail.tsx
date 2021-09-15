@@ -5,14 +5,18 @@ import { useQuery } from 'react-query';
 import { PageRouteProps, SHOPPING_LIST } from '@constants';
 import { FindProductByIdOutput } from '@interfaces/product.interface';
 import { productKeys } from '@reactQuery/query-keys';
-import { findProductById } from '@api';
+import { findProductById, likeProductAPI } from '@api';
 import { formmatPrice } from '@utils/index';
 import LandingPage from '@pages/landing';
 import { addProductToShoppingList, existedProductOnShoppingList, getShoppingList, IShoppingItem } from '@store';
+import useAuth from '@hooks/useAuth';
 
 const ProductDetailPage = ({ f7route }: PageRouteProps) => {
   const [sheetOpened, setSheetOpened] = useState(false);
-  const [orderCount, setOrderCount] = useState<number>(0);
+  const [orderCount, setOrderCount] = useState<number>(1);
+  const { currentUser } = useAuth();
+
+  currentUser.id;
 
   const productId = f7route.params.id;
 
@@ -27,10 +31,11 @@ const ProductDetailPage = ({ f7route }: PageRouteProps) => {
   if (status === 'success') console.log(data.product);
 
   const onAddProductToShoppingList = () => {
-    const shoppingList = getShoppingList();
-    if (existedProductOnShoppingList(productId)) {
+    const shoppingList = getShoppingList(currentUser.id);
+    if (existedProductOnShoppingList(currentUser.id, productId)) {
       f7.dialog.alert('이미 장바구니에 있습니다.');
     } else {
+      f7.dialog.alert('장바구니에 담았습니다.');
       const shoppingItem: IShoppingItem = {
         id: productId,
         name: data.product.name,
@@ -39,7 +44,24 @@ const ProductDetailPage = ({ f7route }: PageRouteProps) => {
         orderCount: 1,
       };
       shoppingList.push({ ...shoppingItem });
-      addProductToShoppingList(shoppingList);
+      addProductToShoppingList(currentUser.id, shoppingList);
+    }
+  };
+
+  const likeProduct = async () => {
+    f7.dialog.preloader('잠시만 기다려주세요...');
+    try {
+      const { ok, error } = await likeProductAPI({ productId });
+
+      if (ok) {
+        f7.dialog.alert('찜 했습니다.');
+      } else {
+        f7.dialog.alert(error);
+      }
+      f7.dialog.close();
+    } catch (error) {
+      f7.dialog.close();
+      f7.dialog.alert(error?.response?.data || error?.message);
     }
   };
 
@@ -88,11 +110,15 @@ const ProductDetailPage = ({ f7route }: PageRouteProps) => {
               </tbody>
             </table>
           </div>
+          {/* heart_fill */}
           <div className="Review__sector pb-20">Review sector</div>
-          <div className="flex fixed bottom-2 border-t-2 botder-gray-600 w-full p-2 bg-white">
-            <i className="f7-icons m-3 text-gray-500">heart</i>
+          <div className="flex fixed bottom-0 border-t-2 botder-gray-600 w-full p-2 bg-white">
+            
+            <i className="f7-icons cursor-pointer m-3 text-gray-500" onClick={likeProduct}>
+              heart
+            </i>
             <button
-              className="sheet-open border mr-4 bg-blue-600 text-white font-bold text-base tracking-normal  rounded-md actions-open"
+              className="sheet-open border-none focus:outline-none mr-4 bg-blue-600 text-white font-bold text-base tracking-normal  rounded-md actions-open"
               data-sheet=".buy"
             >
               구매하기
@@ -123,13 +149,13 @@ const ProductDetailPage = ({ f7route }: PageRouteProps) => {
             />
             <div className="flex">
               <button
-                className="outline-none border border-blue-600 text-blue-600 font-bold text-base tracking-normal rounded-md p-2 mr-2"
+                className="focus:outline-none outline-none border border-blue-600 text-blue-600 font-bold text-base tracking-normal rounded-md p-2 mr-2"
                 onClick={onAddProductToShoppingList}
-                disabled={existedProductOnShoppingList(productId)}
+                // disabled={existedProductOnShoppingList(currentUser.id, productId)}
               >
                 장바구니에 담기
               </button>
-              <button className="outline-none border bg-blue-600 text-white font-bold text-base tracking-normal rounded-md p-2 ml-2">
+              <button className="outline-none border-none bg-blue-600 text-white font-bold text-base tracking-normal rounded-md p-2 ml-2">
                 바로구매
               </button>
             </div>
