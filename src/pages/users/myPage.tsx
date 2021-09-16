@@ -51,22 +51,21 @@ const MyPage = () => {
         </div>
         <div className="py-8 grid grid-flow-col auto-cols-max grid-cols-3 gap-4 text-center">
           <div className="text-center">
-            <a href="/notifications">
+            <a href="/notifications" className="flex flex-col mypage_notification">
               <i className="mb-2 las la-bell" style={{ fontSize: '42px', color: 'lightgray' }} />
-              <br />
               <span className="text-sm text-gray-600">알림</span>
             </a>
           </div>
           <div className="text-center">
-            <i className="mb-2 las la-file-invoice" style={{ fontSize: '42px', color: 'lightgray' }} />
-            <br />
-            <span className="text-sm text-gray-600">주문</span>
+            <a href="#" className="text-sm flex flex-col mypage_order">
+              <i className="mb-2 las la-file-invoice" style={{ fontSize: '42px', color: 'lightgray' }} />
+              <span className="text-sm text-gray-600">주문</span>
+            </a>
           </div>
           <div className="text-center">
-            <a href="/likes/list" className="text-sm text-gray-600">
+            <a href="/like-list" className="text-sm text-gray-600 flex flex-col mypage_like">
               <i className="mb-2 lar la-heart" style={{ fontSize: '42px', color: 'lightgray' }} />
-              <br />
-              좋아요{/* <span className="font-semibold text-gray-900">0</span> */}
+              <span className="text-sm text-gray-600">좋아요</span>
             </a>
           </div>
         </div>
