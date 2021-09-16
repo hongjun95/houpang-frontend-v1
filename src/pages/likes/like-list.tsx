@@ -45,7 +45,7 @@ const LikeListPage = ({ f7router }: PageRouteProps) => {
                 </div>
                 <div className="flex items-center">
                   <button className="w-20 font-medium border py-2 px-4 rounded-md border-gray-300">삭제</button>
-                  <button className="w-1/3 py-2 px-3 border-2 border-blue-600 text-blue-600 rounded-md ml-2">
+                  <button className="w-1/2 py-2 px-3 border-2 border-blue-600 text-blue-600 rounded-md ml-2">
                     장바구니 담기
                   </button>
                 </div>

@@ -86,31 +86,31 @@ const ShoppingListPage = ({ f7router }: PageRouteProps) => {
 
       {shoppingList &&
         shoppingList.map((item) => (
-          <div className="pb-2 border-b border-gray-400 mx-2 my-4" key={item.id}>
-            <div className="flex">
-              <img src={item.imageUrl} alt="" className="w-1/4 mr-4" />
-              <div>
-                <div className="flex mb-4">
-                  <Checkbox
-                    name={item.id}
-                    className="mr-2"
-                    checked={items.indexOf(item.id) >= 0}
-                    onChange={onItemChange}
-                  ></Checkbox>
-                  <div className="font-bold">{item.name}</div>
-                </div>
-                <div className="mb-4">
-                  <span className="font-bold text-lg">{formmatPrice(item.price)}</span>
-                  <span>원</span>
-                </div>
-                <div className="flex items-center">
-                  <button className="w-20 font-medium border py-2 px-6 rounded-md bg-gray-200">삭제</button>
-                  <Stepper
-                    value={item.orderCount}
-                    onStepperChange={(e) => onClickOrderCount(e, item.id)}
-                    className="ml-4 text-gray-300 border-gray-200"
-                  />
-                </div>
+          <div className="flex pb-2 border-b border-gray-400 mx-2 my-4" key={item.id}>
+            <div className="w-1/4 h-36 mr-4">
+              <img src={item.imageUrl} alt="" className="w-full" />
+            </div>
+            <div className="flex flex-col justify-between">
+              <div className="flex mb-4">
+                <Checkbox
+                  name={item.id}
+                  className="mr-2"
+                  checked={items.indexOf(item.id) >= 0}
+                  onChange={onItemChange}
+                ></Checkbox>
+                <div className="font-bold">{item.name}</div>
+              </div>
+              <div className="mb-4">
+                <span className="font-bold text-lg">{formmatPrice(item.price)}</span>
+                <span>원</span>
+              </div>
+              <div className="flex items-center">
+                <button className="w-20 font-medium border py-2 px-4 rounded-md border-gray-300">삭제</button>
+                <Stepper
+                  value={item.orderCount}
+                  onStepperChange={(e) => onClickOrderCount(e, item.id)}
+                  className="ml-4 text-gray-300 border-gray-200"
+                />
               </div>
             </div>
           </div>
