@@ -80,10 +80,10 @@ const ShoppingListPage = ({ f7router }: PageRouteProps) => {
       <Navbar title="장바구니" backLink={true}></Navbar>
       <Toolbar top>
         <div></div>
-        <Link href="/shopping-list" className="font-bold flex px-6 py-4 text-base">
+        <Link href="/shopping-list" className="font-bold flex px-6 py-4 text-base border-b-2 border-blue-700">
           일반구매({shoppingList.length})
         </Link>
-        <Link href="/like-list" className="font-bold flex px-6 py-4 text-base">
+        <Link href="/like-list" className="font-bold flex px-6 py-4 text-base !text-black hover:text-blue-700">
           찜한상품({likeList.products.length})
         </Link>
         <div></div>
