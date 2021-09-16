@@ -184,7 +184,7 @@ const ProductDetailPage = ({ f7route }: PageRouteProps) => {
               <button
                 className="focus:outline-none outline-none border border-blue-600 text-blue-600 font-bold text-base tracking-normal rounded-md p-2 mr-2"
                 onClick={onAddProductToShoppingList}
-                // disabled={existedProductOnShoppingList(currentUser.id, productId)}
+                disabled={existedProductOnShoppingList(currentUser.id, productId)}
               >
                 장바구니에 담기
               </button>
