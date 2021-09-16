@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Checkbox, Link, Navbar, Page, Stepper, Toolbar } from 'framework7-react';
 
 import { formmatPrice } from '@utils/index';
-import { savehoppingList, IShoppingItem } from '@store';
+import { saveShoppingList, IShoppingItem } from '@store';
 import { PageRouteProps } from '@constants';
 import useAuth from '@hooks/useAuth';
 import { useRecoilState, useRecoilValue } from 'recoil';
@@ -13,30 +13,80 @@ const ShoppingListPage = ({ f7router }: PageRouteProps) => {
   const { currentUser } = useAuth();
   const [items, setItems] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
+  const [currentPrice, setCurrentPrice] = useState(0);
   const [shoppingList, setShoppingList] = useRecoilState<Array<IShoppingItem>>(shoppingListAtom);
   const likeList = useRecoilValue<Like>(likeListAtom);
 
-  const onClickOrderCount = (e, id: string) => {
-    shoppingList.forEach((item) => {
-      if (item.id == id) {
-        item.orderCount = e;
+  const onClickOrderCount = (e: any) => {
+    const id = e.target.name;
+    const value = e.target.value;
+
+    const newShoppingList = shoppingList.map<IShoppingItem>((item) => {
+      if (item.id === id) {
+        return {
+          ...item,
+          orderCount: value,
+        };
+      } else {
+        return item;
       }
     });
-    savehoppingList(currentUser.id, shoppingList);
-    setShoppingList([...shoppingList]);
+
+    saveShoppingList(currentUser.id, newShoppingList);
+    setShoppingList([...newShoppingList]);
   };
 
-  const plusTotalPrice = (name: string) => {
+  const onSteppClickOrderCount = (value: number, id: string) => {
+    console.log(id);
+    const newShoppingList = shoppingList.map<IShoppingItem>((item) => {
+      if (item.id === id) {
+        return {
+          ...item,
+          orderCount: value,
+        };
+      } else {
+        return item;
+      }
+    });
+
+    // const item = shoppingList.find((item) => item.id === id);
+
+    // setCurrentPrice((prev) => prev + item.price);
+
+    saveShoppingList(currentUser.id, newShoppingList);
+    // setShoppingList([...newShoppingList]);
+  };
+
+  const onPlusOrderCount = (value: number, id: string) => {
+    const item = shoppingList.find((item) => item.id === id);
+
+    setCurrentPrice((prev) => prev + item.price);
+    console.log(currentPrice);
+    // plusTotalPrice(id);
+  };
+
+  const onMinusOrderCount = (e: any) => {
+    const id = e.target.name;
+
+    const item = shoppingList.find((item) => item.id === id);
+
+    setCurrentPrice((prev) => prev - item.price);
+    console.log(currentPrice);
+    // plusTotalPrice(id);
+  };
+
+  const plusTotalPrice = (id: string) => {
+    // setTotalPrice(currentPrice);
     shoppingList.forEach((item) => {
-      if (item.id === name) {
-        setTotalPrice((prev) => prev + item.price);
+      if (item.id === id) {
+        setTotalPrice((prev) => prev + item.price * item.orderCount);
       }
     });
   };
-  const minusTotalPrice = (name: string) => {
+  const minusTotalPrice = (id: string) => {
     shoppingList.forEach((item) => {
-      if (item.id === name) {
-        setTotalPrice((prev) => prev - item.price);
+      if (item.id === id) {
+        setTotalPrice((prev) => prev - item.price * item.orderCount);
       }
     });
   };
@@ -50,7 +100,7 @@ const ShoppingListPage = ({ f7router }: PageRouteProps) => {
       items.splice(items.indexOf(name), 1);
       minusTotalPrice(name);
     }
-    setItems(items);
+    setItems([...items]);
   };
   const onItemsChange = () => {
     if (items.length < shoppingList.length) {
@@ -58,7 +108,7 @@ const ShoppingListPage = ({ f7router }: PageRouteProps) => {
       setItems(checkedNames);
       let total: number = 0;
       shoppingList.forEach((item) => {
-        total += item.price;
+        total = total + item.price * item.orderCount;
       });
       setTotalPrice(total);
     } else if (items.length === shoppingList.length) {
@@ -76,9 +126,9 @@ const ShoppingListPage = ({ f7router }: PageRouteProps) => {
     });
   };
 
-  const onDeleteClick = (e, id: string) => {
+  const onDeleteClick = (e: any, id: string) => {
     const filteredShoppingList = shoppingList.filter((item) => item.id !== id);
-    savehoppingList(currentUser.id, filteredShoppingList);
+    saveShoppingList(currentUser.id, filteredShoppingList);
     setShoppingList([...filteredShoppingList]);
   };
 
@@ -109,7 +159,7 @@ const ShoppingListPage = ({ f7router }: PageRouteProps) => {
                   className="mr-2"
                   checked={items.indexOf(item.id) >= 0}
                   onChange={onItemChange}
-                ></Checkbox>
+                />
                 <div className="font-bold">{item.name}</div>
               </div>
               <div className="mb-4">
@@ -125,7 +175,12 @@ const ShoppingListPage = ({ f7router }: PageRouteProps) => {
                 </button>
                 <Stepper
                   value={item.orderCount}
-                  onStepperChange={(e) => onClickOrderCount(e, item.id)}
+                  name={item.id}
+                  onInput={onClickOrderCount}
+                  // onStepperChange={(e) => onSteppClickOrderCount(e, item.id)}
+                  // onStepperPlusClick={(e) => onPlusOrderCount(e, item.id)}
+                  // onStepperMinusClick={onMinusOrderCount}
+                  // onStepperChange={(e) => onClickOrderCount2(e, item.id)}
                   className="ml-4 text-gray-300 border-gray-200"
                 />
               </div>

@@ -2,21 +2,21 @@ import React from 'react';
 import { f7, Link, Navbar, Page, Toolbar } from 'framework7-react';
 
 import { formmatPrice } from '@utils/index';
-import { getShoppingList } from '@store';
+import { existedProductOnShoppingList, getShoppingList, IShoppingItem, saveShoppingList } from '@store';
 import { PageRouteProps } from '@constants';
 import useAuth from '@hooks/useAuth';
 import { useRecoilState } from 'recoil';
 import { Like } from '@interfaces/like.interface';
-import { likeListAtom } from '@atoms';
+import { likeListAtom, shoppingListAtom } from '@atoms';
 import { unlikeProductAPI } from '@api';
 
-const LikeListPage = ({ f7router }: PageRouteProps) => {
+const LikeListPage = () => {
   const { currentUser } = useAuth();
-  const shoppingList = getShoppingList(currentUser.id);
   const [likeList, setLikeList] = useRecoilState<Like>(likeListAtom);
+  const [shoppingList, setShoppingList] = useRecoilState<Array<IShoppingItem>>(shoppingListAtom);
+  // const shoppingList = getShoppingList(currentUser.id);
 
   const onDeleteClick = async (e, productId: string) => {
-    const filteredLikeList = likeList.products.filter((product) => product.id !== productId);
     setLikeList((prev) => ({
       ...prev,
       products: [...prev.products.filter((product) => product.id !== productId)],
@@ -31,14 +31,24 @@ const LikeListPage = ({ f7router }: PageRouteProps) => {
     }
   };
 
-  // const unlikeProduct = async (e) => {
-  //   f7.dialog.preloader('잠시만 기다려주세요...');
-  //   setLike(false);
-  //   setLikeList((prev) => ({
-  //     ...prev,
-  //     products: [...prev.products.filter((product) => product.id !== productId)],
-  //   }));
-  // };
+  const onAddProductToShoppingList = (e: any, data: IShoppingItem) => {
+    const shoppingList = getShoppingList(currentUser.id);
+    if (existedProductOnShoppingList(currentUser.id, data.id)) {
+      f7.dialog.alert('이미 장바구니에 있습니다.');
+    } else {
+      f7.dialog.alert('장바구니에 담았습니다.');
+      const shoppingItem: IShoppingItem = {
+        id: data.id,
+        name: data.name,
+        price: data.price,
+        imageUrl: data.imageUrl,
+        orderCount: 1,
+      };
+      shoppingList.push({ ...shoppingItem });
+      saveShoppingList(currentUser.id, shoppingList);
+      setShoppingList([...shoppingList]);
+    }
+  };
 
   return (
     <Page noToolbar className="min-h-screen">
@@ -54,8 +64,6 @@ const LikeListPage = ({ f7router }: PageRouteProps) => {
         <div></div>
       </Toolbar>
 
-      {/* <View id="view-shopping-list" stackPages name="items" tab url="/shopping-list" /> */}
-      {/* <View id="view-items" stackPages name="items" tab url="/items?is_main=true/" /> */}
       {likeList &&
         likeList.products.map((item) => (
           <div className="pb-2 border-b border-gray-400 mx-2 my-4" key={item.id}>
@@ -76,7 +84,23 @@ const LikeListPage = ({ f7router }: PageRouteProps) => {
                   >
                     삭제
                   </button>
-                  <button className="w-1/2 py-2 px-3 border-2 border-blue-600 text-blue-600 rounded-md ml-2">
+                  <button
+                    className={`w-1/2 py-2 px-3   rounded-md ml-2 ${
+                      existedProductOnShoppingList(currentUser.id, item.id)
+                        ? 'border border-gray-600 text-gray-600 pointer-events-none'
+                        : 'border-2 border-blue-600 text-blue-600'
+                    }`}
+                    onClick={(e) =>
+                      onAddProductToShoppingList(e, {
+                        id: item.id,
+                        name: item.name,
+                        price: item.price,
+                        orderCount: 1,
+                        imageUrl: item.images[0],
+                      })
+                    }
+                    disabled={existedProductOnShoppingList(currentUser.id, item.id)}
+                  >
                     장바구니 담기
                   </button>
                 </div>
