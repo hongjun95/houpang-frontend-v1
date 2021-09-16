@@ -14,6 +14,7 @@ import ProductsOnCategoryPage from '@pages/products/products-on-category';
 import ProductDetailPage from '@pages/products/product-detail';
 import AddProductPage from '@pages/products/add-product';
 import AddProductInfoPage from '@pages/products/add-product-info';
+import ManageProductsPage from '@pages/products/manage-products';
 
 import Order from '@pages/orders/order';
 
@@ -52,6 +53,7 @@ const productPages = [
   { path: '/products', component: ProductsOnCategoryPage },
   { path: '/products/add', component: AddProductPage },
   { path: '/products/add-info', component: AddProductInfoPage },
+  { path: '/products/manage', component: ManageProductsPage },
   { path: '/products/:id', component: ProductDetailPage },
 ];
 

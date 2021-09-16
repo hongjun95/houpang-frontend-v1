@@ -24,18 +24,10 @@ interface ProductFilterProps {
   categoryId: string;
 }
 
-const ProductsOnCategoryPage = ({ f7route, f7router }) => {
+const ManageProductsPage = ({ f7route, f7router }) => {
   const { is_main, categoryId }: { is_main: boolean; categoryId: string } = f7route.query;
   const [viewType, setViewType] = useState('grid');
   const queryClient = useQueryClient();
-
-  // const { data: category } = useQuery<Category, Error>(
-  //   ['category', parseInt(category_id, 10)],
-  //   getCategory(category_id),
-  //   {
-  //     enabled: !!category_id,
-  //   },
-  // );
 
   const [categoryName, setCategoryName] = useState('');
 
@@ -73,6 +65,7 @@ const ProductsOnCategoryPage = ({ f7route, f7router }) => {
       }
     },
   });
+
   const PRODUCT_KEY = productKeys.list({ ...filterForm.values });
 
   //   const { data, status } = useQuery<Promise<GetProductsByCategoryIdOutput>, Error>(['category', categoryId], () =>
@@ -190,4 +183,4 @@ const ProductsOnCategoryPage = ({ f7route, f7router }) => {
   );
 };
 
-export default React.memo(ProductsOnCategoryPage);
+export default React.memo(ManageProductsPage);
