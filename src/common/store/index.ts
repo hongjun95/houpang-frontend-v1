@@ -28,7 +28,10 @@ export const existedProductOnShoppingList = (userId: string, productId: string):
   const shoppingList = getShoppingList(userId);
   return !!shoppingList.find((item) => item.id === productId);
 };
-export const addProductToShoppingList = (userId: string, shoppingList: Array<IShoppingItem>): void => {
+export const savehoppingList = (userId: string, shoppingList: Array<IShoppingItem>): void => {
+  localStorage.setItem(`${SHOPPING_LIST}-${userId}`, JSON.stringify(shoppingList));
+};
+export const removeProductFromShoppingList = (userId: string, shoppingList: Array<IShoppingItem>): void => {
   localStorage.setItem(`${SHOPPING_LIST}-${userId}`, JSON.stringify(shoppingList));
 };
 

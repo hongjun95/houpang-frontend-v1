@@ -2,22 +2,28 @@ import React, { useState } from 'react';
 import { Checkbox, Link, Navbar, Page, Stepper, Toolbar } from 'framework7-react';
 
 import { formmatPrice } from '@utils/index';
-import { addProductToShoppingList, getShoppingList } from '@store';
+import { savehoppingList, IShoppingItem } from '@store';
 import { PageRouteProps } from '@constants';
 import useAuth from '@hooks/useAuth';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { Like } from '@interfaces/like.interface';
+import { likeListAtom, shoppingListAtom } from '@atoms';
 
 const ShoppingListPage = ({ f7router }: PageRouteProps) => {
   const { currentUser } = useAuth();
   const [items, setItems] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
-  const shoppingList = getShoppingList(currentUser.id);
+  const [shoppingList, setShoppingList] = useRecoilState<Array<IShoppingItem>>(shoppingListAtom);
+  const likeList = useRecoilValue<Like>(likeListAtom);
+
   const onClickOrderCount = (e, id: string) => {
     shoppingList.forEach((item) => {
       if (item.id == id) {
         item.orderCount = e;
       }
     });
-    addProductToShoppingList(currentUser.id, shoppingList);
+    savehoppingList(currentUser.id, shoppingList);
+    setShoppingList([...shoppingList]);
   };
 
   const plusTotalPrice = (name: string) => {
@@ -70,47 +76,58 @@ const ShoppingListPage = ({ f7router }: PageRouteProps) => {
     });
   };
 
+  const onDeleteClick = (e, id: string) => {
+    const filteredShoppingList = shoppingList.filter((item) => item.id !== id);
+    savehoppingList(currentUser.id, filteredShoppingList);
+    setShoppingList([...filteredShoppingList]);
+  };
+
   return (
     <Page noToolbar className="min-h-screen">
       <Navbar title="장바구니" backLink={true}></Navbar>
       <Toolbar top>
         <div></div>
-        <Link href="/shopping-list" className="font-bold flex px-6 py-4 text-base">
-          일반구매
+        <Link href="/shopping-list" className="font-bold flex px-6 py-4 text-base border-b-2 border-blue-700">
+          일반구매({shoppingList.length})
         </Link>
-        <Link href="/like-list" className="font-bold flex px-6 py-4 text-base">
-          찜한상품
+        <Link href="/like-list" className="font-bold flex px-6 py-4 text-base !text-black hover:text-blue-700">
+          찜한상품({likeList.products.length})
         </Link>
         <div></div>
       </Toolbar>
 
       {shoppingList &&
         shoppingList.map((item) => (
-          <div className="pb-2 border-b border-gray-400 mx-2 my-4" key={item.id}>
-            <div className="flex">
-              <img src={item.imageUrl} alt="" className="w-1/4 mr-4" />
-              <div>
-                <div className="flex mb-4">
-                  <Checkbox
-                    name={item.id}
-                    className="mr-2"
-                    checked={items.indexOf(item.id) >= 0}
-                    onChange={onItemChange}
-                  ></Checkbox>
-                  <div className="font-bold">{item.name}</div>
-                </div>
-                <div className="mb-4">
-                  <span className="font-bold text-lg">{formmatPrice(item.price)}</span>
-                  <span>원</span>
-                </div>
-                <div className="flex items-center">
-                  <button className="w-20 font-medium border py-2 px-6 rounded-md bg-gray-200">삭제</button>
-                  <Stepper
-                    value={item.orderCount}
-                    onStepperChange={(e) => onClickOrderCount(e, item.id)}
-                    className="ml-4 text-gray-300 border-gray-200"
-                  />
-                </div>
+          <div className="flex pb-2 border-b border-gray-400 mx-2 my-4" key={item.id}>
+            <div className="w-1/4 h-36 mr-4">
+              <img src={item.imageUrl} alt="" className="w-full" />
+            </div>
+            <div className="flex flex-col justify-between">
+              <div className="flex mb-4">
+                <Checkbox
+                  name={item.id}
+                  className="mr-2"
+                  checked={items.indexOf(item.id) >= 0}
+                  onChange={onItemChange}
+                ></Checkbox>
+                <div className="font-bold">{item.name}</div>
+              </div>
+              <div className="mb-4">
+                <span className="font-bold text-lg">{formmatPrice(item.price)}</span>
+                <span>원</span>
+              </div>
+              <div className="flex items-center">
+                <button
+                  className="w-20 font-medium border py-2 px-4 rounded-md border-gray-300"
+                  onClick={(e) => onDeleteClick(e, item.id)}
+                >
+                  삭제
+                </button>
+                <Stepper
+                  value={item.orderCount}
+                  onStepperChange={(e) => onClickOrderCount(e, item.id)}
+                  className="ml-4 text-gray-300 border-gray-200"
+                />
               </div>
             </div>
           </div>

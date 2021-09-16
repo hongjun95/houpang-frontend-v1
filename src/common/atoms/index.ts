@@ -1,6 +1,7 @@
 import { atom } from 'recoil';
 import { AuthState } from '@constants';
-import { FindLikeListOutput, Like } from '@interfaces/like.interface';
+import { Like } from '@interfaces/like.interface';
+import { IShoppingItem } from '@store';
 
 const initialAuthState: AuthState = {
   token: null,
@@ -52,4 +53,9 @@ export const likeListAtom = atom<Like>({
     id: '',
     products: [],
   },
+});
+
+export const shoppingListAtom = atom<Array<IShoppingItem>>({
+  key: 'shoppingListAtom',
+  default: [],
 });
