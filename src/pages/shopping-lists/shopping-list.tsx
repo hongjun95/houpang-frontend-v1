@@ -2,18 +2,18 @@ import React, { useState } from 'react';
 import { Checkbox, Link, Navbar, Page, Stepper, Toolbar } from 'framework7-react';
 
 import { formmatPrice } from '@utils/index';
-import { addProductToShoppingList, getShoppingList } from '@store';
+import { savehoppingList, IShoppingItem } from '@store';
 import { PageRouteProps } from '@constants';
 import useAuth from '@hooks/useAuth';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { Like } from '@interfaces/like.interface';
-import { likeListAtom } from '@atoms';
+import { likeListAtom, shoppingListAtom } from '@atoms';
 
 const ShoppingListPage = ({ f7router }: PageRouteProps) => {
   const { currentUser } = useAuth();
   const [items, setItems] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
-  const shoppingList = getShoppingList(currentUser.id);
+  const [shoppingList, setShoppingList] = useRecoilState<Array<IShoppingItem>>(shoppingListAtom);
   const likeList = useRecoilValue<Like>(likeListAtom);
 
   const onClickOrderCount = (e, id: string) => {
@@ -22,7 +22,8 @@ const ShoppingListPage = ({ f7router }: PageRouteProps) => {
         item.orderCount = e;
       }
     });
-    addProductToShoppingList(currentUser.id, shoppingList);
+    savehoppingList(currentUser.id, shoppingList);
+    setShoppingList([...shoppingList]);
   };
 
   const plusTotalPrice = (name: string) => {
@@ -75,6 +76,12 @@ const ShoppingListPage = ({ f7router }: PageRouteProps) => {
     });
   };
 
+  const onDeleteClick = (e, id: string) => {
+    const filteredShoppingList = shoppingList.filter((item) => item.id !== id);
+    savehoppingList(currentUser.id, filteredShoppingList);
+    setShoppingList([...filteredShoppingList]);
+  };
+
   return (
     <Page noToolbar className="min-h-screen">
       <Navbar title="장바구니" backLink={true}></Navbar>
@@ -110,7 +117,12 @@ const ShoppingListPage = ({ f7router }: PageRouteProps) => {
                 <span>원</span>
               </div>
               <div className="flex items-center">
-                <button className="w-20 font-medium border py-2 px-4 rounded-md border-gray-300">삭제</button>
+                <button
+                  className="w-20 font-medium border py-2 px-4 rounded-md border-gray-300"
+                  onClick={(e) => onDeleteClick(e, item.id)}
+                >
+                  삭제
+                </button>
                 <Stepper
                   value={item.orderCount}
                   onStepperChange={(e) => onClickOrderCount(e, item.id)}

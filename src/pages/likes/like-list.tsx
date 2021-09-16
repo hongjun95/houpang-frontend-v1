@@ -1,18 +1,44 @@
-import React, { useState } from 'react';
-import { Checkbox, Link, Navbar, Page, Stepper, Toolbar } from 'framework7-react';
+import React from 'react';
+import { f7, Link, Navbar, Page, Toolbar } from 'framework7-react';
 
 import { formmatPrice } from '@utils/index';
-import { addProductToShoppingList, getShoppingList } from '@store';
+import { getShoppingList } from '@store';
 import { PageRouteProps } from '@constants';
 import useAuth from '@hooks/useAuth';
 import { useRecoilState } from 'recoil';
 import { Like } from '@interfaces/like.interface';
 import { likeListAtom } from '@atoms';
+import { unlikeProductAPI } from '@api';
 
 const LikeListPage = ({ f7router }: PageRouteProps) => {
   const { currentUser } = useAuth();
   const shoppingList = getShoppingList(currentUser.id);
   const [likeList, setLikeList] = useRecoilState<Like>(likeListAtom);
+
+  const onDeleteClick = async (e, productId: string) => {
+    const filteredLikeList = likeList.products.filter((product) => product.id !== productId);
+    setLikeList((prev) => ({
+      ...prev,
+      products: [...prev.products.filter((product) => product.id !== productId)],
+    }));
+    try {
+      const { ok, error } = await unlikeProductAPI({ productId });
+      if (!ok) {
+        f7.dialog.alert(error);
+      }
+    } catch (error) {
+      f7.dialog.alert(error?.response?.data || error?.message);
+    }
+  };
+
+  // const unlikeProduct = async (e) => {
+  //   f7.dialog.preloader('잠시만 기다려주세요...');
+  //   setLike(false);
+  //   setLikeList((prev) => ({
+  //     ...prev,
+  //     products: [...prev.products.filter((product) => product.id !== productId)],
+  //   }));
+  // };
 
   return (
     <Page noToolbar className="min-h-screen">
@@ -44,7 +70,12 @@ const LikeListPage = ({ f7router }: PageRouteProps) => {
                   <span>원</span>
                 </div>
                 <div className="flex items-center">
-                  <button className="w-20 font-medium border py-2 px-4 rounded-md border-gray-300">삭제</button>
+                  <button
+                    className="w-20 font-medium border py-2 px-4 rounded-md border-gray-300"
+                    onClick={(e) => onDeleteClick(e, item.id)}
+                  >
+                    삭제
+                  </button>
                   <button className="w-1/2 py-2 px-3 border-2 border-blue-600 text-blue-600 rounded-md ml-2">
                     장바구니 담기
                   </button>

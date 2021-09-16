@@ -8,7 +8,7 @@ import { productKeys } from '@reactQuery/query-keys';
 import { findProductById, likeProductAPI, unlikeProductAPI } from '@api';
 import { formmatPrice } from '@utils/index';
 import LandingPage from '@pages/landing';
-import { addProductToShoppingList, existedProductOnShoppingList, getShoppingList, IShoppingItem } from '@store';
+import { savehoppingList, existedProductOnShoppingList, getShoppingList, IShoppingItem } from '@store';
 import useAuth from '@hooks/useAuth';
 import { Like } from '@interfaces/like.interface';
 import { useRecoilState } from 'recoil';
@@ -45,7 +45,7 @@ const ProductDetailPage = ({ f7route }: PageRouteProps) => {
         orderCount: 1,
       };
       shoppingList.push({ ...shoppingItem });
-      addProductToShoppingList(currentUser.id, shoppingList);
+      savehoppingList(currentUser.id, shoppingList);
     }
   };
 
