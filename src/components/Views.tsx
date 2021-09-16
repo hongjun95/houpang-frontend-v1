@@ -42,7 +42,7 @@ const F7Views = () => {
   const { data, status } = useQuery<FindLikeListOutput, Error>(likeKeys.detail(currentUser?.id), findLikeList);
   if (status === 'success') {
     setLikeList(data.likeList);
-    setShoppingList(getShoppingList(currentUser.id));
+    setShoppingList(getShoppingList(currentUser?.id || ''));
   }
 
   if (isLoading) {

@@ -16,7 +16,6 @@ const LikeListPage = ({ f7router }: PageRouteProps) => {
   const [likeList, setLikeList] = useRecoilState<Like>(likeListAtom);
 
   const onDeleteClick = async (e, productId: string) => {
-    const filteredLikeList = likeList.products.filter((product) => product.id !== productId);
     setLikeList((prev) => ({
       ...prev,
       products: [...prev.products.filter((product) => product.id !== productId)],
@@ -30,15 +29,6 @@ const LikeListPage = ({ f7router }: PageRouteProps) => {
       f7.dialog.alert(error?.response?.data || error?.message);
     }
   };
-
-  // const unlikeProduct = async (e) => {
-  //   f7.dialog.preloader('잠시만 기다려주세요...');
-  //   setLike(false);
-  //   setLikeList((prev) => ({
-  //     ...prev,
-  //     products: [...prev.products.filter((product) => product.id !== productId)],
-  //   }));
-  // };
 
   return (
     <Page noToolbar className="min-h-screen">
@@ -54,8 +44,6 @@ const LikeListPage = ({ f7router }: PageRouteProps) => {
         <div></div>
       </Toolbar>
 
-      {/* <View id="view-shopping-list" stackPages name="items" tab url="/shopping-list" /> */}
-      {/* <View id="view-items" stackPages name="items" tab url="/items?is_main=true/" /> */}
       {likeList &&
         likeList.products.map((item) => (
           <div className="pb-2 border-b border-gray-400 mx-2 my-4" key={item.id}>
