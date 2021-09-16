@@ -53,3 +53,9 @@ export interface FindProductByIdInput {
 export interface FindProductByIdOutput extends CoreOutput {
   product?: Product;
 }
+
+// Get products from provider
+
+export interface GetProductsFromProviderOutput extends CoreOutput {
+  products?: Product[];
+}
