@@ -20,10 +20,10 @@ const LikeListPage = ({ f7router }: PageRouteProps) => {
       <Toolbar top>
         <div></div>
         <Link href="/shopping-list" className="font-bold flex px-6 py-4 text-base">
-          일반구매
+          일반구매({shoppingList.length})
         </Link>
         <Link href="/like-list" className="font-bold flex px-6 py-4 text-base">
-          찜한상품
+          찜한상품({likeList.products.length})
         </Link>
         <div></div>
       </Toolbar>

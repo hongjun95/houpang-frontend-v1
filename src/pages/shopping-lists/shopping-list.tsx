@@ -5,12 +5,17 @@ import { formmatPrice } from '@utils/index';
 import { addProductToShoppingList, getShoppingList } from '@store';
 import { PageRouteProps } from '@constants';
 import useAuth from '@hooks/useAuth';
+import { useRecoilValue } from 'recoil';
+import { Like } from '@interfaces/like.interface';
+import { likeListAtom } from '@atoms';
 
 const ShoppingListPage = ({ f7router }: PageRouteProps) => {
   const { currentUser } = useAuth();
   const [items, setItems] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
   const shoppingList = getShoppingList(currentUser.id);
+  const likeList = useRecoilValue<Like>(likeListAtom);
+
   const onClickOrderCount = (e, id: string) => {
     shoppingList.forEach((item) => {
       if (item.id == id) {
@@ -76,10 +81,10 @@ const ShoppingListPage = ({ f7router }: PageRouteProps) => {
       <Toolbar top>
         <div></div>
         <Link href="/shopping-list" className="font-bold flex px-6 py-4 text-base">
-          일반구매
+          일반구매({shoppingList.length})
         </Link>
         <Link href="/like-list" className="font-bold flex px-6 py-4 text-base">
-          찜한상품
+          찜한상품({likeList.products.length})
         </Link>
         <div></div>
       </Toolbar>
