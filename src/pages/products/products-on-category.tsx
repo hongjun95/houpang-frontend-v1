@@ -11,6 +11,8 @@ import { Product, SortState, SortStates } from '@interfaces/product.interface';
 import { GetProductsByCategoryIdOutput } from '@interfaces/category.interface';
 import { productKeys } from '@reactQuery/query-keys';
 import { formmatPrice } from '@utils/index';
+import { getShoppingList } from '@store';
+import useAuth from '@hooks/useAuth';
 
 interface ProductFilterProps {
   sort: SortState;
@@ -18,6 +20,8 @@ interface ProductFilterProps {
 }
 
 const ProductsOnCategoryPage = ({ f7route, f7router }) => {
+  const { currentUser } = useAuth();
+  const shoppingList = getShoppingList(currentUser?.id);
   const { is_main, categoryId }: { is_main: boolean; categoryId: string } = f7route.query;
   const [viewType, setViewType] = useState('grid');
   const queryClient = useQueryClient();
@@ -102,7 +106,7 @@ const ProductsOnCategoryPage = ({ f7route, f7router }) => {
       <Navbar backLink={!is_main}>
         <NavTitle>{categoryName || '쇼핑'}</NavTitle>
         <NavRight>
-          <Link href="/shopping-list" iconF7="cart" iconBadge={3} badgeColor="red" />
+          <Link href="/shopping-list" iconF7="cart" iconBadge={shoppingList.length} badgeColor="red" />
         </NavRight>
       </Navbar>
 
