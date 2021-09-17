@@ -10,8 +10,12 @@ import { CreateOrderInput, CreateOrderOutput } from '@interfaces/order.interface
 import {
   AddProductInput,
   AddProductOutput,
+  EditProductInput,
+  EditProductOutput,
   FindProductByIdInput,
   FindProductByIdOutput,
+  GetProductsFromProviderInput,
+  GetProductsFromProviderOutput,
 } from '@interfaces/product.interface';
 import { getToken } from '@store';
 import { AxiosResponse } from 'axios';
@@ -131,10 +135,58 @@ export const findProductById = async ({ productId }: FindProductByIdInput): Prom
   return result;
 };
 
+export const getProductsFromProvider = async ({
+  page,
+  sort,
+}: GetProductsFromProviderInput): Promise<GetProductsFromProviderOutput> => {
+  let response: AxiosResponse<GetProductsFromProviderOutput>;
+  try {
+    response = await API.get<GetProductsFromProviderOutput>('/products/provider', {
+      params: {
+        page,
+        sort,
+      },
+    });
+  } catch (error) {
+    console.error(error);
+  }
+  const result = response.data;
+  return result;
+};
+
 export const addProduct = async (data: AddProductInput): Promise<AddProductOutput> => {
   let response: AxiosResponse<AddProductOutput>;
   try {
+    console.log(data);
     response = await API.post<AddProductOutput>('/products', data);
+  } catch (error) {
+    console.error(error);
+  }
+  const result = response.data;
+  return result;
+};
+
+export const editProduct = async ({
+  productId,
+  categoryName,
+  images,
+  infos,
+  name,
+  price,
+  stock,
+}: EditProductInput): Promise<EditProductOutput> => {
+  const data = {
+    categoryName,
+    images,
+    infos,
+    name,
+    price,
+    stock,
+  };
+  let response: AxiosResponse<EditProductOutput>;
+  try {
+    console.log(data);
+    response = await API.put<EditProductOutput>(`/products/${productId}`, data);
   } catch (error) {
     console.error(error);
   }

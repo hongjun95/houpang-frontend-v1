@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { f7, Navbar, Page, Sheet, Stepper, Swiper, SwiperSlide } from 'framework7-react';
 import { useQuery } from 'react-query';
+import styled from 'styled-components';
+import { uuid } from 'uuidv4';
 
 import { PageRouteProps } from '@constants';
 import { FindProductByIdOutput } from '@interfaces/product.interface';
@@ -13,8 +15,17 @@ import useAuth from '@hooks/useAuth';
 import { Like } from '@interfaces/like.interface';
 import { useRecoilState } from 'recoil';
 import { likeListAtom } from '@atoms';
+import { UserRole } from '@interfaces/user.interface';
 
-const ProductDetailPage = ({ f7route }: PageRouteProps) => {
+const ProductPrice = styled.div`
+  flex: 4 1;
+`;
+
+const ProductUpdateLink = styled.a`
+  flex: 2rem 1;
+`;
+
+const ProductDetailPage = ({ f7route, f7router }: PageRouteProps) => {
   const [sheetOpened, setSheetOpened] = useState(false);
   const [like, setLike] = useState(false);
   const [likeList, setLikeList] = useRecoilState<Like>(likeListAtom);
@@ -92,6 +103,18 @@ const ProductDetailPage = ({ f7route }: PageRouteProps) => {
     }
   };
 
+  // const PRODUCTS_FROM_PROVIDER_KEY = productsFromProviderKeys.list({ ...filterForm.values });
+  const PRODUCTS_FROM_PROVIDER_KEY = '';
+  const onEditLink = (e: any, productId) => {
+    f7router.navigate(`/products/${productId}/edit`, {
+      props: {
+        productQeuryKey: PRODUCTS_FROM_PROVIDER_KEY,
+      },
+    });
+  };
+
+  console.log(data?.product?.infos);
+
   return (
     <Page noToolbar className="min-h-screen">
       <Navbar title="상품상세" backLink={true}></Navbar>
@@ -116,16 +139,40 @@ const ProductDetailPage = ({ f7route }: PageRouteProps) => {
               </div>
               <div className="text-center">review stars (review number)</div>
             </div>
-            <h1 className="text-xl my-4">{data.product.name}</h1>
-            <div className="text-red-700 text-xl font-bold">{formmatPrice(data.product.price)}원</div>
+            <div className="flex my-4">
+              <h1 className="text-xl mr-1 truncate">{data.product.name}</h1>
+            </div>
+            <div className="flex">
+              <ProductPrice className="text-red-700 text-xl font-bold">
+                {formmatPrice(data.product.price)}원
+              </ProductPrice>
+              {currentUser.role === UserRole.Provider && (
+                <ProductUpdateLink
+                  className="block w-2 py-1 text-center text-white bg-blue-600 rounded-md mr-2"
+                  href={`/products/${productId}/edit`}
+                  // onClick={(e) => onEditLink(e, data.product.id)}
+                >
+                  수정
+                </ProductUpdateLink>
+              )}
+              {currentUser.role === UserRole.Provider && (
+                <ProductUpdateLink
+                  className="block w-2 py-1 text-center text-white bg-red-600 rounded-md"
+                  href={`/products/${productId}/edit`}
+                  // onClick={(e) => onEditLink(e, data.product.id)}
+                >
+                  삭제
+                </ProductUpdateLink>
+              )}
+            </div>
           </div>
           <div className="w-full h-3 bg-gray-300"></div>
           <div className="Product__info mx-2 my-4">
             <h2 className="text-lg font-bold border-b-2 border-gray-300 pb-4 mb-4">상품정보</h2>
             <table className="border border-gray-400 w-full">
               <tbody>
-                {data?.product?.info?.map((aInfo) => (
-                  <tr>
+                {data?.product?.infos?.map((aInfo) => (
+                  <tr key={data.product.id + aInfo.value}>
                     <td className="bg-gray-200 py-1 pl-2 text-gray-500">{aInfo.key}</td>
                     <td className="numeric-cell py-1 pl-2">{aInfo.value}</td>
                   </tr>

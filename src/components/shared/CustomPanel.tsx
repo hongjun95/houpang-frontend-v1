@@ -14,13 +14,13 @@ const CustomPanel = ({ currentUser, handleLogout, isLoggedIn }) => {
               </div>
               <div className="ml-3">
                 <p className="text-lg font-medium text-gray-700 group-hover:text-gray-900">
-                  {isLoggedIn ? currentUser.username : '인썸니아'}
+                  {isLoggedIn ? currentUser?.username : '인썸니아'}
                 </p>
                 <p
                   className="text-sm font-normal text-gray-500 group-hover:text-gray-700"
                   style={{ overflowWrap: 'anywhere' }}
                 >
-                  {isLoggedIn ? currentUser.email : 'test@insomenia'}
+                  {isLoggedIn ? currentUser?.email : 'test@insomenia'}
                 </p>
               </div>
             </div>

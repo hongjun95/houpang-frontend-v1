@@ -4,10 +4,9 @@ import { Form, Formik, FormikHelpers } from 'formik';
 import i18next from 'i18next';
 
 import { List, ListInput, ListItem, Navbar, Page } from 'framework7-react';
-import { PageRouteProps } from '@constants';
 import { getCategories } from '@api';
-import { AddProductForm } from '@interfaces/product.interface';
-import { useQuery } from 'react-query';
+import { EditProductForm, FindProductByIdOutput } from '@interfaces/product.interface';
+import { useQuery, useQueryClient } from 'react-query';
 import { GetAllCategoriesOutput } from '@interfaces/category.interface';
 import { useSetRecoilState } from 'recoil';
 import {
@@ -17,8 +16,10 @@ import {
   productPriceAtom,
   productStockAtom,
 } from '@atoms';
+import { productKeys } from '@reactQuery/query-keys';
+import { PageRouteProps } from '@constants';
 
-const AddProductSchema: Yup.SchemaOf<AddProductForm> = Yup.object().shape({
+const EditProductSchema: Yup.SchemaOf<EditProductForm> = Yup.object().shape({
   name: Yup.string() //
     .required('필수 입력사항 입니다'),
   price: Yup.number() //
@@ -32,26 +33,31 @@ const AddProductSchema: Yup.SchemaOf<AddProductForm> = Yup.object().shape({
   images: Yup.array(),
 });
 
-const AddProductPage = ({ f7router, f7route }) => {
+const EditProductInfoPage = ({ f7router, f7route }) => {
   const setProducthName = useSetRecoilState(productNameAtom);
   const setProductPrice = useSetRecoilState(productPriceAtom);
   const setProductCategoryName = useSetRecoilState(productCategoryNameAtom);
   const setStockAtom = useSetRecoilState(productStockAtom);
   const setProductImgFile = useSetRecoilState(productImgFilesAtom);
 
+  const queryClient = useQueryClient();
+  const productId = f7route.params.id;
+
+  const productData = queryClient.getQueryData<FindProductByIdOutput>(productKeys.detail(productId));
+
   const { is_main }: { is_main: boolean } = f7route.query;
 
-  const initialValues: AddProductForm = {
-    name: '',
-    price: 0,
-    categoryName: '패션의류',
-    stock: 0,
+  const initialValues: EditProductForm = {
+    name: productData.product.name,
+    price: productData.product.price,
+    categoryName: productData.product.category.name,
+    stock: productData.product.stock,
     images: [],
   };
 
-  const { data, status } = useQuery<GetAllCategoriesOutput, Error>(['categories_key'], getCategories);
+  const { data: categoryData, status } = useQuery<GetAllCategoriesOutput, Error>(['categories_key'], getCategories);
 
-  const handleProductContent = async (values: AddProductForm, setSubmitting) => {
+  const handleProductContent = async (values: EditProductForm, setSubmitting) => {
     setSubmitting(false);
 
     try {
@@ -64,7 +70,15 @@ const AddProductPage = ({ f7router, f7route }) => {
       setProductPrice(price);
       setProductCategoryName(categoryName);
       setStockAtom(stock);
-      f7router.navigate('/products/add-info');
+      console.log('handleProductsContent');
+      console.log(productData.product.infos);
+      f7router.navigate(`/products/${productId}/edit-info`, {
+        props: {
+          productId,
+          productInfos: productData.product.infos || [],
+          currentImageUrls: productData.product.images,
+        },
+      });
     } catch (e) {
       console.error(e);
     }
@@ -76,8 +90,8 @@ const AddProductPage = ({ f7router, f7route }) => {
       <p className="font-semibole text-4xl text-center mt-5">Houpang</p>
       <Formik
         initialValues={initialValues}
-        validationSchema={AddProductSchema}
-        onSubmit={(values, { setSubmitting }: FormikHelpers<AddProductForm>) =>
+        validationSchema={EditProductSchema}
+        onSubmit={(values, { setSubmitting }: FormikHelpers<EditProductForm>) =>
           handleProductContent(values, setSubmitting)
         }
         validateOnMount
@@ -124,8 +138,8 @@ const AddProductPage = ({ f7router, f7route }) => {
               />
               {status === 'success' && (
                 <ListItem title="카테고리" smartSelect>
-                  <select name="categoryName" defaultValue={`${data.categories[0].name}`}>
-                    {data.categories.map((category) => (
+                  <select name="categoryName" defaultValue={`${categoryData.categories[0].name}`}>
+                    {categoryData.categories.map((category) => (
                       <option key={category.id} value={`${category.name}`}>
                         {category.name}
                       </option>
@@ -163,4 +177,4 @@ const AddProductPage = ({ f7router, f7route }) => {
   );
 };
 
-export default React.memo(AddProductPage);
+export default React.memo(EditProductInfoPage);

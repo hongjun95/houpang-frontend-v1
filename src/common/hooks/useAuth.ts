@@ -8,15 +8,14 @@ const useAuth = () => {
   const [currentUser, setCurrentUser] = useRecoilState<AuthState>(authSelector);
 
   const authenticateUser = async ({ token, csrf }: Token) => {
-    const user = await useMe();
     saveToken({ token, csrf });
+    const user = await useMe();
     setCurrentUser({ token, csrf, currentUser: user });
-    console.log(currentUser);
   };
 
   const unAuthenticateUser = () => {
     destroyToken();
-    setCurrentUser({ token: null, csrf: null, currentUser: null });
+    setCurrentUser({ token: '', csrf: '', currentUser: null });
   };
 
   return {

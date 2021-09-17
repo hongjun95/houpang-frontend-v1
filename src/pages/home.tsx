@@ -6,7 +6,7 @@ import React from 'react';
 
 const HomePage = () => {
   const { currentUser } = useAuth();
-  const shoppingList = getShoppingList(currentUser.id);
+  const shoppingList = getShoppingList(currentUser?.id);
 
   return (
     <Page name="home">
