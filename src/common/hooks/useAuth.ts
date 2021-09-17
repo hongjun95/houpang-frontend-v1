@@ -11,7 +11,6 @@ const useAuth = () => {
     saveToken({ token, csrf });
     const user = await useMe();
     setCurrentUser({ token, csrf, currentUser: user });
-    console.log(currentUser);
   };
 
   const unAuthenticateUser = () => {

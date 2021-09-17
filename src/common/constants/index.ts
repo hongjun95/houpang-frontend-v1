@@ -3,6 +3,7 @@ import { Router } from 'framework7/types';
 
 import packageJson from '../../../package.json';
 import { User } from 'src/interfaces/user.interface';
+import { InfoItem } from '@interfaces/product.interface';
 export * from './schema';
 
 /** 리터럴 혹은 불변 객체 */
@@ -40,6 +41,12 @@ export interface TokenPayload {
 export interface PageRouteProps {
   f7route: Router.Route;
   f7router: Router.Router;
+}
+
+export interface EditProductInfoProps extends PageRouteProps {
+  productId: string;
+  productInfos: InfoItem[];
+  currentImageUrls: string[];
 }
 
 export interface Address {

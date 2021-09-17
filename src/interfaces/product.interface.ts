@@ -5,6 +5,7 @@ import { Review } from './review.interface';
 import { User } from './user.interface';
 
 export interface InfoItem {
+  id: number;
   key: string;
   value: string;
 }
@@ -16,7 +17,7 @@ export interface Product extends CoreEntity {
   stock: number;
   images: string[];
   category: Category;
-  info?: InfoItem[];
+  infos?: InfoItem[];
   orderItems: OrderItem[];
   reviews: Review[];
 }
@@ -29,7 +30,7 @@ export interface AddProductInput {
   stock: number;
   categoryName: string;
   images: string[];
-  info: Array<InfoItem>;
+  infos: Array<InfoItem>;
 }
 export interface AddProductOutput extends CoreOutput {
   product?: Product;
@@ -70,7 +71,7 @@ export interface GetProductsFromProviderOutput extends PaginationOutput {
   products?: Product[];
 }
 
-// Update product
+// Edit product
 
 export interface EditProductInput {
   name: string;
@@ -78,11 +79,10 @@ export interface EditProductInput {
   stock: number;
   categoryName: string;
   images: string[];
-  info: Array<InfoItem>;
+  infos: Array<InfoItem>;
+  productId: string;
 }
-export interface EditProductOutput extends CoreOutput {
-  product?: Product;
-}
+export interface EditProductOutput extends CoreOutput {}
 export interface EditProductForm {
   name: string;
   price: number;

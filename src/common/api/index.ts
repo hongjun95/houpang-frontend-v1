@@ -10,6 +10,8 @@ import { CreateOrderInput, CreateOrderOutput } from '@interfaces/order.interface
 import {
   AddProductInput,
   AddProductOutput,
+  EditProductInput,
+  EditProductOutput,
   FindProductByIdInput,
   FindProductByIdOutput,
   GetProductsFromProviderInput,
@@ -155,7 +157,36 @@ export const getProductsFromProvider = async ({
 export const addProduct = async (data: AddProductInput): Promise<AddProductOutput> => {
   let response: AxiosResponse<AddProductOutput>;
   try {
+    console.log(data);
     response = await API.post<AddProductOutput>('/products', data);
+  } catch (error) {
+    console.error(error);
+  }
+  const result = response.data;
+  return result;
+};
+
+export const editProduct = async ({
+  productId,
+  categoryName,
+  images,
+  infos,
+  name,
+  price,
+  stock,
+}: EditProductInput): Promise<EditProductOutput> => {
+  const data = {
+    categoryName,
+    images,
+    infos,
+    name,
+    price,
+    stock,
+  };
+  let response: AxiosResponse<EditProductOutput>;
+  try {
+    console.log(data);
+    response = await API.put<EditProductOutput>(`/products/${productId}`, data);
   } catch (error) {
     console.error(error);
   }

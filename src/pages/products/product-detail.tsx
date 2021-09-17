@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { f7, Navbar, Page, Sheet, Stepper, Swiper, SwiperSlide } from 'framework7-react';
 import { useQuery } from 'react-query';
 import styled from 'styled-components';
+import { uuid } from 'uuidv4';
 
 import { PageRouteProps } from '@constants';
 import { FindProductByIdOutput } from '@interfaces/product.interface';
@@ -112,6 +113,8 @@ const ProductDetailPage = ({ f7route, f7router }: PageRouteProps) => {
     });
   };
 
+  console.log(data?.product?.infos);
+
   return (
     <Page noToolbar className="min-h-screen">
       <Navbar title="상품상세" backLink={true}></Navbar>
@@ -168,8 +171,8 @@ const ProductDetailPage = ({ f7route, f7router }: PageRouteProps) => {
             <h2 className="text-lg font-bold border-b-2 border-gray-300 pb-4 mb-4">상품정보</h2>
             <table className="border border-gray-400 w-full">
               <tbody>
-                {data?.product?.info?.map((aInfo) => (
-                  <tr>
+                {data?.product?.infos?.map((aInfo) => (
+                  <tr key={data.product.id + aInfo.value}>
                     <td className="bg-gray-200 py-1 pl-2 text-gray-500">{aInfo.key}</td>
                     <td className="numeric-cell py-1 pl-2">{aInfo.value}</td>
                   </tr>

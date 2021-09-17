@@ -12,6 +12,7 @@ import { FindLikeListOutput, Like } from '@interfaces/like.interface';
 import { findLikeList } from '@api';
 import { useSetRecoilState } from 'recoil';
 import { likeListAtom, shoppingListAtom } from '@atoms';
+import { UserRole } from '@interfaces/user.interface';
 
 const F7Views = () => {
   const { currentUser, isAuthenticated, authenticateUser, unAuthenticateUser } = useAuth();
@@ -39,10 +40,12 @@ const F7Views = () => {
     })();
   }, []);
 
-  const { data, status } = useQuery<FindLikeListOutput, Error>(likeKeys.detail(currentUser?.id), findLikeList);
-  if (status === 'success') {
-    setLikeList(data.likeList);
-    setShoppingList(getShoppingList(currentUser?.id || ''));
+  if (currentUser?.role === UserRole.Consumer) {
+    const { data, status } = useQuery<FindLikeListOutput, Error>(likeKeys.detail(currentUser?.id), findLikeList);
+    if (status === 'success') {
+      setLikeList(data.likeList);
+      setShoppingList(getShoppingList(currentUser?.id || ''));
+    }
   }
 
   if (isLoading) {
