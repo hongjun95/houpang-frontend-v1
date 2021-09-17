@@ -10,6 +10,7 @@ import i18n from '../../assets/lang/i18n';
 import { GetProductsFromProviderOutput, Product, SortState, SortStates } from '@interfaces/product.interface';
 import { productsFromProviderKeys } from '@reactQuery/query-keys';
 import { formmatPrice } from '@utils/index';
+import { PageRouteProps } from '@constants';
 
 interface ProductsFilterProps {
   sort: SortState;
@@ -22,6 +23,8 @@ const ManageProductsPage = ({ f7route, f7router }) => {
   const [categoryName, setCategoryName] = useState('');
   const [products, setProducts] = useState<Product[]>([]);
   const [totalCount, setTotalCount] = useState(0);
+
+  const { is_main }: { is_main: boolean } = f7route.query;
 
   useEffect(() => {
     (async () => {
@@ -53,11 +56,7 @@ const ManageProductsPage = ({ f7route, f7router }) => {
 
   const PRODUCTS_FROM_PROVIDER_KEY = productsFromProviderKeys.list({ ...filterForm.values });
 
-  //   const { data, status } = useQuery<Promise<GetProductsFromProviderOutput>, Error>(['category', categoryId], () =>
-  //   getProductsFromProvider(categoryId),
-  // );
-
-  const { data, refetch } = useQuery<GetProductsFromProviderOutput, Error>(
+  const { refetch } = useQuery<GetProductsFromProviderOutput, Error>(
     PRODUCTS_FROM_PROVIDER_KEY,
     () => getProductsFromProvider({ ...filterForm.values }),
     {
@@ -73,7 +72,7 @@ const ManageProductsPage = ({ f7route, f7router }) => {
     done();
   };
 
-  const onClickLink = (e, productId) => {
+  const onClickLink = (e: any, productId) => {
     f7router.navigate(`/products/${productId}`, {
       props: {
         productQeuryKey: PRODUCTS_FROM_PROVIDER_KEY,
@@ -82,10 +81,8 @@ const ManageProductsPage = ({ f7route, f7router }) => {
   };
 
   return (
-    // <Page noToolbar={!is_main} onPtrRefresh={onRefresh} ptr>
-    //   <Navbar backLink={!is_main}>
-    <Page onPtrRefresh={onRefresh} ptr>
-      <Navbar backLink={true}>
+    <Page noToolbar={!is_main} onPtrRefresh={onRefresh} ptr>
+      <Navbar backLink={!is_main}>
         <NavTitle>{categoryName || '쇼핑'}</NavTitle>
         <NavRight>
           <Link href="/shopping-list" iconF7="cart" iconBadge={3} badgeColor="red" />
@@ -146,8 +143,6 @@ const ManageProductsPage = ({ f7route, f7router }) => {
                 ))
               : products.map((product: Product, i) => (
                   <div className="relative" key={product.id}>
-                    {/* <div className="absolute bg-gray-600 w-full min-h-full"></div>
-                    <img alt="" src={product.images[0]} className="absolute w-full m-auto radius rounded shadow" /> */}
                     <Link className="block m-1" onClick={(e) => onClickLink(e, product.id)}>
                       <div
                         className="bg-gray-100 py-32 bg-center bg-cover"

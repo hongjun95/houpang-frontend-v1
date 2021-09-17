@@ -3,7 +3,6 @@ import * as Yup from 'yup';
 import { Form, Formik, FormikHelpers } from 'formik';
 import i18next from 'i18next';
 
-// import useAuth from '@hooks/useAuth';
 import { List, ListInput, ListItem, Navbar, Page } from 'framework7-react';
 import { PageRouteProps } from '@constants';
 import { getCategories } from '@api';
@@ -33,12 +32,14 @@ const AddProductSchema: Yup.SchemaOf<AddProductForm> = Yup.object().shape({
   images: Yup.array(),
 });
 
-const AddProductPage = ({ f7router }: PageRouteProps) => {
+const AddProductPage = ({ f7router, f7route }) => {
   const setProducthName = useSetRecoilState(productNameAtom);
   const setProductPrice = useSetRecoilState(productPriceAtom);
   const setProductCategoryName = useSetRecoilState(productCategoryNameAtom);
   const setStockAtom = useSetRecoilState(productStockAtom);
   const setProductImgFile = useSetRecoilState(productImgFilesAtom);
+
+  const { is_main }: { is_main: boolean } = f7route.query;
 
   const initialValues: AddProductForm = {
     name: '',
@@ -70,8 +71,8 @@ const AddProductPage = ({ f7router }: PageRouteProps) => {
   };
 
   return (
-    <Page>
-      <Navbar title="상품 추가" backLink sliding={false} />
+    <Page noToolbar={!is_main}>
+      <Navbar title="상품 추가" backLink={!is_main} sliding={false} />
       <p className="font-semibole text-4xl text-center mt-5">Houpang</p>
       <Formik
         initialValues={initialValues}
