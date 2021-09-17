@@ -17,7 +17,6 @@ import {
   productStockAtom,
 } from '@atoms';
 import { productKeys } from '@reactQuery/query-keys';
-import { PageRouteProps } from '@constants';
 
 const EditProductSchema: Yup.SchemaOf<EditProductForm> = Yup.object().shape({
   name: Yup.string() //
@@ -70,8 +69,6 @@ const EditProductInfoPage = ({ f7router, f7route }) => {
       setProductPrice(price);
       setProductCategoryName(categoryName);
       setStockAtom(stock);
-      console.log('handleProductsContent');
-      console.log(productData.product.infos);
       f7router.navigate(`/products/${productId}/edit-info`, {
         props: {
           productId,

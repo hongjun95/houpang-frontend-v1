@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { f7, Navbar, Page, Sheet, Stepper, Swiper, SwiperSlide } from 'framework7-react';
 import { useQuery } from 'react-query';
 import styled from 'styled-components';
-import { uuid } from 'uuidv4';
 
 import { PageRouteProps } from '@constants';
 import { FindProductByIdOutput } from '@interfaces/product.interface';
@@ -21,7 +20,7 @@ const ProductPrice = styled.div`
   flex: 4 1;
 `;
 
-const ProductUpdateLink = styled.a`
+const ProductEditLink = styled.a`
   flex: 2rem 1;
 `;
 
@@ -103,18 +102,6 @@ const ProductDetailPage = ({ f7route, f7router }: PageRouteProps) => {
     }
   };
 
-  // const PRODUCTS_FROM_PROVIDER_KEY = productsFromProviderKeys.list({ ...filterForm.values });
-  const PRODUCTS_FROM_PROVIDER_KEY = '';
-  const onEditLink = (e: any, productId) => {
-    f7router.navigate(`/products/${productId}/edit`, {
-      props: {
-        productQeuryKey: PRODUCTS_FROM_PROVIDER_KEY,
-      },
-    });
-  };
-
-  console.log(data?.product?.infos);
-
   return (
     <Page noToolbar className="min-h-screen">
       <Navbar title="상품상세" backLink={true}></Navbar>
@@ -147,22 +134,20 @@ const ProductDetailPage = ({ f7route, f7router }: PageRouteProps) => {
                 {formmatPrice(data.product.price)}원
               </ProductPrice>
               {currentUser.role === UserRole.Provider && (
-                <ProductUpdateLink
+                <ProductEditLink
                   className="block w-2 py-1 text-center text-white bg-blue-600 rounded-md mr-2"
                   href={`/products/${productId}/edit`}
-                  // onClick={(e) => onEditLink(e, data.product.id)}
                 >
                   수정
-                </ProductUpdateLink>
+                </ProductEditLink>
               )}
               {currentUser.role === UserRole.Provider && (
-                <ProductUpdateLink
+                <ProductEditLink
                   className="block w-2 py-1 text-center text-white bg-red-600 rounded-md"
                   href={`/products/${productId}/edit`}
-                  // onClick={(e) => onEditLink(e, data.product.id)}
                 >
                   삭제
-                </ProductUpdateLink>
+                </ProductEditLink>
               )}
             </div>
           </div>
@@ -184,7 +169,6 @@ const ProductDetailPage = ({ f7route, f7router }: PageRouteProps) => {
               </tbody>
             </table>
           </div>
-          {/* heart_fill */}
           <div className="Review__sector pb-20">Review sector</div>
           <div className="flex fixed bottom-0 border-t-2 botder-gray-600 w-full p-2 bg-white">
             {like || likeList.products.find((product) => product.id === productId) ? (
@@ -204,14 +188,6 @@ const ProductDetailPage = ({ f7route, f7router }: PageRouteProps) => {
               구매하기
             </button>
           </div>
-          {/* <Toolbar>
-            <div>
-              <Icon f7="heart" className="text-red-500" size="20px" />
-            </div>
-            <Button fill sheetOpen=".buy-option" className="w-11/12">
-              구매하기
-            </Button>
-          </Toolbar> */}
           <Sheet
             className="buy p-2 h-52"
             opened={sheetOpened}
