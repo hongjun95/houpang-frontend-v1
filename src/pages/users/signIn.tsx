@@ -24,7 +24,7 @@ const SignInSchema: Yup.SchemaOf<SignInInput> = Yup.object().shape({
 
 const initialValues: SignInInput = { email: '', password: '' };
 
-const SessionNewPage = ({ f7router }: PageRouteProps) => {
+const SignInPage = ({ f7router }: PageRouteProps) => {
   const { authenticateUser } = useAuth();
 
   const handleLogin = async (values: SignInInput, setSubmitting: (isSubmitting: boolean) => void) => {
@@ -99,4 +99,4 @@ const SessionNewPage = ({ f7router }: PageRouteProps) => {
   );
 };
 
-export default React.memo(SessionNewPage);
+export default React.memo(SignInPage);

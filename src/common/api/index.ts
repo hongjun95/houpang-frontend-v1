@@ -50,7 +50,7 @@ export const signupAPI = async (data: SignUpInput) => {
   } catch (error) {
     console.error(error);
   }
-  const result = response?.data;
+  const result = response.data;
   return result;
 };
 
@@ -61,7 +61,7 @@ export const loginAPI = async (data: SignInInput) => {
   } catch (error) {
     console.error(error);
   }
-  const result = response?.data;
+  const result = response.data;
   return result;
 };
 
@@ -72,7 +72,7 @@ export const editProfileAPI = async (data: EditProfileInput) => {
   } catch (error) {
     console.error(error);
   }
-  const result = response?.data;
+  const result = response.data;
   return result;
 };
 
@@ -83,7 +83,7 @@ export const changePasswordAPI = async (data: ChangePasswordInput) => {
   } catch (error) {
     console.error(error);
   }
-  const result = response?.data;
+  const result = response.data;
   return result;
 };
 
@@ -118,7 +118,7 @@ export const getProductsByCategoryId = async ({
   } catch (error) {
     console.error(error);
   }
-  const result = response?.data;
+  const result = response.data;
   return result;
 };
 
@@ -129,7 +129,7 @@ export const findProductById = async ({ productId }: FindProductByIdInput): Prom
   } catch (error) {
     console.error(error);
   }
-  const result = response?.data;
+  const result = response.data;
   return result;
 };
 
@@ -148,8 +148,7 @@ export const getProductsFromProvider = async ({
   } catch (error) {
     console.error(error);
   }
-  console.log(response);
-  const result = response?.data;
+  const result = response.data;
   return result;
 };
 
@@ -160,7 +159,7 @@ export const addProduct = async (data: AddProductInput): Promise<AddProductOutpu
   } catch (error) {
     console.error(error);
   }
-  const result = response?.data;
+  const result = response.data;
   return result;
 };
 
@@ -173,7 +172,7 @@ export const getCategories = async () => {
   } catch (error) {
     console.error(error);
   }
-  const result = response?.data;
+  const result = response.data;
   return result;
 };
 // export const getCategory = (slug: string) => API.get<GetAllCategoriesOutput>(`/products/${slug}`);
@@ -187,7 +186,7 @@ export const uploadImages = async (data) => {
   } catch (error) {
     console.error(error);
   }
-  const result = response?.data;
+  const result = response.data;
   return result;
 };
 
@@ -200,7 +199,7 @@ export const createOrderAPI = async (data: CreateOrderInput): Promise<CreateOrde
   } catch (error) {
     console.error(error);
   }
-  const result = response?.data;
+  const result = response.data;
   return result;
 };
 
@@ -213,7 +212,7 @@ export const findLikeList = async (): Promise<FindLikeListOutput> => {
   } catch (error) {
     console.error(error);
   }
-  const result = response?.data;
+  const result = response.data;
   return result;
 };
 export const likeProductAPI = async ({ productId }: LikeProductInput): Promise<LikeProductOutput> => {
@@ -223,7 +222,7 @@ export const likeProductAPI = async ({ productId }: LikeProductInput): Promise<L
   } catch (error) {
     console.error(error);
   }
-  const result = response?.data;
+  const result = response.data;
   return result;
 };
 export const unlikeProductAPI = async ({ productId }: UnlikeProductInput): Promise<UnlikeProductOutput> => {
@@ -233,7 +232,7 @@ export const unlikeProductAPI = async ({ productId }: UnlikeProductInput): Promi
   } catch (error) {
     console.error(error);
   }
-  const result = response?.data;
+  const result = response.data;
   return result;
 };
 

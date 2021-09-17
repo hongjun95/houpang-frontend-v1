@@ -1,18 +1,6 @@
-import { TOKEN_KEY } from '@constants';
-import { getToken } from '@store';
-import axios from 'axios';
-
-const headerConfig = {
-  headers: {
-    'Content-Type': 'application/json',
-    'Accept-Version': `v1`,
-    Authorization: getToken().token ? `Bearer ${getToken().token}` : '',
-    withCredentials: true,
-  },
-};
+import { API } from '../api/api.config';
 
 export const useMe = () =>
-  axios
-    .get('http://localhost:4000/me', headerConfig) //
+  API.get('http://localhost:4000/me') //
     .then((res) => res.data)
     .catch((error) => console.error(error));
