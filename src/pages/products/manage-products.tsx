@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useFormik } from 'formik';
-import { Link, List, ListInput, ListItem, Navbar, NavRight, NavTitle, Page } from 'framework7-react';
+import { Link, List, ListInput, Navbar, NavRight, NavTitle, Page } from 'framework7-react';
 import { map } from 'lodash';
 import { useQuery, useQueryClient } from 'react-query';
 
@@ -82,7 +82,7 @@ const ManageProductsPage = ({ f7route, f7router }) => {
   return (
     <Page noToolbar={!is_main} onPtrRefresh={onRefresh} ptr>
       <Navbar backLink={!is_main}>
-        <NavTitle>{categoryName || '쇼핑'}</NavTitle>
+        <NavTitle>{'상품 관리'}</NavTitle>
         <NavRight>
           <Link href="/shopping-list" iconF7="cart" iconBadge={0} badgeColor="red" />
         </NavRight>
@@ -153,7 +153,7 @@ const ManageProductsPage = ({ f7route, f7router }) => {
                     }}
                   ></div>
                   <div className="m-1">
-                    <div className="font-bold mt-1">{product.name}</div>
+                    <div className="font-bold mt-1 mr-1 truncate">{product.name}</div>
                     <div className="text-red-700 text-xl font-bold">{formmatPrice(product.price)}원</div>
                     <div>review stars(review number)</div>
                   </div>

@@ -69,3 +69,27 @@ export interface GetProductsFromProviderInput extends PaginationInput {
 export interface GetProductsFromProviderOutput extends PaginationOutput {
   products?: Product[];
 }
+
+// Update product
+
+export interface EditProductInput {
+  name: string;
+  price: number;
+  stock: number;
+  categoryName: string;
+  images: string[];
+  info: Array<InfoItem>;
+}
+export interface EditProductOutput extends CoreOutput {
+  product?: Product;
+}
+export interface EditProductForm {
+  name: string;
+  price: number;
+  stock: number;
+  categoryName: string;
+  images: Array<File>;
+}
+export interface EditProductInfoForm {
+  [key: string]: string;
+}
