@@ -7,20 +7,13 @@ import { useQuery, useQueryClient } from 'react-query';
 import { getProductsByCategoryId } from '@api';
 import { currency } from '@js/utils';
 import i18n from '../../assets/lang/i18n';
-import { Product } from '@interfaces/product.interface';
+import { Product, SortState, SortStates } from '@interfaces/product.interface';
 import { GetProductsByCategoryIdOutput } from '@interfaces/category.interface';
 import { productKeys } from '@reactQuery/query-keys';
 import { formmatPrice } from '@utils/index';
 
-const OrderStates = [
-  ['createdAt desc', '최신순'],
-  ['price desc', '높은가격순'],
-  ['price asc', '낮은가격순'],
-] as const;
-type OrderState = typeof OrderStates[number][0];
-
 interface ProductFilterProps {
-  order: OrderState;
+  sort: SortState;
   categoryId: string;
 }
 
@@ -57,7 +50,7 @@ const ProductsOnCategoryPage = ({ f7route, f7router }) => {
 
   const filterForm = useFormik<ProductFilterProps>({
     initialValues: {
-      order: 'createdAt desc',
+      sort: 'createdAt desc',
       categoryId,
     },
 
@@ -120,14 +113,14 @@ const ProductsOnCategoryPage = ({ f7route, f7router }) => {
         <ListInput
           type="select"
           className="float-right inline-flex items-center px-2.5 py-3 border border-gray-300 shadow-sm text-xs font-medium rounded text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-          name="order"
+          name="sort"
           onChange={(e) => {
             filterForm.handleChange(e);
             filterForm.submitForm();
           }}
-          value={filterForm.values.order}
+          value={filterForm.values.sort}
         >
-          {map(OrderStates, (v, idx) => (
+          {map(SortStates, (v, idx) => (
             <option value={v[0]} key={idx}>
               {v[1]}
             </option>

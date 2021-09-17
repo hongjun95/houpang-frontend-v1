@@ -12,6 +12,7 @@ import {
   AddProductOutput,
   FindProductByIdInput,
   FindProductByIdOutput,
+  GetProductsFromProviderInput,
   GetProductsFromProviderOutput,
 } from '@interfaces/product.interface';
 import { getToken } from '@store';
@@ -132,10 +133,18 @@ export const findProductById = async ({ productId }: FindProductByIdInput): Prom
   return result;
 };
 
-export const getProductsFromProvider = async (): Promise<GetProductsFromProviderOutput> => {
+export const getProductsFromProvider = async ({
+  page,
+  sort,
+}: GetProductsFromProviderInput): Promise<GetProductsFromProviderOutput> => {
   let response: AxiosResponse<GetProductsFromProviderOutput>;
   try {
-    response = await API.get<GetProductsFromProviderOutput>('/products/provider');
+    response = await API.get<GetProductsFromProviderOutput>('/products/provider', {
+      params: {
+        page,
+        sort,
+      },
+    });
   } catch (error) {
     console.error(error);
   }

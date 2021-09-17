@@ -4,57 +4,42 @@ import { Link, List, ListInput, ListItem, Navbar, NavRight, NavTitle, Page } fro
 import { map } from 'lodash';
 import { useQuery, useQueryClient } from 'react-query';
 
-import { getProductsByCategoryId } from '@api';
+import { getProductsFromProvider } from '@api';
 import { currency } from '@js/utils';
 import i18n from '../../assets/lang/i18n';
-import { Product } from '@interfaces/product.interface';
-import { GetProductsByCategoryIdOutput } from '@interfaces/category.interface';
-import { productKeys } from '@reactQuery/query-keys';
+import { GetProductsFromProviderOutput, Product, SortState, SortStates } from '@interfaces/product.interface';
+import { productsFromProviderKeys } from '@reactQuery/query-keys';
 import { formmatPrice } from '@utils/index';
 
-const OrderStates = [
-  ['createdAt desc', '최신순'],
-  ['price desc', '높은가격순'],
-  ['price asc', '낮은가격순'],
-] as const;
-type OrderState = typeof OrderStates[number][0];
-
-interface ProductFilterProps {
-  order: OrderState;
-  categoryId: string;
+interface ProductsFilterProps {
+  sort: SortState;
 }
 
 const ManageProductsPage = ({ f7route, f7router }) => {
-  const { is_main, categoryId }: { is_main: boolean; categoryId: string } = f7route.query;
-  const [viewType, setViewType] = useState('grid');
   const queryClient = useQueryClient();
 
+  const [viewType, setViewType] = useState('grid');
   const [categoryName, setCategoryName] = useState('');
-
   const [products, setProducts] = useState<Product[]>([]);
   const [totalCount, setTotalCount] = useState(0);
+
   useEffect(() => {
-    if (categoryId) {
-      (async () => {
-        const { ok, products, totalResults, categoryName } = await getProductsByCategoryId({ categoryId });
-        if (ok) {
-          console.log(products);
-          setProducts(products);
-          setTotalCount(totalResults);
-          setCategoryName(categoryName);
-        }
-      })();
-    }
+    (async () => {
+      const { ok, products, totalResults } = await getProductsFromProvider({ page: 1 });
+      if (ok) {
+        setProducts(products);
+        setTotalCount(totalResults);
+      }
+    })();
   }, []);
 
-  const filterForm = useFormik<ProductFilterProps>({
+  const filterForm = useFormik<ProductsFilterProps>({
     initialValues: {
-      order: 'createdAt desc',
-      categoryId,
+      sort: 'createdAt desc',
     },
 
     onSubmit: async () => {
-      await queryClient.removeQueries(PRODUCT_KEY);
+      await queryClient.removeQueries(PRODUCTS_FROM_PROVIDER_KEY);
       const {
         data: { ok, products, totalResults },
       } = await refetch();
@@ -66,40 +51,41 @@ const ManageProductsPage = ({ f7route, f7router }) => {
     },
   });
 
-  const PRODUCT_KEY = productKeys.list({ ...filterForm.values });
+  const PRODUCTS_FROM_PROVIDER_KEY = productsFromProviderKeys.list({ ...filterForm.values });
 
-  //   const { data, status } = useQuery<Promise<GetProductsByCategoryIdOutput>, Error>(['category', categoryId], () =>
-  //   getProductsByCategoryId(categoryId),
+  //   const { data, status } = useQuery<Promise<GetProductsFromProviderOutput>, Error>(['category', categoryId], () =>
+  //   getProductsFromProvider(categoryId),
   // );
 
-  const { data, refetch } = useQuery<GetProductsByCategoryIdOutput, Error>(
-    PRODUCT_KEY,
-    () => getProductsByCategoryId({ ...filterForm.values }),
+  const { data, refetch } = useQuery<GetProductsFromProviderOutput, Error>(
+    PRODUCTS_FROM_PROVIDER_KEY,
+    () => getProductsFromProvider({ ...filterForm.values }),
     {
-      enabled: !!categoryId,
+      enabled: false,
     },
   );
 
   const onRefresh = async (done) => {
-    await queryClient.removeQueries(PRODUCT_KEY);
+    await queryClient.removeQueries(PRODUCTS_FROM_PROVIDER_KEY);
     const { data } = await refetch();
     setProducts(data.products);
     setTotalCount(data.totalResults);
-    setCategoryName(data.categoryName);
     done();
   };
 
   const onClickLink = (e, productId) => {
     f7router.navigate(`/products/${productId}`, {
       props: {
-        productQeuryKey: PRODUCT_KEY,
+        productQeuryKey: PRODUCTS_FROM_PROVIDER_KEY,
       },
     });
   };
 
   return (
-    <Page noToolbar={!is_main} onPtrRefresh={onRefresh} ptr>
-      <Navbar backLink={!is_main}>
+    // <Page noToolbar={!is_main} onPtrRefresh={onRefresh} ptr>
+    //   <Navbar backLink={!is_main}>
+    <Page onPtrRefresh={onRefresh} ptr>
+      <Navbar backLink={true}>
         <NavTitle>{categoryName || '쇼핑'}</NavTitle>
         <NavRight>
           <Link href="/shopping-list" iconF7="cart" iconBadge={3} badgeColor="red" />
@@ -113,14 +99,15 @@ const ManageProductsPage = ({ f7route, f7router }) => {
         <ListInput
           type="select"
           className="float-right inline-flex items-center px-2.5 py-3 border border-gray-300 shadow-sm text-xs font-medium rounded text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-          name="order"
+          name="sort"
           onChange={(e) => {
+            console.log(e);
             filterForm.handleChange(e);
             filterForm.submitForm();
           }}
-          value={filterForm.values.order}
+          value={filterForm.values.sort}
         >
-          {map(OrderStates, (v, idx) => (
+          {map(SortStates, (v, idx) => (
             <option value={v[0]} key={idx}>
               {v[1]}
             </option>

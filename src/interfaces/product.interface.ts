@@ -1,6 +1,6 @@
 import { Category } from './category.interface';
-import { CoreEntity, CoreOutput } from './core.interface';
-import { OrderItem } from './order.interface';
+import { CoreEntity, CoreOutput, PaginationInput, PaginationOutput } from './core.interface';
+import { OrderItem, OrderStatus } from './order.interface';
 import { Review } from './review.interface';
 import { User } from './user.interface';
 
@@ -56,6 +56,16 @@ export interface FindProductByIdOutput extends CoreOutput {
 
 // Get products from provider
 
-export interface GetProductsFromProviderOutput extends CoreOutput {
+export const SortStates = [
+  ['createdAt desc', '최신순'],
+  ['price desc', '높은가격순'],
+  ['price asc', '낮은가격순'],
+] as const;
+export type SortState = typeof SortStates[number][0];
+
+export interface GetProductsFromProviderInput extends PaginationInput {
+  sort?: SortState;
+}
+export interface GetProductsFromProviderOutput extends PaginationOutput {
   products?: Product[];
 }
