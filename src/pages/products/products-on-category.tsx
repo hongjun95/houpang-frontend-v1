@@ -26,14 +26,6 @@ const ProductsOnCategoryPage = ({ f7route, f7router }) => {
   const [viewType, setViewType] = useState('grid');
   const queryClient = useQueryClient();
 
-  // const { data: category } = useQuery<Category, Error>(
-  //   ['category', parseInt(category_id, 10)],
-  //   getCategory(category_id),
-  //   {
-  //     enabled: !!category_id,
-  //   },
-  // );
-
   const [categoryName, setCategoryName] = useState('');
 
   const [products, setProducts] = useState<Product[]>([]);
@@ -144,42 +136,43 @@ const ProductsOnCategoryPage = ({ f7route, f7router }) => {
         </ListInput>
       </form>
       <List noHairlines className="mt-0 text-sm font-thin">
-        {products && (
+        {products && viewType === 'list' ? (
+          <ul className="flex flex-col">
+            {products.map((product: Product) => (
+              <a className="flex m-1 w-full" onClick={(e) => onClickLink(e, product.id)} key={product.id}>
+                <div
+                  className="bg-gray-100 w-40 h-48 bg-center bg-cover relative left-0"
+                  style={{
+                    backgroundImage: `url(${product.images[0]})`,
+                  }}
+                ></div>
+                <div className="ml-2 mt-4">
+                  <div className="text-xl font-bold mt-1">{product.name}</div>
+                  <div className="text-red-700 text-2xl mb-6 font-bold">{formmatPrice(product.price)}원</div>
+                  <div>review stars(review number)</div>
+                </div>
+              </a>
+            ))}
+          </ul>
+        ) : (
           <ul className="flex-wrap grid grid-cols-2">
-            {viewType === 'list'
-              ? products.map((product: Product) => (
-                  <React.Fragment key={product.id}>
-                    <ListItem
-                      key={product.id}
-                      mediaItem
-                      onClick={(e) => onClickLink(e, product.id)}
-                      title={`${product.name}-${product.id}`}
-                      subtitle={`${currency(product.price)}원`}
-                      className="w-full"
-                    >
-                      <img slot="media" src={product.images[0]} className="w-20 rounded" alt="" />
-                    </ListItem>
-                  </React.Fragment>
-                ))
-              : products.map((product: Product, i) => (
-                  <div className="relative" key={product.id}>
-                    {/* <div className="absolute bg-gray-600 w-full min-h-full"></div>
-                    <img alt="" src={product.images[0]} className="absolute w-full m-auto radius rounded shadow" /> */}
-                    <Link className="block m-1" onClick={(e) => onClickLink(e, product.id)}>
-                      <div
-                        className="bg-gray-100 py-32 bg-center bg-cover"
-                        style={{
-                          backgroundImage: `url(${product.images[0]})`,
-                        }}
-                      ></div>
-                      <div className="m-1">
-                        <div className="font-bold mt-1">{product.provider.username}</div>
-                        <div className="text-red-700 text-xl font-bold">{formmatPrice(product.price)}원</div>
-                        <div>review stars(review number)</div>
-                      </div>
-                    </Link>
+            {products.map((product: Product, i) => (
+              <div className="relative" key={product.id}>
+                <Link className="block m-1" onClick={(e) => onClickLink(e, product.id)}>
+                  <div
+                    className="bg-gray-100 py-32 bg-center bg-cover"
+                    style={{
+                      backgroundImage: `url(${product.images[0]})`,
+                    }}
+                  ></div>
+                  <div className="m-1">
+                    <div className="font-bold mt-1">{product.name}</div>
+                    <div className="text-red-700 text-xl font-bold">{formmatPrice(product.price)}원</div>
+                    <div>review stars(review number)</div>
                   </div>
-                ))}
+                </Link>
+              </div>
+            ))}
           </ul>
         )}
       </List>
