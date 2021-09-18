@@ -141,7 +141,7 @@ const EditProductInfoPage = ({ f7router, productId, productInfos, currentImageUr
 
   return (
     <Page>
-      <Navbar title="상품 추가" backLink sliding={false} />
+      <Navbar title="상품 수정" backLink sliding={false} />
       <div className="p-4 mx-2 bg-gray-200">
         <div className="flex justify-between border-black border-t pt-4">
           <div className="p-3 font-semibold text-center">상품 정보</div>

@@ -83,7 +83,7 @@ const EditProductInfoPage = ({ f7router, f7route }) => {
 
   return (
     <Page noToolbar={!is_main}>
-      <Navbar title="상품 추가" backLink={!is_main} sliding={false} />
+      <Navbar title="상품 수정" backLink={!is_main} sliding={false} />
       <p className="font-semibole text-4xl text-center mt-5">Houpang</p>
       <Formik
         initialValues={initialValues}
