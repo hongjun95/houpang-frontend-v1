@@ -27,8 +27,6 @@ const F7Views = () => {
   useEffect(() => {
     (async function checkToken() {
       try {
-        // const response = await refresh();
-        // saveToken(response.data);
         authenticateUser(getToken());
       } catch {
         destroyToken();
@@ -40,12 +38,10 @@ const F7Views = () => {
     })();
   }, []);
 
-  if (currentUser?.role === UserRole.Consumer) {
-    const { data, status } = useQuery<FindLikeListOutput, Error>(likeKeys.detail(currentUser?.id), findLikeList);
-    if (status === 'success') {
-      setLikeList(data.likeList);
-      setShoppingList(getShoppingList(currentUser?.id || ''));
-    }
+  const { data, status } = useQuery<FindLikeListOutput, Error>(likeKeys.detail(currentUser?.id), findLikeList);
+  if (status === 'success') {
+    setLikeList(data.likeList);
+    setShoppingList(getShoppingList(currentUser?.id || ''));
   }
 
   if (isLoading) {
