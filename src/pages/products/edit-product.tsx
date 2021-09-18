@@ -17,7 +17,6 @@ import {
   productStockAtom,
 } from '@atoms';
 import { productKeys } from '@reactQuery/query-keys';
-import { PageRouteProps } from '@constants';
 
 const EditProductSchema: Yup.SchemaOf<EditProductForm> = Yup.object().shape({
   name: Yup.string() //
@@ -70,8 +69,6 @@ const EditProductInfoPage = ({ f7router, f7route }) => {
       setProductPrice(price);
       setProductCategoryName(categoryName);
       setStockAtom(stock);
-      console.log('handleProductsContent');
-      console.log(productData.product.infos);
       f7router.navigate(`/products/${productId}/edit-info`, {
         props: {
           productId,
@@ -86,7 +83,7 @@ const EditProductInfoPage = ({ f7router, f7route }) => {
 
   return (
     <Page noToolbar={!is_main}>
-      <Navbar title="상품 추가" backLink={!is_main} sliding={false} />
+      <Navbar title="상품 수정" backLink={!is_main} sliding={false} />
       <p className="font-semibole text-4xl text-center mt-5">Houpang</p>
       <Formik
         initialValues={initialValues}
