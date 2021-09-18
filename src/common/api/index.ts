@@ -10,6 +10,8 @@ import { CreateOrderInput, CreateOrderOutput } from '@interfaces/order.interface
 import {
   AddProductInput,
   AddProductOutput,
+  DeleteProductInput,
+  DeleteProductOutput,
   EditProductInput,
   EditProductOutput,
   FindProductByIdInput,
@@ -185,8 +187,20 @@ export const editProduct = async ({
   };
   let response: AxiosResponse<EditProductOutput>;
   try {
-    console.log(data);
     response = await API.put<EditProductOutput>(`/products/${productId}`, data);
+  } catch (error) {
+    console.error(error);
+  }
+  const result = response.data;
+  return result;
+};
+
+export const deleteProduct = async ({
+  productId,
+}: DeleteProductInput): Promise<DeleteProductOutput> => {
+  let response: AxiosResponse<DeleteProductOutput>;
+  try {
+    response = await API.delete<DeleteProductOutput>(`/products/${productId}`);
   } catch (error) {
     console.error(error);
   }

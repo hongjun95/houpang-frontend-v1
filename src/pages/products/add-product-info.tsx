@@ -56,8 +56,6 @@ const AddProductInfoPage = ({ f7router }: PageRouteProps) => {
     try {
       const { ...rest } = values;
 
-      console.log(rest);
-
       const submittedInfoObjects = infos.map<InfoItem>((info) => ({
         id: info.id,
         key: rest[`${info.id}-infoKey`],

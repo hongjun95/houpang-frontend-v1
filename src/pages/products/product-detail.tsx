@@ -6,7 +6,7 @@ import styled from 'styled-components';
 import { PageRouteProps } from '@constants';
 import { FindProductByIdOutput } from '@interfaces/product.interface';
 import { productKeys } from '@reactQuery/query-keys';
-import { findProductById, likeProductAPI, unlikeProductAPI } from '@api';
+import { deleteProduct, findProductById, likeProductAPI, unlikeProductAPI } from '@api';
 import { formmatPrice } from '@utils/index';
 import LandingPage from '@pages/landing';
 import { saveShoppingList, existedProductOnShoppingList, getShoppingList, IShoppingItem } from '@store';
@@ -21,6 +21,10 @@ const ProductPrice = styled.div`
 `;
 
 const ProductEditLink = styled.a`
+  flex: 2rem 1;
+`;
+
+const ProductDeleteBtn = styled.button`
   flex: 2rem 1;
 `;
 
@@ -102,6 +106,20 @@ const ProductDetailPage = ({ f7route, f7router }: PageRouteProps) => {
     }
   };
 
+  const onDeleteBtn = async () => {
+    try {
+      // const ok = await f7.dialog.confirm('정말로 삭제하시겠습니까?');
+      const ok = window.confirm('정말 삭제하시겠습니까?');
+      if (ok) {
+        await deleteProduct({ productId });
+        f7router.navigate(f7router.history.pop());
+        // f7router.refreshPage();
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <Page noToolbar className="min-h-screen">
       <Navbar title="상품상세" backLink={true}></Navbar>
@@ -142,12 +160,12 @@ const ProductDetailPage = ({ f7route, f7router }: PageRouteProps) => {
                 </ProductEditLink>
               )}
               {currentUser.role === UserRole.Provider && (
-                <ProductEditLink
+                <ProductDeleteBtn
                   className="block w-2 py-1 text-center text-white bg-red-600 rounded-md"
-                  href={`/products/${productId}/edit`}
+                  onClick={onDeleteBtn}
                 >
                   삭제
-                </ProductEditLink>
+                </ProductDeleteBtn>
               )}
             </div>
           </div>

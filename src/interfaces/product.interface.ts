@@ -93,3 +93,10 @@ export interface EditProductForm {
 export interface EditProductInfoForm {
   [key: string]: string;
 }
+
+// Delete product
+
+export interface DeleteProductInput {
+  productId: string;
+}
+export interface DeleteProductOutput extends CoreOutput {}
