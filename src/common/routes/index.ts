@@ -18,7 +18,8 @@ import ManageProductsPage from '@pages/products/manage-products';
 import EditProductPage from '@pages/products/edit-product';
 import EditProductInfoPage from '@pages/products/edit-product-info';
 
-import Order from '@pages/orders/order';
+import OrderPage from '@pages/orders/order';
+import OrderListPage from '@pages/orders/order-list';
 
 import ShoppingListPage from '@pages/shopping-lists/shopping-list';
 
@@ -61,7 +62,10 @@ const productPages = [
   { path: '/products/:id/edit-info', component: EditProductInfoPage },
 ];
 
-const orderPages = [{ path: '/order', component: Order }];
+const orderPages = [
+  { path: '/order', component: OrderPage },
+  { path: '/order-list', component: OrderListPage },
+];
 
 const listPages = [
   { path: '/shopping-list', component: ShoppingListPage },

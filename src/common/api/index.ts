@@ -6,7 +6,12 @@ import {
   UnlikeProductInput,
   UnlikeProductOutput,
 } from '@interfaces/like.interface';
-import { CreateOrderInput, CreateOrderOutput } from '@interfaces/order.interface';
+import {
+  CreateOrderInput,
+  CreateOrderOutput,
+  GetOrdersFromConsumerInput,
+  GetOrdersFromConsumerOutput,
+} from '@interfaces/order.interface';
 import {
   AddProductInput,
   AddProductOutput,
@@ -195,9 +200,7 @@ export const editProduct = async ({
   return result;
 };
 
-export const deleteProduct = async ({
-  productId,
-}: DeleteProductInput): Promise<DeleteProductOutput> => {
+export const deleteProduct = async ({ productId }: DeleteProductInput): Promise<DeleteProductOutput> => {
   let response: AxiosResponse<DeleteProductOutput>;
   try {
     response = await API.delete<DeleteProductOutput>(`/products/${productId}`);
@@ -241,6 +244,25 @@ export const createOrderAPI = async (data: CreateOrderInput): Promise<CreateOrde
   let response: AxiosResponse<CreateOrderOutput>;
   try {
     response = await API.post<CreateOrderOutput>('/orders', data);
+  } catch (error) {
+    console.error(error);
+  }
+  const result = response.data;
+  return result;
+};
+
+export const getOrdersFromConsumerAPI = async ({
+  consumerId,
+  status,
+}: GetOrdersFromConsumerInput): Promise<GetOrdersFromConsumerOutput> => {
+  let response: AxiosResponse<GetOrdersFromConsumerOutput>;
+  try {
+    response = await API.get<GetOrdersFromConsumerOutput>('/orders/consumer', {
+      params: {
+        status,
+        consumerId,
+      },
+    });
   } catch (error) {
     console.error(error);
   }

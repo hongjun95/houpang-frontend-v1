@@ -20,3 +20,11 @@ export const productsFromProviderKeys = {
   details: () => [...productKeys.all, 'detail'] as const,
   detail: (id: string) => [...productKeys.details(), id] as const,
 };
+
+export const ordersFromConsumer = {
+  all: ['orders', 'consumer'] as const,
+  lists: () => [...productKeys.all, 'list'] as const,
+  list: ({ consumerId }: { consumerId: string }) => [...productKeys.lists(), consumerId] as const,
+  details: () => [...productKeys.all, 'detail'] as const,
+  detail: (orderId: string) => [...productKeys.details(), orderId] as const,
+};

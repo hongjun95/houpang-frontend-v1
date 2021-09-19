@@ -15,6 +15,9 @@ export interface Order extends CoreEntity {
   orderItems: OrderItem[];
   total: number;
   status: OrderStatus;
+  destination: string;
+  deliverRequest: string;
+  orderedAt: string;
 }
 
 export interface OrderItem extends CoreEntity {
@@ -22,6 +25,8 @@ export interface OrderItem extends CoreEntity {
   product: Product;
   count: number;
 }
+
+// Create order
 
 export interface OrderForm {
   deliverRequest?: string;
@@ -38,4 +43,14 @@ export interface CreateOrderInput {
 }
 export interface CreateOrderOutput extends CoreOutput {
   orderId?: string;
+}
+
+// Get Orders
+export interface GetOrdersFromConsumerInput {
+  status?: OrderStatus;
+  consumerId: string;
+}
+
+export interface GetOrdersFromConsumerOutput extends CoreOutput {
+  orders?: Order[];
 }
