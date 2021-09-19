@@ -37,11 +37,12 @@ const OrderListPage = () => {
             {order?.orderItems?.map((orderItem) => (
               <OrderItem
                 key={orderItem.id}
-                orderItemId={orderItem.id}
+                orderStatus={order.status}
                 productId={orderItem?.product?.id}
                 productImage={orderItem?.product?.images[0]}
                 productName={orderItem?.product?.name}
                 productPrice={orderItem?.product?.price}
+                productCount={orderItem.count}
                 userId={currentUser.id}
               />
             ))}
