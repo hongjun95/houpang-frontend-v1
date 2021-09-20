@@ -14,7 +14,6 @@ export interface Order extends CoreEntity {
   consumer: User;
   orderItems: OrderItem[];
   total: number;
-  status: OrderStatus;
   destination: string;
   deliverRequest: string;
   orderedAt: string;
@@ -24,6 +23,7 @@ export interface OrderItem extends CoreEntity {
   order: Order;
   product: Product;
   count: number;
+  status: OrderStatus;
 }
 
 // Get Orders

@@ -15,18 +15,14 @@ const OrderListPage = () => {
     getOrdersFromConsumerAPI({ consumerId: currentUser.id }),
   );
 
-  const orderDate = (date) => {
-    console.log(typeof date);
-    console.log(date);
-    return date;
-    // return `${date.getFullYear()}. ${date.getMonth() + 1}. ${date.getDate()}`;
-    // return orderDate;
-  };
-
   return (
     <Page noToolbar className="min-h-screen">
-      <Navbar title="장바구니" backLink={true}></Navbar>
-      {status === 'success' &&
+      <Navbar title="주문목록" backLink={true}></Navbar>
+      {status === 'success' && data.orders.length === 0 ? (
+        <div className="flex items-center justify-center min-h-full">
+          <span className="text-3xl font-bold text-gray-500">주문 목록이 비었습니다.</span>
+        </div>
+      ) : (
         data?.orders.map((order) => (
           <Order
             key={order.id}
@@ -37,7 +33,9 @@ const OrderListPage = () => {
             {order?.orderItems?.map((orderItem) => (
               <OrderItem
                 key={orderItem.id}
-                orderStatus={order.status}
+                orderItemId={orderItem.id}
+                orderId={order.id}
+                orderItemStatus={orderItem.status}
                 productId={orderItem?.product?.id}
                 productImage={orderItem?.product?.images[0]}
                 productName={orderItem?.product?.name}
@@ -47,7 +45,8 @@ const OrderListPage = () => {
               />
             ))}
           </Order>
-        ))}
+        ))
+      )}
     </Page>
   );
 };

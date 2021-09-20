@@ -7,14 +7,17 @@ import { shoppingListAtom } from '@atoms';
 import { f7 } from 'framework7-react';
 import styled from 'styled-components';
 import { OrderStatus } from '@interfaces/order.interface';
+import { cancelOrderItemAPI } from '@api';
 
 interface OrderItemProps {
   userId: string;
+  orderId: string;
+  orderItemId: string;
+  orderItemStatus: OrderStatus;
   productId: string;
   productName: string;
   productPrice: number;
   productImage: string;
-  orderStatus: OrderStatus;
   productCount: number;
 }
 
@@ -23,12 +26,14 @@ const OrderItemContent = styled.div`
 `;
 
 const OrderItem: React.FC<OrderItemProps> = ({
-  orderStatus,
+  userId,
+  orderId,
+  orderItemId,
+  orderItemStatus,
   productId,
   productName,
-  productPrice = 1,
+  productPrice,
   productImage,
-  userId,
   productCount,
 }) => {
   const [shoppingList, setShoppingList] = useRecoilState<Array<IShoppingItem>>(shoppingListAtom);
@@ -51,10 +56,29 @@ const OrderItem: React.FC<OrderItemProps> = ({
       setShoppingList([...shoppingList]);
     }
   };
+
+  const onCancelOrderItemClick = async () => {
+    f7.dialog.preloader('잠시만 기다려주세요...');
+
+    try {
+      const { ok, error } = await cancelOrderItemAPI({ orderId, orderItemId });
+
+      if (ok) {
+        f7.dialog.alert('찜 했습니다.');
+      } else {
+        f7.dialog.alert(error);
+      }
+      f7.dialog.close();
+    } catch (error) {
+      f7.dialog.close();
+      f7.dialog.alert(error?.response?.data || error?.message);
+    }
+  };
+
   return (
     <div className="pb-2 border-b border-gray-400 mx-3 my-4">
       <div className="mb-4">
-        <span className="font-bold text-md">{orderStatus}</span>
+        <span className="font-bold text-md">{orderItemStatus}</span>
       </div>
       <div className="flex">
         {/* <img src={productImage} alt="" className="w-1/4 h-24 mr-4" /> */}
@@ -98,7 +122,7 @@ const OrderItem: React.FC<OrderItemProps> = ({
         </OrderItemContent>
       </div>
       <div className="flex mt-2">
-        <button className="border-2 py-2 rounded-lg mr-2 border-gray-200 font-medium">
+        <button className="border-2 py-2 rounded-lg mr-2 border-gray-200 font-medium" onClick={onCancelOrderItemClick}>
           주문<span className="mx-1">&#183;</span>배송 취소
         </button>
         <button className="border-2 border-blue-600 text-blue-600 py-2 rounded-lg font-medium">배송조회</button>
