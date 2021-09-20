@@ -3,20 +3,20 @@ import { Checkbox, Stepper } from 'framework7-react';
 
 import { formmatPrice } from '@utils/index';
 import { saveShoppingList, IShoppingItem } from '@store';
-import useAuth from '@hooks/useAuth';
-import { useRecoilState } from 'recoil';
-import { shoppingListAtom } from '@atoms';
+import { SetterOrUpdater } from 'recoil';
 import { Router } from 'framework7/types';
+import { User } from '@interfaces/user.interface';
 
 interface NormalBuyingProps {
   f7router: Router.Router;
+  currentUser: User;
+  shoppingList: IShoppingItem[];
+  setShoppingList: SetterOrUpdater<IShoppingItem[]>;
 }
 
-const NormalBuying: React.FC<NormalBuyingProps> = ({ f7router }) => {
-  const { currentUser } = useAuth();
+const NormalBuying: React.FC<NormalBuyingProps> = ({ f7router, currentUser, shoppingList, setShoppingList }) => {
   const [items, setItems] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
-  const [shoppingList, setShoppingList] = useRecoilState<Array<IShoppingItem>>(shoppingListAtom);
 
   const onClickOrderCount = (e: any) => {
     const id = e.target.name;
@@ -92,7 +92,7 @@ const NormalBuying: React.FC<NormalBuyingProps> = ({ f7router }) => {
     setShoppingList([...filteredShoppingList]);
   };
   return (
-    <div>
+    <>
       {shoppingList &&
         shoppingList.map((item) => (
           <div className="flex pb-2 border-b border-gray-400 mx-2 my-4" key={item.id}>
@@ -157,7 +157,7 @@ const NormalBuying: React.FC<NormalBuyingProps> = ({ f7router }) => {
           <span>({items.length})</span>
         </button>
       </div>
-    </div>
+    </>
   );
 };
 
