@@ -147,7 +147,7 @@ const ProductsOnCategoryPage = ({ f7route, f7router }) => {
                   }}
                 ></div>
                 <div className="ml-2 mt-4">
-                  <div className="text-xl font-bold mt-1">{product.name}</div>
+                  <div className="text-xl font-bold mt-1 truncate">{product.name}</div>
                   <div className="text-red-700 text-2xl mb-6 font-bold">{formmatPrice(product.price)}원</div>
                   <div>review stars(review number)</div>
                 </div>
