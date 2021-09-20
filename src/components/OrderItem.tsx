@@ -7,10 +7,11 @@ import { formmatPrice } from '@utils/index';
 import { existedProductOnShoppingList, getShoppingList, IShoppingItem, saveShoppingList } from '@store';
 import { shoppingListAtom } from '@atoms';
 import { CancelOrderItemInput, CancelOrderItemOutput, OrderStatus } from '@interfaces/order.interface';
+import useAuth from '@hooks/useAuth';
+import { UserRole } from '@interfaces/user.interface';
 
 interface OrderItemProps {
   userId: string;
-  orderId: string;
   orderItemId: string;
   orderItemStatus: OrderStatus;
   productId: string;
@@ -23,7 +24,6 @@ interface OrderItemProps {
 
 const OrderItem: React.FC<OrderItemProps> = ({
   userId,
-  orderId,
   orderItemId,
   orderItemStatus,
   productId,
@@ -33,6 +33,7 @@ const OrderItem: React.FC<OrderItemProps> = ({
   productCount,
   cancelOrderItemMutation,
 }) => {
+  const { currentUser } = useAuth();
   const [shoppingList, setShoppingList] = useRecoilState<Array<IShoppingItem>>(shoppingListAtom);
 
   const onAddProductToShoppingList = (e: any, data: IShoppingItem) => {
@@ -58,7 +59,6 @@ const OrderItem: React.FC<OrderItemProps> = ({
     f7.dialog.preloader('잠시만 기다려주세요...');
     try {
       cancelOrderItemMutation.mutate({
-        orderId,
         orderItemId,
       });
 
@@ -91,25 +91,42 @@ const OrderItem: React.FC<OrderItemProps> = ({
               <span className="mx-1">&#183;</span>
               <span>{productCount}개</span>
             </div>
-            <button
-              className={`w-1/2 py-2 px-3 rounded-md ml-2 ${
-                existedProductOnShoppingList(userId, productId)
-                  ? 'border border-gray-600 text-gray-600 pointer-events-none'
-                  : 'border-2 border-blue-600 text-blue-600'
-              }`}
-              onClick={(e) =>
-                onAddProductToShoppingList(e, {
-                  id: productId,
-                  name: productName,
-                  price: productPrice,
-                  orderCount: 1,
-                  imageUrl: productImage,
-                })
-              }
-              disabled={existedProductOnShoppingList(userId, productId)}
-            >
-              장바구니 담기
-            </button>
+            {currentUser.role === UserRole.Consumer ? (
+              <button
+                className={`w-1/2 py-2 px-3 rounded-md ml-2 ${
+                  existedProductOnShoppingList(userId, productId)
+                    ? 'border border-gray-600 text-gray-600 pointer-events-none'
+                    : 'border-2 border-blue-600 text-blue-600'
+                }`}
+                onClick={(e) =>
+                  onAddProductToShoppingList(e, {
+                    id: productId,
+                    name: productName,
+                    price: productPrice,
+                    orderCount: 1,
+                    imageUrl: productImage,
+                  })
+                }
+                disabled={existedProductOnShoppingList(userId, productId)}
+              >
+                장바구니 담기
+              </button>
+            ) : (
+              <button
+                className={`w-1/2 py-2 px-3 rounded-md ml-2 border border-gray-600 text-gray-600 pointer-events-none`}
+                onClick={(e) =>
+                  onAddProductToShoppingList(e, {
+                    id: productId,
+                    name: productName,
+                    price: productPrice,
+                    orderCount: 1,
+                    imageUrl: productImage,
+                  })
+                }
+              >
+                주문 수락
+              </button>
+            )}
           </div>
           <div className="flex items-center"></div>
         </div>

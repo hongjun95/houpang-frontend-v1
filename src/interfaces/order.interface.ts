@@ -66,7 +66,6 @@ export interface CreateOrderOutput extends CoreOutput {
 // Cancel order
 
 export interface CancelOrderItemInput {
-  orderId: string;
   orderItemId: string;
 }
 

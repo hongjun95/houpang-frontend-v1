@@ -128,17 +128,31 @@ const MyPage = () => {
               </a>
             </li>
             <li>
-              <a href="/order-list" className="block hover:bg-gray-50">
-                <div className="flex items-center px-4 py-4 sm:px-6">
-                  <div className="min-w-0 flex-1 flex items-center">
-                    <div className="min-w-0 flex-1 px-4 md:grid md:grid-cols-2 md:gap-4">
-                      <div>
-                        <p className="text-sm font-medium text-gray-900 truncate">주문/배송 조회</p>
+              {currentUser.role === UserRole.Consumer ? (
+                <a href="/order-list" className="block hover:bg-gray-50">
+                  <div className="flex items-center px-4 py-4 sm:px-6">
+                    <div className="min-w-0 flex-1 flex items-center">
+                      <div className="min-w-0 flex-1 px-4 md:grid md:grid-cols-2 md:gap-4">
+                        <div>
+                          <p className="text-sm font-medium text-gray-900 truncate">주문/배송 조회</p>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              </a>
+                </a>
+              ) : (
+                <a href="/order-list/provider" className="block hover:bg-gray-50">
+                  <div className="flex items-center px-4 py-4 sm:px-6">
+                    <div className="min-w-0 flex-1 flex items-center">
+                      <div className="min-w-0 flex-1 px-4 md:grid md:grid-cols-2 md:gap-4">
+                        <div>
+                          <p className="text-sm font-medium text-gray-900 truncate">주문/배송 조회</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </a>
+              )}
             </li>
             <li>
               <a href="#" className="block hover:bg-gray-50">

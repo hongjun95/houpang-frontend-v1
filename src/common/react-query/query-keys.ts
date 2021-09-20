@@ -15,16 +15,24 @@ export const productKeys = {
 
 export const productsFromProviderKeys = {
   all: ['products'] as const,
-  lists: () => [...productKeys.all, 'list'] as const,
-  list: ({ sort }: { sort: string }) => [...productKeys.lists(), sort] as const,
-  details: () => [...productKeys.all, 'detail'] as const,
-  detail: (id: string) => [...productKeys.details(), id] as const,
+  lists: () => [...productsFromProviderKeys.all, 'list'] as const,
+  list: ({ sort }: { sort: string }) => [...productsFromProviderKeys.lists(), sort] as const,
+  details: () => [...productsFromProviderKeys.all, 'detail'] as const,
+  detail: (id: string) => [...productsFromProviderKeys.details(), id] as const,
 };
 
 export const ordersFromConsumer = {
   all: ['orders', 'consumer'] as const,
-  lists: () => [...productKeys.all, 'list'] as const,
-  list: ({ consumerId }: { consumerId: string }) => [...productKeys.lists(), consumerId] as const,
-  details: () => [...productKeys.all, 'detail'] as const,
-  detail: (orderId: string) => [...productKeys.details(), orderId] as const,
+  lists: () => [...ordersFromConsumer.all, 'list'] as const,
+  list: ({ consumerId }: { consumerId: string }) => [...ordersFromConsumer.lists(), consumerId] as const,
+  details: () => [...ordersFromConsumer.all, 'detail'] as const,
+  detail: (orderId: string) => [...ordersFromConsumer.details(), orderId] as const,
+};
+
+export const ordersFromProvider = {
+  all: ['orders', 'consumer'] as const,
+  lists: () => [...ordersFromProvider.all, 'list'] as const,
+  list: ({ providerId }: { providerId: string }) => [...ordersFromProvider.lists(), providerId] as const,
+  details: () => [...ordersFromProvider.all, 'detail'] as const,
+  detail: (orderId: string) => [...ordersFromProvider.details(), orderId] as const,
 };

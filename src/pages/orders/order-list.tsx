@@ -27,7 +27,7 @@ const OrderListPage = () => {
     onSuccess: ({ ok, error, orderItem }) => {
       if (ok) {
         f7.dialog.alert('주문을 취소했습니다.');
-        queryClient.setQueryData([''], orderItem);
+        queryClient.setQueryData(['cancelOrderItem'], orderItem);
         refetch();
       } else {
         f7.dialog.alert(error);
@@ -69,7 +69,6 @@ const OrderListPage = () => {
               <OrderItem
                 key={orderItem.id}
                 orderItemId={orderItem.id}
-                orderId={order.id}
                 orderItemStatus={orderItem.status}
                 productId={orderItem?.product?.id}
                 productImage={orderItem?.product?.images[0]}

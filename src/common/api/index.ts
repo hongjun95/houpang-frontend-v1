@@ -289,13 +289,10 @@ export const createOrderAPI = async (data: CreateOrderInput): Promise<CreateOrde
   return result;
 };
 
-export const cancelOrderItemAPI = async ({
-  orderId,
-  orderItemId,
-}: CancelOrderItemInput): Promise<CancelOrderItemOutput> => {
+export const cancelOrderItemAPI = async ({ orderItemId }: CancelOrderItemInput): Promise<CancelOrderItemOutput> => {
   let response: AxiosResponse<CancelOrderItemOutput>;
   try {
-    response = await API.post<CancelOrderItemOutput>(`/orders/${orderId}/order-item/${orderItemId}`);
+    response = await API.post<CancelOrderItemOutput>(`/orders/order-item/${orderItemId}`);
   } catch (error) {
     console.error(error);
   }
