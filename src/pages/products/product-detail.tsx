@@ -214,7 +214,7 @@ const ProductDetailPage = ({ f7route, f7router }: PageRouteProps) => {
               setSheetOpened(false);
             }}
           >
-            <h3 className="text-lg font-bold mt-2">{data.product.name}</h3>
+            <h3 className="text-lg font-bold mt-2 truncate">{data.product.name}</h3>
             <div className="text-red-700 text-sm font-bold my-2">{formmatPrice(data.product.price)}원</div>
             <Stepper
               value={orderCount}

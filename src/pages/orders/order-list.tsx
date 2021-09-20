@@ -1,19 +1,38 @@
 import React from 'react';
-import { Navbar, Page } from 'framework7-react';
+import { f7, Navbar, Page } from 'framework7-react';
 
 import useAuth from '@hooks/useAuth';
-import { getOrdersFromConsumerAPI } from '@api';
+import { cancelOrderItemAPI, getOrdersFromConsumerAPI } from '@api';
 import OrderItem from '@components/OrderItem';
 import Order from '@components/Order';
-import { useQuery } from 'react-query';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { ordersFromConsumer } from '@reactQuery/query-keys';
+import { CancelOrderItemInput, CancelOrderItemOutput } from '@interfaces/order.interface';
 
 const OrderListPage = () => {
   const { currentUser } = useAuth();
 
-  const { data, status } = useQuery(ordersFromConsumer.list({ consumerId: currentUser.id }), () =>
+  const { data, status, refetch } = useQuery(ordersFromConsumer.list({ consumerId: currentUser.id }), () =>
     getOrdersFromConsumerAPI({ consumerId: currentUser.id }),
   );
+
+  const queryClient = useQueryClient();
+  const cancelOrderItemMutation = useMutation<
+    CancelOrderItemOutput,
+    Error,
+    CancelOrderItemInput,
+    CancelOrderItemOutput
+  >(cancelOrderItemAPI, {
+    onSuccess: ({ ok, error, orderItem }) => {
+      if (ok) {
+        f7.dialog.alert('주문을 취소했습니다.');
+        queryClient.setQueryData([''], orderItem);
+        refetch();
+      } else {
+        f7.dialog.alert(error);
+      }
+    },
+  });
 
   return (
     <Page noToolbar className="min-h-screen">
@@ -42,6 +61,7 @@ const OrderListPage = () => {
                 productPrice={orderItem?.product?.price}
                 productCount={orderItem.count}
                 userId={currentUser.id}
+                cancelOrderItemMutation={cancelOrderItemMutation}
               />
             ))}
           </Order>
