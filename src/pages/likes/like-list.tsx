@@ -3,7 +3,6 @@ import { f7, Link, Navbar, Page, Toolbar } from 'framework7-react';
 
 import { formmatPrice } from '@utils/index';
 import { existedProductOnShoppingList, getShoppingList, IShoppingItem, saveShoppingList } from '@store';
-import { PageRouteProps } from '@constants';
 import useAuth from '@hooks/useAuth';
 import { useRecoilState } from 'recoil';
 import { Like } from '@interfaces/like.interface';
@@ -14,7 +13,6 @@ const LikeListPage = () => {
   const { currentUser } = useAuth();
   const [likeList, setLikeList] = useRecoilState<Like>(likeListAtom);
   const [shoppingList, setShoppingList] = useRecoilState<Array<IShoppingItem>>(shoppingListAtom);
-  // const shoppingList = getShoppingList(currentUser.id);
 
   const onDeleteClick = async (e, productId: string) => {
     setLikeList((prev) => ({

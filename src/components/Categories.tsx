@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { API_URL, getCategories } from '@api';
-import { Link, SkeletonBlock, SkeletonText } from 'framework7-react';
+
+import { getCategories } from '@api';
+import { Link } from 'framework7-react';
+import { Category } from '@interfaces/category.interface';
+
 // import { useQuery } from 'react-query';
-import { Category } from '@constants';
 
 // const categoriesSkeletonPlaceholder = (size) => new Array(size).fill({});
 
@@ -23,7 +25,7 @@ const Categories = () => {
   const [categories, setCategories] = useState([]);
   useEffect(() => {
     (async () => {
-      const { ok, error, categories } = await getCategories();
+      const { ok, categories } = await getCategories();
       if (ok) {
         setCategories(categories);
       }

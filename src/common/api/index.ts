@@ -6,7 +6,14 @@ import {
   UnlikeProductInput,
   UnlikeProductOutput,
 } from '@interfaces/like.interface';
-import { CreateOrderInput, CreateOrderOutput } from '@interfaces/order.interface';
+import {
+  CancelOrderItemInput,
+  CancelOrderItemOutput,
+  CreateOrderInput,
+  CreateOrderOutput,
+  GetOrdersFromConsumerInput,
+  GetOrdersFromConsumerOutput,
+} from '@interfaces/order.interface';
 import {
   AddProductInput,
   AddProductOutput,
@@ -195,9 +202,7 @@ export const editProduct = async ({
   return result;
 };
 
-export const deleteProduct = async ({
-  productId,
-}: DeleteProductInput): Promise<DeleteProductOutput> => {
+export const deleteProduct = async ({ productId }: DeleteProductInput): Promise<DeleteProductOutput> => {
   let response: AxiosResponse<DeleteProductOutput>;
   try {
     response = await API.delete<DeleteProductOutput>(`/products/${productId}`);
@@ -237,10 +242,41 @@ export const uploadImages = async (data) => {
 
 // order api
 
+export const getOrdersFromConsumerAPI = async ({
+  consumerId,
+}: GetOrdersFromConsumerInput): Promise<GetOrdersFromConsumerOutput> => {
+  let response: AxiosResponse<GetOrdersFromConsumerOutput>;
+  try {
+    response = await API.get<GetOrdersFromConsumerOutput>('/orders/consumer', {
+      params: {
+        consumerId,
+      },
+    });
+  } catch (error) {
+    console.error(error);
+  }
+  const result = response.data;
+  return result;
+};
+
 export const createOrderAPI = async (data: CreateOrderInput): Promise<CreateOrderOutput> => {
   let response: AxiosResponse<CreateOrderOutput>;
   try {
     response = await API.post<CreateOrderOutput>('/orders', data);
+  } catch (error) {
+    console.error(error);
+  }
+  const result = response.data;
+  return result;
+};
+
+export const cancelOrderItemAPI = async ({
+  orderId,
+  orderItemId,
+}: CancelOrderItemInput): Promise<CancelOrderItemOutput> => {
+  let response: AxiosResponse<CancelOrderItemOutput>;
+  try {
+    response = await API.post<CancelOrderItemOutput>(`/orders/${orderId}/order-item/${orderItemId}`);
   } catch (error) {
     console.error(error);
   }

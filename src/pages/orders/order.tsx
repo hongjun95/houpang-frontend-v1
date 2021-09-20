@@ -22,7 +22,7 @@ const OrderSchema: Yup.SchemaOf<OrderForm> = Yup.object().shape({
 
 const OrderPage = ({ items, totalPrice, f7router }: OrderProps) => {
   const { currentUser } = useAuth();
-  const shoppingList = getShoppingList();
+  const shoppingList = getShoppingList(currentUser.id);
   const orderList = shoppingList.filter((item) => items.includes(item.id));
 
   const initialValues: OrderForm = {
