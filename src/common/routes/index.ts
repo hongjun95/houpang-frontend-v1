@@ -24,8 +24,6 @@ import OrderListProviderPage from '@pages/orders/order-list-provider';
 
 import ShoppingListPage from '@pages/shopping-lists/shopping-list';
 
-import LikeListPage from '@pages/likes/like-list';
-
 import PostIndexPage from '@pages/posts/index';
 import PostShowPage from '@pages/posts/show';
 import PostNewPage from '@pages/posts/new';
@@ -69,10 +67,7 @@ const orderPages = [
   { path: '/order-list/provider', component: OrderListProviderPage },
 ];
 
-const listPages = [
-  { path: '/shopping-list', component: ShoppingListPage },
-  { path: '/like-list', component: LikeListPage },
-];
+const listPages = [{ path: '/shopping-list', component: ShoppingListPage }];
 
 const routes: Router.RouteParameters[] = [
   ...commonPages,
