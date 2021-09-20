@@ -35,7 +35,6 @@ const ProductsOnCategoryPage = ({ f7route, f7router }) => {
       (async () => {
         const { ok, products, totalResults, categoryName } = await getProductsByCategoryId({ categoryId });
         if (ok) {
-          console.log(products);
           setProducts(products);
           setTotalCount(totalResults);
           setCategoryName(categoryName);
