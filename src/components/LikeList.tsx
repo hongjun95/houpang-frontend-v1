@@ -1,18 +1,22 @@
 import React from 'react';
-import { f7, Link, Navbar, Page, Toolbar } from 'framework7-react';
+import { f7 } from 'framework7-react';
 
 import { formmatPrice } from '@utils/index';
 import { existedProductOnShoppingList, getShoppingList, IShoppingItem, saveShoppingList } from '@store';
-import useAuth from '@hooks/useAuth';
 import { useRecoilState } from 'recoil';
 import { Like } from '@interfaces/like.interface';
-import { likeListAtom, shoppingListAtom } from '@atoms';
+import { likeListAtom } from '@atoms';
 import { unlikeProductAPI } from '@api';
+import { User } from '@interfaces/user.interface';
+import { SetterOrUpdater } from 'recoil';
 
-const LikeListPage = () => {
-  const { currentUser } = useAuth();
+interface LikeListProps {
+  currentUser: User;
+  setShoppingList: SetterOrUpdater<IShoppingItem[]>;
+}
+
+const LikeList: React.FC<LikeListProps> = ({ currentUser, setShoppingList }) => {
   const [likeList, setLikeList] = useRecoilState<Like>(likeListAtom);
-  const [shoppingList, setShoppingList] = useRecoilState<Array<IShoppingItem>>(shoppingListAtom);
 
   const onDeleteClick = async (e, productId: string) => {
     setLikeList((prev) => ({
@@ -49,27 +53,15 @@ const LikeListPage = () => {
   };
 
   return (
-    <Page noToolbar className="min-h-screen">
-      <Navbar title="장바구니" backLink={true}></Navbar>
-      <Toolbar top>
-        <div></div>
-        <Link href="/shopping-list" className="font-bold flex px-6 py-4 text-base !text-black hover:text-blue-700">
-          일반구매({shoppingList.length})
-        </Link>
-        <Link href="/like-list" className="font-bold flex px-6 py-4 text-base border-b-2 border-blue-700">
-          찜한상품({likeList.products.length})
-        </Link>
-        <div></div>
-      </Toolbar>
-
+    <>
       {likeList &&
         likeList.products.map((item) => (
           <div className="pb-2 border-b border-gray-400 mx-2 my-4" key={item.id}>
-            <div className="flex">
+            <div className="flex min-w-full">
               <img src={item.images[0]} alt="" className="w-1/4 mr-4" />
-              <div className="w-full flex flex-col justify-between">
+              <div className="w-80 flex flex-col justify-between">
                 <div className="flex mb-4">
-                  <div className="font-bold">{item.name}</div>
+                  <span className="font-bold truncate w-full">{item.name}</span>
                 </div>
                 <div className="mb-4">
                   <span className="font-bold text-lg">{formmatPrice(item.price)}</span>
@@ -106,8 +98,8 @@ const LikeListPage = () => {
             </div>
           </div>
         ))}
-    </Page>
+    </>
   );
 };
 
-export default React.memo(LikeListPage);
+export default React.memo(LikeList);
