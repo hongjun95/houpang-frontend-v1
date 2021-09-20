@@ -10,7 +10,7 @@ import { ordersFromConsumer } from '@reactQuery/query-keys';
 import { CancelOrderItemInput, CancelOrderItemOutput } from '@interfaces/order.interface';
 import { UserRole } from '@interfaces/user.interface';
 
-const OrderListPage = () => {
+const OrderListProviderPage = () => {
   const { currentUser } = useAuth();
 
   const { data, status, refetch } = useQuery(ordersFromConsumer.list({ consumerId: currentUser.id }), () =>
@@ -38,16 +38,13 @@ const OrderListPage = () => {
   return (
     <Page noToolbar className="min-h-screen">
       <Navbar title="주문목록" backLink={true}></Navbar>
-      {currentUser?.role === UserRole.Provider && (
+      {currentUser.role === UserRole.Provider && (
         <Toolbar top>
           <div></div>
-          <Link href="/order-list" className="font-bold flex px-6 py-4 text-base border-b-2 border-blue-700">
+          <Link href="/order-list" className="font-bold flex px-6 py-4 text-base !text-black hover:text-blue-700">
             나의 주문
           </Link>
-          <Link
-            href="/order-list/provider"
-            className="font-bold flex px-6 py-4 text-base !text-black hover:text-blue-700"
-          >
+          <Link href="/order-list/provider" className="font-bold flex px-6 py-4 text-base border-b-2 border-blue-700">
             고객 주문
           </Link>
           <div></div>
@@ -87,4 +84,4 @@ const OrderListPage = () => {
   );
 };
 
-export default React.memo(OrderListPage);
+export default React.memo(OrderListProviderPage);
