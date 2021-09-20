@@ -13,6 +13,8 @@ import {
   CreateOrderOutput,
   GetOrdersFromConsumerInput,
   GetOrdersFromConsumerOutput,
+  GetOrdersFromProviderInput,
+  GetOrdersFromProviderOutput,
 } from '@interfaces/order.interface';
 import {
   AddProductInput,
@@ -250,6 +252,23 @@ export const getOrdersFromConsumerAPI = async ({
     response = await API.get<GetOrdersFromConsumerOutput>('/orders/consumer', {
       params: {
         consumerId,
+      },
+    });
+  } catch (error) {
+    console.error(error);
+  }
+  const result = response.data;
+  return result;
+};
+
+export const getOrdersFromProviderAPI = async ({
+  providerId,
+}: GetOrdersFromProviderInput): Promise<GetOrdersFromProviderOutput> => {
+  let response: AxiosResponse<GetOrdersFromProviderOutput>;
+  try {
+    response = await API.get<GetOrdersFromProviderOutput>('/orders/provider', {
+      params: {
+        providerId,
       },
     });
   } catch (error) {
