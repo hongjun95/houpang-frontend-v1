@@ -44,7 +44,7 @@ const OrderPage = ({ items, totalPrice, f7router }: OrderProps) => {
       console.log(`orderId:${orderId}`);
       if (ok) {
         f7.dialog.alert('성공적으로 주문하였습니다.');
-        f7router.navigate('/');
+        f7router.navigate('/order-list');
       } else {
         f7.dialog.alert(error);
       }

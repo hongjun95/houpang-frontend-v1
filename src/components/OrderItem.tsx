@@ -1,13 +1,12 @@
 import React from 'react';
+import { UseMutationResult } from 'react-query';
+import { f7 } from 'framework7-react';
+import { useRecoilState } from 'recoil';
 
 import { formmatPrice } from '@utils/index';
 import { existedProductOnShoppingList, getShoppingList, IShoppingItem, saveShoppingList } from '@store';
-import { useRecoilState } from 'recoil';
 import { shoppingListAtom } from '@atoms';
-import { f7 } from 'framework7-react';
-import styled from 'styled-components';
-import { OrderStatus } from '@interfaces/order.interface';
-import { cancelOrderItemAPI } from '@api';
+import { CancelOrderItemInput, CancelOrderItemOutput, OrderStatus } from '@interfaces/order.interface';
 
 interface OrderItemProps {
   userId: string;
@@ -19,11 +18,8 @@ interface OrderItemProps {
   productPrice: number;
   productImage: string;
   productCount: number;
+  cancelOrderItemMutation: UseMutationResult<CancelOrderItemOutput, Error, CancelOrderItemInput, CancelOrderItemOutput>;
 }
-
-const OrderItemContent = styled.div`
-  // flex: 3 1;
-`;
 
 const OrderItem: React.FC<OrderItemProps> = ({
   userId,
@@ -35,6 +31,7 @@ const OrderItem: React.FC<OrderItemProps> = ({
   productPrice,
   productImage,
   productCount,
+  cancelOrderItemMutation,
 }) => {
   const [shoppingList, setShoppingList] = useRecoilState<Array<IShoppingItem>>(shoppingListAtom);
 
@@ -59,15 +56,12 @@ const OrderItem: React.FC<OrderItemProps> = ({
 
   const onCancelOrderItemClick = async () => {
     f7.dialog.preloader('잠시만 기다려주세요...');
-
     try {
-      const { ok, error } = await cancelOrderItemAPI({ orderId, orderItemId });
+      cancelOrderItemMutation.mutate({
+        orderId,
+        orderItemId,
+      });
 
-      if (ok) {
-        f7.dialog.alert('찜 했습니다.');
-      } else {
-        f7.dialog.alert(error);
-      }
       f7.dialog.close();
     } catch (error) {
       f7.dialog.close();
@@ -81,14 +75,13 @@ const OrderItem: React.FC<OrderItemProps> = ({
         <span className="font-bold text-md">{orderItemStatus}</span>
       </div>
       <div className="flex">
-        {/* <img src={productImage} alt="" className="w-1/4 h-24 mr-4" /> */}
-        <div
+        <img src={productImage} alt="" className="w-24 h-24 mr-4" />
+        {/* <div
           style={{ backgroundImage: `url(${productImage})` }}
           className=" bg-gray-200 bg-center bg-cover w-24 h-24 mr-4"
-        ></div>
-        <OrderItemContent className="overflow-hidden w-3/4 flex flex-col justify-between h-full">
+        ></div> */}
+        <div className="overflow-hidden w-3/4 flex flex-col justify-between h-full">
           <div className="font-bold mb-4 h-12 truncate">{productName}</div>
-          {/* <div className="h-6"></div> */}
           <div className="flex justify-between items-center">
             <div className="flex text-gray-500 text-lg">
               <div>
@@ -119,13 +112,22 @@ const OrderItem: React.FC<OrderItemProps> = ({
             </button>
           </div>
           <div className="flex items-center"></div>
-        </OrderItemContent>
+        </div>
       </div>
       <div className="flex mt-2">
-        <button className="border-2 py-2 rounded-lg mr-2 border-gray-200 font-medium" onClick={onCancelOrderItemClick}>
-          주문<span className="mx-1">&#183;</span>배송 취소
-        </button>
-        <button className="border-2 border-blue-600 text-blue-600 py-2 rounded-lg font-medium">배송조회</button>
+        {orderItemStatus === OrderStatus.Canceled ? (
+          <div className="border-2 py-2 rounded-lg mr-2 border-gray-200 flex-1 font-medium w-1/2 text-center text-gray-500">
+            주문 취소 완료
+          </div>
+        ) : (
+          <button
+            className="border-2 py-2 rounded-lg mr-2 border-gray-200 font-medium flex-1"
+            onClick={onCancelOrderItemClick}
+          >
+            주문<span className="mx-1">&#183;</span>배송 취소
+          </button>
+        )}
+        <button className="border-2 border-blue-600 text-blue-600 py-2 rounded-lg font-medium flex-1">배송조회</button>
       </div>
     </div>
   );
