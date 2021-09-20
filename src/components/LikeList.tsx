@@ -57,11 +57,11 @@ const LikeList: React.FC<LikeListProps> = ({ currentUser, setShoppingList }) => 
       {likeList &&
         likeList.products.map((item) => (
           <div className="pb-2 border-b border-gray-400 mx-2 my-4" key={item.id}>
-            <div className="flex">
+            <div className="flex min-w-full">
               <img src={item.images[0]} alt="" className="w-1/4 mr-4" />
-              <div className="w-full flex flex-col justify-between">
+              <div className="w-80 flex flex-col justify-between">
                 <div className="flex mb-4">
-                  <div className="font-bold">{item.name}</div>
+                  <span className="font-bold truncate w-full">{item.name}</span>
                 </div>
                 <div className="mb-4">
                   <span className="font-bold text-lg">{formmatPrice(item.price)}</span>
