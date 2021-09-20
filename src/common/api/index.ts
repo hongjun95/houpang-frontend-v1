@@ -7,6 +7,8 @@ import {
   UnlikeProductOutput,
 } from '@interfaces/like.interface';
 import {
+  CancelOrderItemInput,
+  CancelOrderItemOutput,
   CreateOrderInput,
   CreateOrderOutput,
   GetOrdersFromConsumerInput,
@@ -240,6 +242,23 @@ export const uploadImages = async (data) => {
 
 // order api
 
+export const getOrdersFromConsumerAPI = async ({
+  consumerId,
+}: GetOrdersFromConsumerInput): Promise<GetOrdersFromConsumerOutput> => {
+  let response: AxiosResponse<GetOrdersFromConsumerOutput>;
+  try {
+    response = await API.get<GetOrdersFromConsumerOutput>('/orders/consumer', {
+      params: {
+        consumerId,
+      },
+    });
+  } catch (error) {
+    console.error(error);
+  }
+  const result = response.data;
+  return result;
+};
+
 export const createOrderAPI = async (data: CreateOrderInput): Promise<CreateOrderOutput> => {
   let response: AxiosResponse<CreateOrderOutput>;
   try {
@@ -251,18 +270,13 @@ export const createOrderAPI = async (data: CreateOrderInput): Promise<CreateOrde
   return result;
 };
 
-export const getOrdersFromConsumerAPI = async ({
-  consumerId,
-  status,
-}: GetOrdersFromConsumerInput): Promise<GetOrdersFromConsumerOutput> => {
-  let response: AxiosResponse<GetOrdersFromConsumerOutput>;
+export const cancelOrderItemAPI = async ({
+  orderId,
+  orderItemId,
+}: CancelOrderItemInput): Promise<CancelOrderItemOutput> => {
+  let response: AxiosResponse<CancelOrderItemOutput>;
   try {
-    response = await API.get<GetOrdersFromConsumerOutput>('/orders/consumer', {
-      params: {
-        status,
-        consumerId,
-      },
-    });
+    response = await API.post<CancelOrderItemOutput>(`/orders/${orderId}/order-item/${orderItemId}`);
   } catch (error) {
     console.error(error);
   }
