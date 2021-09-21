@@ -15,6 +15,8 @@ import {
   GetOrdersFromConsumerOutput,
   GetOrdersFromProviderInput,
   GetOrdersFromProviderOutput,
+  UpdateOrerStatusInput,
+  UpdateOrerStatusOutput,
 } from '@interfaces/order.interface';
 import {
   AddProductInput,
@@ -293,6 +295,24 @@ export const cancelOrderItemAPI = async ({ orderItemId }: CancelOrderItemInput):
   let response: AxiosResponse<CancelOrderItemOutput>;
   try {
     response = await API.put<CancelOrderItemOutput>(`/orders/order-item/${orderItemId}`);
+  } catch (error) {
+    console.error(error);
+  }
+  const result = response.data;
+  return result;
+};
+
+export const updateOrderStatusAPI = async ({
+  orderItemId,
+  orderStatus,
+}: UpdateOrerStatusInput): Promise<UpdateOrerStatusOutput> => {
+  let response: AxiosResponse<UpdateOrerStatusOutput>;
+  try {
+    response = await API.put<UpdateOrerStatusOutput>(`/orders/order-item/${orderItemId}/update`, null, {
+      params: {
+        orderStatus,
+      },
+    });
   } catch (error) {
     console.error(error);
   }

@@ -68,7 +68,17 @@ export interface CreateOrderOutput extends CoreOutput {
 export interface CancelOrderItemInput {
   orderItemId: string;
 }
-
 export interface CancelOrderItemOutput extends CoreOutput {
+  orderItem?: OrderItem;
+}
+
+// Update order status
+
+export interface UpdateOrerStatusInput {
+  orderItemId: string;
+  orderStatus: OrderStatus;
+}
+
+export interface UpdateOrerStatusOutput extends CoreOutput {
   orderItem?: OrderItem;
 }

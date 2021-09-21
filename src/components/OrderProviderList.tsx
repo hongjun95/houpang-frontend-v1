@@ -49,6 +49,7 @@ const OrderProviderList: React.FC<OrderProviderListProps> = ({ currentUser, canc
             userId={currentUser.id}
             cancelOrderItemMutation={cancelOrderItemMutation}
             onSuccess={onSuccess}
+            providerOrderListrefetch={refetch}
           />
         ))
       )}

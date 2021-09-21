@@ -1,14 +1,20 @@
 import React from 'react';
-import { UseMutationResult } from 'react-query';
+import { QueryObserverResult, RefetchOptions, UseMutationResult } from 'react-query';
 import { f7 } from 'framework7-react';
 import { useRecoilState } from 'recoil';
 
 import { formmatPrice } from '@utils/index';
 import { existedProductOnShoppingList, getShoppingList, IShoppingItem, saveShoppingList } from '@store';
 import { shoppingListAtom } from '@atoms';
-import { CancelOrderItemInput, CancelOrderItemOutput, OrderStatus } from '@interfaces/order.interface';
+import {
+  CancelOrderItemInput,
+  CancelOrderItemOutput,
+  GetOrdersFromProviderOutput,
+  OrderStatus,
+} from '@interfaces/order.interface';
 import useAuth from '@hooks/useAuth';
 import { UserRole } from '@interfaces/user.interface';
+import { updateOrderStatusAPI } from '@api';
 
 interface OrderItemProps {
   userId: string;
@@ -21,6 +27,9 @@ interface OrderItemProps {
   productCount: number;
   cancelOrderItemMutation: UseMutationResult<CancelOrderItemOutput, Error, CancelOrderItemInput, CancelOrderItemOutput>;
   onSuccess({ ok, error, orderItem }: { ok: any; error: any; orderItem: any }): void;
+  providerOrderListrefetch(
+    options?: RefetchOptions,
+  ): Promise<QueryObserverResult<GetOrdersFromProviderOutput, unknown>>;
 }
 
 const OrderItem: React.FC<OrderItemProps> = ({
@@ -34,9 +43,10 @@ const OrderItem: React.FC<OrderItemProps> = ({
   productCount,
   cancelOrderItemMutation,
   onSuccess,
+  providerOrderListrefetch,
 }) => {
   const { currentUser } = useAuth();
-  const [shoppingList, setShoppingList] = useRecoilState<Array<IShoppingItem>>(shoppingListAtom);
+  const [, setShoppingList] = useRecoilState<Array<IShoppingItem>>(shoppingListAtom);
 
   const onAddProductToShoppingList = (e: any, data: IShoppingItem) => {
     const shoppingList = getShoppingList(userId);
@@ -69,6 +79,23 @@ const OrderItem: React.FC<OrderItemProps> = ({
         },
       );
 
+      f7.dialog.close();
+    } catch (error) {
+      f7.dialog.close();
+      f7.dialog.alert(error?.response?.data || error?.message);
+    }
+  };
+
+  const onAcceptOrderClick = async () => {
+    f7.dialog.preloader('잠시만 기다려주세요...');
+    try {
+      const { ok, error } = await updateOrderStatusAPI({ orderItemId, orderStatus: OrderStatus.Received });
+      if (ok) {
+        f7.dialog.alert('주문을 수락하였습니다.');
+        providerOrderListrefetch();
+      } else {
+        f7.dialog.alert(error);
+      }
       f7.dialog.close();
     } catch (error) {
       f7.dialog.close();
@@ -120,16 +147,13 @@ const OrderItem: React.FC<OrderItemProps> = ({
               </button>
             ) : (
               <button
-                className={`w-1/2 py-2 px-3 rounded-md ml-2 border border-gray-600 text-gray-600 pointer-events-none`}
-                onClick={(e) =>
-                  onAddProductToShoppingList(e, {
-                    id: productId,
-                    name: productName,
-                    price: productPrice,
-                    orderCount: 1,
-                    imageUrl: productImage,
-                  })
-                }
+                className={`w-1/2 py-2 px-3 rounded-md ml-2 ${
+                  orderItemStatus !== OrderStatus.Checking
+                    ? 'border border-gray-600 text-gray-600 pointer-events-none'
+                    : 'border-2 border-blue-600 text-blue-600'
+                }`}
+                onClick={onAcceptOrderClick}
+                disabled={orderItemStatus !== OrderStatus.Checking}
               >
                 주문 수락
               </button>
