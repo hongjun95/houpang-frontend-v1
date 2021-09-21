@@ -8,6 +8,8 @@ import { useMutation } from 'react-query';
 import { CancelOrderItemInput, CancelOrderItemOutput } from '@interfaces/order.interface';
 import OrderConsumerList from '@components/OrderConsumerList';
 import OrderProviderList from '@components/OrderProviderList';
+import { UserRole } from '@interfaces/user.interface';
+import { PageRouteProps } from '@constants';
 
 type PageToggle = 'ConsumerOrders' | 'ProviderOrders';
 
@@ -24,7 +26,7 @@ const Indicator = styled.div`
   transition: 0.3s;
 `;
 
-const OrderListPage = () => {
+const OrderListPage = ({ f7router }: PageRouteProps) => {
   const { currentUser } = useAuth();
   const [page, setPage] = useState<PageToggle>('ConsumerOrders');
 
@@ -47,29 +49,35 @@ const OrderListPage = () => {
     <Page noToolbar className="min-h-screen">
       <Navbar title="주문목록" backLink={true}></Navbar>
 
-      <div className="flex w-full relative">
-        <ToggleButton
-          className={`outline-none flex items-center justify-center font-bold px-6 text-base ${
-            page === 'ConsumerOrders' ? 'text-blue-700  py-4 current_page' : '!text-black hover:text-blue-700'
-          }  `}
-          onClick={changeToConsumerOrders}
-        >
-          <span className="">나의 주문</span>
-        </ToggleButton>
-        <ToggleButton
-          className={`outline-none flex items-center justify-center font-bold px-6 text-base ${
-            page === 'ProviderOrders' ? 'text-blue-700 py-4 current_page' : '!text-black hover:text-blue-700'
-          }  `}
-          onClick={changeToProviderOrders}
-        >
-          <span>고객 주문</span>
-        </ToggleButton>
-        <Indicator className="indicator absolute left-0 bottom-0 w-1/2 bg-blue-700"></Indicator>
-      </div>
+      {currentUser.role !== UserRole.Consumer && (
+        <div className="flex w-full relative">
+          <ToggleButton
+            className={`outline-none flex items-center justify-center font-bold px-6 text-base ${
+              page === 'ConsumerOrders' ? 'text-blue-700  py-4 current_page' : '!text-black hover:text-blue-700'
+            }  `}
+            onClick={changeToConsumerOrders}
+          >
+            <span className="">나의 주문</span>
+          </ToggleButton>
+          <ToggleButton
+            className={`outline-none flex items-center justify-center font-bold px-6 text-base ${
+              page === 'ProviderOrders' ? 'text-blue-700 py-4 current_page' : '!text-black hover:text-blue-700'
+            }  `}
+            onClick={changeToProviderOrders}
+          >
+            <span>고객 주문</span>
+          </ToggleButton>
+          <Indicator className="indicator absolute left-0 bottom-0 w-1/2 bg-blue-700"></Indicator>
+        </div>
+      )}
       {page === 'ConsumerOrders' ? (
         <OrderConsumerList currentUser={currentUser} cancelOrderItemMutation={cancelOrderItemMutation} />
       ) : (
-        <OrderProviderList currentUser={currentUser} cancelOrderItemMutation={cancelOrderItemMutation} />
+        <OrderProviderList //
+          currentUser={currentUser}
+          cancelOrderItemMutation={cancelOrderItemMutation}
+          f7router={f7router}
+        />
       )}
     </Page>
   );

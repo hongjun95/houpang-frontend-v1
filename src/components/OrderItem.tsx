@@ -15,6 +15,7 @@ import {
 import useAuth from '@hooks/useAuth';
 import { UserRole } from '@interfaces/user.interface';
 import { updateOrderStatusAPI } from '@api';
+import { Router } from 'framework7/types';
 
 interface OrderItemProps {
   userId: string;
@@ -30,6 +31,7 @@ interface OrderItemProps {
   providerOrderListrefetch(
     options?: RefetchOptions,
   ): Promise<QueryObserverResult<GetOrdersFromProviderOutput, unknown>>;
+  f7router: Router.Router;
 }
 
 const OrderItem: React.FC<OrderItemProps> = ({
@@ -44,6 +46,7 @@ const OrderItem: React.FC<OrderItemProps> = ({
   cancelOrderItemMutation,
   onSuccess,
   providerOrderListrefetch,
+  f7router,
 }) => {
   const { currentUser } = useAuth();
   const [, setShoppingList] = useRecoilState<Array<IShoppingItem>>(shoppingListAtom);
@@ -78,12 +81,15 @@ const OrderItem: React.FC<OrderItemProps> = ({
           onSuccess,
         },
       );
-
       f7.dialog.close();
     } catch (error) {
       f7.dialog.close();
       f7.dialog.alert(error?.response?.data || error?.message);
     }
+  };
+
+  const onExchangeOrReturnOrderItemClick = async () => {
+    f7router.navigate(`/orders/${orderItemId}/return`, {});
   };
 
   const onAcceptOrderClick = async () => {
@@ -163,17 +169,28 @@ const OrderItem: React.FC<OrderItemProps> = ({
         </div>
       </div>
       <div className="flex mt-2">
-        {orderItemStatus === OrderStatus.Canceled ? (
-          <div className="border-2 py-2 rounded-lg mr-2 border-gray-200 flex-1 font-medium w-1/2 text-center text-gray-500">
-            주문 취소 완료
-          </div>
-        ) : (
+        {currentUser.role === UserRole.Consumer && orderItemStatus === OrderStatus.Delivered ? (
+          <button
+            className="border-2 py-2 rounded-lg mr-2 border-gray-200 font-medium flex-1"
+            onClick={onExchangeOrReturnOrderItemClick}
+          >
+            교환<span className="mx-1">&#183;</span>반품 신청
+          </button>
+        ) : orderItemStatus === OrderStatus.Checking ? (
           <button
             className="border-2 py-2 rounded-lg mr-2 border-gray-200 font-medium flex-1"
             onClick={onCancelOrderItemClick}
           >
             주문<span className="mx-1">&#183;</span>배송 취소
           </button>
+        ) : orderItemStatus === OrderStatus.Canceled ? (
+          <div className="border-2 py-2 rounded-lg mr-2 border-gray-200 flex-1 font-medium w-1/2 text-center text-gray-500">
+            주문 취소 완료
+          </div>
+        ) : (
+          <div className="border-2 py-2 rounded-lg mr-2 border-gray-200 flex-1 font-medium w-1/2 text-center text-gray-500">
+            {orderItemStatus}
+          </div>
         )}
         <button className="border-2 border-blue-600 text-blue-600 py-2 rounded-lg font-medium flex-1">배송조회</button>
       </div>

@@ -7,13 +7,15 @@ import { UseMutationResult, useQuery, useQueryClient } from 'react-query';
 import { ordersFromProvider } from '@reactQuery/query-keys';
 import { CancelOrderItemInput, CancelOrderItemOutput } from '@interfaces/order.interface';
 import { User } from '@interfaces/user.interface';
+import { Router } from 'framework7/types';
 
 interface OrderProviderListProps {
   currentUser: User;
   cancelOrderItemMutation: UseMutationResult<CancelOrderItemOutput, Error, CancelOrderItemInput, CancelOrderItemOutput>;
+  f7router: Router.Router;
 }
 
-const OrderProviderList: React.FC<OrderProviderListProps> = ({ currentUser, cancelOrderItemMutation }) => {
+const OrderProviderList: React.FC<OrderProviderListProps> = ({ currentUser, cancelOrderItemMutation, f7router }) => {
   const { data, status, refetch } = useQuery(ordersFromProvider.list({ providerId: currentUser.id }), () =>
     getOrdersFromProviderAPI({ providerId: currentUser.id }),
   );
@@ -50,6 +52,7 @@ const OrderProviderList: React.FC<OrderProviderListProps> = ({ currentUser, canc
             cancelOrderItemMutation={cancelOrderItemMutation}
             onSuccess={onSuccess}
             providerOrderListrefetch={refetch}
+            f7router={f7router}
           />
         ))
       )}
