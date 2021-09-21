@@ -20,6 +20,7 @@ interface OrderItemProps {
   productImage: string;
   productCount: number;
   cancelOrderItemMutation: UseMutationResult<CancelOrderItemOutput, Error, CancelOrderItemInput, CancelOrderItemOutput>;
+  onSuccess({ ok, error, orderItem }: { ok: any; error: any; orderItem: any }): void;
 }
 
 const OrderItem: React.FC<OrderItemProps> = ({
@@ -32,6 +33,7 @@ const OrderItem: React.FC<OrderItemProps> = ({
   productImage,
   productCount,
   cancelOrderItemMutation,
+  onSuccess,
 }) => {
   const { currentUser } = useAuth();
   const [shoppingList, setShoppingList] = useRecoilState<Array<IShoppingItem>>(shoppingListAtom);
@@ -58,9 +60,14 @@ const OrderItem: React.FC<OrderItemProps> = ({
   const onCancelOrderItemClick = async () => {
     f7.dialog.preloader('잠시만 기다려주세요...');
     try {
-      cancelOrderItemMutation.mutate({
-        orderItemId,
-      });
+      cancelOrderItemMutation.mutate(
+        {
+          orderItemId,
+        },
+        {
+          onSuccess,
+        },
+      );
 
       f7.dialog.close();
     } catch (error) {

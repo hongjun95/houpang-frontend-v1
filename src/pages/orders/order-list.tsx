@@ -1,86 +1,75 @@
-import React from 'react';
-import { f7, Link, Navbar, Page, Toolbar } from 'framework7-react';
+import React, { useState } from 'react';
+import { Navbar, Page } from 'framework7-react';
+import styled from 'styled-components';
 
 import useAuth from '@hooks/useAuth';
-import { cancelOrderItemAPI, getOrdersFromConsumerAPI } from '@api';
-import OrderItem from '@components/OrderItem';
-import Order from '@components/Order';
-import { useMutation, useQuery, useQueryClient } from 'react-query';
-import { ordersFromConsumer } from '@reactQuery/query-keys';
+import { cancelOrderItemAPI } from '@api';
+import { useMutation } from 'react-query';
 import { CancelOrderItemInput, CancelOrderItemOutput } from '@interfaces/order.interface';
-import { UserRole } from '@interfaces/user.interface';
+import OrderConsumerList from '@components/OrderConsumerList';
+import OrderProviderList from '@components/OrderProviderList';
+
+type PageToggle = 'ConsumerOrders' | 'ProviderOrders';
+
+const ToggleButton = styled.button`
+  :nth-child(1).current_page ~ .indicator {
+    transform: translateX(calc(0%));
+  }
+  :nth-child(2).current_page ~ .indicator {
+    transform: translateX(calc(100%));
+  }
+`;
+const Indicator = styled.div`
+  height: 1px;
+  transition: 0.3s;
+`;
 
 const OrderListPage = () => {
   const { currentUser } = useAuth();
+  const [page, setPage] = useState<PageToggle>('ConsumerOrders');
 
-  const { data, status, refetch } = useQuery(ordersFromConsumer.list({ consumerId: currentUser.id }), () =>
-    getOrdersFromConsumerAPI({ consumerId: currentUser.id }),
-  );
-
-  const queryClient = useQueryClient();
   const cancelOrderItemMutation = useMutation<
     CancelOrderItemOutput,
     Error,
     CancelOrderItemInput,
     CancelOrderItemOutput
-  >(cancelOrderItemAPI, {
-    onSuccess: ({ ok, error, orderItem }) => {
-      if (ok) {
-        f7.dialog.alert('주문을 취소했습니다.');
-        queryClient.setQueryData(['cancelOrderItem'], orderItem);
-        refetch();
-      } else {
-        f7.dialog.alert(error);
-      }
-    },
-  });
+  >(cancelOrderItemAPI);
+
+  const changeToProviderOrders = () => {
+    setPage('ProviderOrders');
+  };
+
+  const changeToConsumerOrders = () => {
+    setPage('ConsumerOrders');
+  };
 
   return (
     <Page noToolbar className="min-h-screen">
       <Navbar title="주문목록" backLink={true}></Navbar>
-      {currentUser?.role === UserRole.Provider && (
-        <Toolbar top>
-          <div></div>
-          <Link href="/order-list" className="font-bold flex px-6 py-4 text-base border-b-2 border-blue-700">
-            나의 주문
-          </Link>
-          <Link
-            href="/order-list/provider"
-            className="font-bold flex px-6 py-4 text-base !text-black hover:text-blue-700"
-          >
-            고객 주문
-          </Link>
-          <div></div>
-        </Toolbar>
-      )}
-      {status === 'success' && data.orders.length === 0 ? (
-        <div className="flex items-center justify-center min-h-full">
-          <span className="text-3xl font-bold text-gray-500">주문 목록이 비었습니다.</span>
-        </div>
+
+      <div className="flex w-full relative">
+        <ToggleButton
+          className={`outline-none flex items-center justify-center font-bold px-6 text-base ${
+            page === 'ConsumerOrders' ? 'text-blue-700  py-4 current_page' : '!text-black hover:text-blue-700'
+          }  `}
+          onClick={changeToConsumerOrders}
+        >
+          <span className="">나의 주문</span>
+        </ToggleButton>
+        <ToggleButton
+          className={`outline-none flex items-center justify-center font-bold px-6 text-base ${
+            page === 'ProviderOrders' ? 'text-blue-700 py-4 current_page' : '!text-black hover:text-blue-700'
+          }  `}
+          onClick={changeToProviderOrders}
+        >
+          <span>고객 주문</span>
+        </ToggleButton>
+        <Indicator className="indicator absolute left-0 bottom-0 w-1/2 bg-blue-700"></Indicator>
+      </div>
+      {page === 'ConsumerOrders' ? (
+        <OrderConsumerList currentUser={currentUser} cancelOrderItemMutation={cancelOrderItemMutation} />
       ) : (
-        data?.orders.map((order) => (
-          <Order
-            key={order.id}
-            createdAt={order.orderedAt}
-            destination={order.destination}
-            deliverRequest={order.deliverRequest}
-          >
-            {order?.orderItems?.map((orderItem) => (
-              <OrderItem
-                key={orderItem.id}
-                orderItemId={orderItem.id}
-                orderItemStatus={orderItem.status}
-                productId={orderItem?.product?.id}
-                productImage={orderItem?.product?.images[0]}
-                productName={orderItem?.product?.name}
-                productPrice={orderItem?.product?.price}
-                productCount={orderItem.count}
-                userId={currentUser.id}
-                cancelOrderItemMutation={cancelOrderItemMutation}
-              />
-            ))}
-          </Order>
-        ))
+        <OrderProviderList currentUser={currentUser} cancelOrderItemMutation={cancelOrderItemMutation} />
       )}
     </Page>
   );

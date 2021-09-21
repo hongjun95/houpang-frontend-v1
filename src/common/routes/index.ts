@@ -20,7 +20,6 @@ import EditProductInfoPage from '@pages/products/edit-product-info';
 
 import OrderPage from '@pages/orders/order';
 import OrderListPage from '@pages/orders/order-list';
-import OrderListProviderPage from '@pages/orders/order-list-provider';
 
 import ShoppingListPage from '@pages/shopping-lists/shopping-list';
 
@@ -64,7 +63,6 @@ const productPages = [
 const orderPages = [
   { path: '/order', component: OrderPage },
   { path: '/order-list', component: OrderListPage },
-  { path: '/order-list/provider', component: OrderListProviderPage },
 ];
 
 const listPages = [{ path: '/shopping-list', component: ShoppingListPage }];
