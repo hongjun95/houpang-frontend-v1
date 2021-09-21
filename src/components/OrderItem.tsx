@@ -1,14 +1,21 @@
 import React from 'react';
-import { UseMutationResult } from 'react-query';
+import { QueryObserverResult, RefetchOptions, UseMutationResult } from 'react-query';
 import { f7 } from 'framework7-react';
 import { useRecoilState } from 'recoil';
 
 import { formmatPrice } from '@utils/index';
 import { existedProductOnShoppingList, getShoppingList, IShoppingItem, saveShoppingList } from '@store';
 import { shoppingListAtom } from '@atoms';
-import { CancelOrderItemInput, CancelOrderItemOutput, OrderStatus } from '@interfaces/order.interface';
+import {
+  CancelOrderItemInput,
+  CancelOrderItemOutput,
+  GetOrdersFromProviderOutput,
+  OrderStatus,
+} from '@interfaces/order.interface';
 import useAuth from '@hooks/useAuth';
 import { UserRole } from '@interfaces/user.interface';
+import { updateOrderStatusAPI } from '@api';
+import { Router } from 'framework7/types';
 
 interface OrderItemProps {
   userId: string;
@@ -20,6 +27,11 @@ interface OrderItemProps {
   productImage: string;
   productCount: number;
   cancelOrderItemMutation: UseMutationResult<CancelOrderItemOutput, Error, CancelOrderItemInput, CancelOrderItemOutput>;
+  onSuccess({ ok, error, orderItem }: { ok: any; error: any; orderItem: any }): void;
+  providerOrderListrefetch(
+    options?: RefetchOptions,
+  ): Promise<QueryObserverResult<GetOrdersFromProviderOutput, unknown>>;
+  f7router: Router.Router;
 }
 
 const OrderItem: React.FC<OrderItemProps> = ({
@@ -32,9 +44,12 @@ const OrderItem: React.FC<OrderItemProps> = ({
   productImage,
   productCount,
   cancelOrderItemMutation,
+  onSuccess,
+  providerOrderListrefetch,
+  f7router,
 }) => {
   const { currentUser } = useAuth();
-  const [shoppingList, setShoppingList] = useRecoilState<Array<IShoppingItem>>(shoppingListAtom);
+  const [, setShoppingList] = useRecoilState<Array<IShoppingItem>>(shoppingListAtom);
 
   const onAddProductToShoppingList = (e: any, data: IShoppingItem) => {
     const shoppingList = getShoppingList(userId);
@@ -58,10 +73,35 @@ const OrderItem: React.FC<OrderItemProps> = ({
   const onCancelOrderItemClick = async () => {
     f7.dialog.preloader('잠시만 기다려주세요...');
     try {
-      cancelOrderItemMutation.mutate({
-        orderItemId,
-      });
+      cancelOrderItemMutation.mutate(
+        {
+          orderItemId,
+        },
+        {
+          onSuccess,
+        },
+      );
+      f7.dialog.close();
+    } catch (error) {
+      f7.dialog.close();
+      f7.dialog.alert(error?.response?.data || error?.message);
+    }
+  };
 
+  const onExchangeOrReturnOrderItemClick = async () => {
+    f7router.navigate(`/orders/${orderItemId}/return`, {});
+  };
+
+  const onAcceptOrderClick = async () => {
+    f7.dialog.preloader('잠시만 기다려주세요...');
+    try {
+      const { ok, error } = await updateOrderStatusAPI({ orderItemId, orderStatus: OrderStatus.Received });
+      if (ok) {
+        f7.dialog.alert('주문을 수락하였습니다.');
+        providerOrderListrefetch();
+      } else {
+        f7.dialog.alert(error);
+      }
       f7.dialog.close();
     } catch (error) {
       f7.dialog.close();
@@ -113,16 +153,13 @@ const OrderItem: React.FC<OrderItemProps> = ({
               </button>
             ) : (
               <button
-                className={`w-1/2 py-2 px-3 rounded-md ml-2 border border-gray-600 text-gray-600 pointer-events-none`}
-                onClick={(e) =>
-                  onAddProductToShoppingList(e, {
-                    id: productId,
-                    name: productName,
-                    price: productPrice,
-                    orderCount: 1,
-                    imageUrl: productImage,
-                  })
-                }
+                className={`w-1/2 py-2 px-3 rounded-md ml-2 ${
+                  orderItemStatus !== OrderStatus.Checking
+                    ? 'border border-gray-600 text-gray-600 pointer-events-none'
+                    : 'border-2 border-blue-600 text-blue-600'
+                }`}
+                onClick={onAcceptOrderClick}
+                disabled={orderItemStatus !== OrderStatus.Checking}
               >
                 주문 수락
               </button>
@@ -132,17 +169,28 @@ const OrderItem: React.FC<OrderItemProps> = ({
         </div>
       </div>
       <div className="flex mt-2">
-        {orderItemStatus === OrderStatus.Canceled ? (
-          <div className="border-2 py-2 rounded-lg mr-2 border-gray-200 flex-1 font-medium w-1/2 text-center text-gray-500">
-            주문 취소 완료
-          </div>
-        ) : (
+        {currentUser.role === UserRole.Consumer && orderItemStatus === OrderStatus.Delivered ? (
+          <button
+            className="border-2 py-2 rounded-lg mr-2 border-gray-200 font-medium flex-1"
+            onClick={onExchangeOrReturnOrderItemClick}
+          >
+            교환<span className="mx-1">&#183;</span>반품 신청
+          </button>
+        ) : orderItemStatus === OrderStatus.Checking ? (
           <button
             className="border-2 py-2 rounded-lg mr-2 border-gray-200 font-medium flex-1"
             onClick={onCancelOrderItemClick}
           >
             주문<span className="mx-1">&#183;</span>배송 취소
           </button>
+        ) : orderItemStatus === OrderStatus.Canceled ? (
+          <div className="border-2 py-2 rounded-lg mr-2 border-gray-200 flex-1 font-medium w-1/2 text-center text-gray-500">
+            주문 취소 완료
+          </div>
+        ) : (
+          <div className="border-2 py-2 rounded-lg mr-2 border-gray-200 flex-1 font-medium w-1/2 text-center text-gray-500">
+            {orderItemStatus}
+          </div>
         )}
         <button className="border-2 border-blue-600 text-blue-600 py-2 rounded-lg font-medium flex-1">배송조회</button>
       </div>

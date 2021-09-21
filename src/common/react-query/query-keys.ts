@@ -14,7 +14,7 @@ export const productKeys = {
 };
 
 export const productsFromProviderKeys = {
-  all: ['products'] as const,
+  all: ['products', 'provider'] as const,
   lists: () => [...productsFromProviderKeys.all, 'list'] as const,
   list: ({ sort }: { sort: string }) => [...productsFromProviderKeys.lists(), sort] as const,
   details: () => [...productsFromProviderKeys.all, 'detail'] as const,
@@ -30,7 +30,7 @@ export const ordersFromConsumer = {
 };
 
 export const ordersFromProvider = {
-  all: ['orders', 'consumer'] as const,
+  all: ['orders', 'provider'] as const,
   lists: () => [...ordersFromProvider.all, 'list'] as const,
   list: ({ providerId }: { providerId: string }) => [...ordersFromProvider.lists(), providerId] as const,
   details: () => [...ordersFromProvider.all, 'detail'] as const,
