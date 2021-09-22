@@ -2,6 +2,7 @@ import React from 'react';
 import { QueryObserverResult, RefetchOptions, UseMutationResult } from 'react-query';
 import { f7 } from 'framework7-react';
 import { useRecoilState } from 'recoil';
+import { Router } from 'framework7/types';
 
 import { formmatPrice } from '@utils/index';
 import { existedProductOnShoppingList, getShoppingList, IShoppingItem, saveShoppingList } from '@store';
@@ -15,7 +16,6 @@ import {
 import useAuth from '@hooks/useAuth';
 import { UserRole } from '@interfaces/user.interface';
 import { updateOrderStatusAPI } from '@api';
-import { Router } from 'framework7/types';
 
 interface OrderItemProps {
   userId: string;
@@ -28,10 +28,10 @@ interface OrderItemProps {
   productCount: number;
   cancelOrderItemMutation: UseMutationResult<CancelOrderItemOutput, Error, CancelOrderItemInput, CancelOrderItemOutput>;
   onSuccess({ ok, error, orderItem }: { ok: any; error: any; orderItem: any }): void;
-  providerOrderListrefetch(
+  providerOrderListrefetch?(
     options?: RefetchOptions,
   ): Promise<QueryObserverResult<GetOrdersFromProviderOutput, unknown>>;
-  f7router: Router.Router;
+  f7router?: Router.Router;
 }
 
 const OrderItem: React.FC<OrderItemProps> = ({
@@ -89,7 +89,16 @@ const OrderItem: React.FC<OrderItemProps> = ({
   };
 
   const onExchangeOrReturnOrderItemClick = async () => {
-    f7router.navigate(`/orders/${orderItemId}/return`, {});
+    if (f7router) {
+      f7router.navigate(`/orders/${orderItemId}/return/select-product`, {
+        props: {
+          productId,
+          productImage,
+          productName,
+          productCount,
+        },
+      });
+    }
   };
 
   const onAcceptOrderClick = async () => {
