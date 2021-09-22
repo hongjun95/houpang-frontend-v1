@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { Navbar, Page } from 'framework7-react';
 import styled from 'styled-components';
+import { useMutation } from 'react-query';
 
 import useAuth from '@hooks/useAuth';
 import { cancelOrderItemAPI } from '@api';
-import { useMutation } from 'react-query';
 import { CancelOrderItemInput, CancelOrderItemOutput } from '@interfaces/order.interface';
 import OrderConsumerList from '@components/OrderConsumerList';
 import OrderProviderList from '@components/OrderProviderList';
@@ -71,12 +71,15 @@ const OrderListPage = ({ f7router }: PageRouteProps) => {
         </div>
       )}
       {page === 'ConsumerOrders' ? (
-        <OrderConsumerList currentUser={currentUser} cancelOrderItemMutation={cancelOrderItemMutation} />
+        <OrderConsumerList
+          currentUser={currentUser}
+          cancelOrderItemMutation={cancelOrderItemMutation}
+          f7router={f7router}
+        />
       ) : (
         <OrderProviderList //
           currentUser={currentUser}
           cancelOrderItemMutation={cancelOrderItemMutation}
-          f7router={f7router}
         />
       )}
     </Page>

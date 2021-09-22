@@ -20,7 +20,9 @@ import EditProductInfoPage from '@pages/products/edit-product-info';
 
 import OrderPage from '@pages/orders/order';
 import OrderListPage from '@pages/orders/order-list';
-import ReturnProdcutPage from '@pages/orders/return-product';
+
+import SelectProdcutPage from '@pages/returns/select-product';
+import ChooseReasonPage from '@pages/returns/choose-reason';
 
 import ShoppingListPage from '@pages/shopping-lists/shopping-list';
 
@@ -64,7 +66,11 @@ const productPages = [
 const orderPages = [
   { path: '/order', component: OrderPage },
   { path: '/order-list', component: OrderListPage },
-  { path: '/orders/:orderItemId/return', component: ReturnProdcutPage },
+];
+
+const returnPages = [
+  { path: '/orders/:orderItemId/return/select-product', component: SelectProdcutPage }, //
+  { path: '/orders/:orderItemId/return/choose-reason', component: ChooseReasonPage }, //
 ];
 
 const listPages = [{ path: '/shopping-list', component: ShoppingListPage }];
@@ -75,6 +81,7 @@ const routes: Router.RouteParameters[] = [
   ...productPages,
   ...listPages,
   ...orderPages,
+  ...returnPages,
 
   { path: '/posts', component: PostIndexPage },
   { path: '/posts/new', component: PostNewPage },

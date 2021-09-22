@@ -174,7 +174,11 @@ const SignUpPage = ({ f7router }: PageRouteProps) => {
                 errorMessage={touched.bio && errors.bio}
               />
               <ListItem title="Language" smartSelect>
-                <select name="language" defaultValue="Korean">
+                <select
+                  name="language" //
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                >
                   <option value="Korean">Korean</option>
                   <option value="English">English</option>
                 </select>

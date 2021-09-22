@@ -1,10 +1,11 @@
 import React from 'react';
 import { f7 } from 'framework7-react';
+import { UseMutationResult, useQuery, useQueryClient } from 'react-query';
+import { Router } from 'framework7/types';
 
 import { getOrdersFromConsumerAPI } from '@api';
 import OrderItem from '@components/OrderItem';
 import Order from '@components/Order';
-import { UseMutationResult, useQuery, useQueryClient } from 'react-query';
 import { ordersFromConsumer } from '@reactQuery/query-keys';
 import { CancelOrderItemInput, CancelOrderItemOutput } from '@interfaces/order.interface';
 import { User } from '@interfaces/user.interface';
@@ -12,9 +13,10 @@ import { User } from '@interfaces/user.interface';
 interface OrderConsumerListProps {
   currentUser: User;
   cancelOrderItemMutation: UseMutationResult<CancelOrderItemOutput, Error, CancelOrderItemInput, CancelOrderItemOutput>;
+  f7router: Router.Router;
 }
 
-const OrderConsumerList: React.FC<OrderConsumerListProps> = ({ currentUser, cancelOrderItemMutation }) => {
+const OrderConsumerList: React.FC<OrderConsumerListProps> = ({ currentUser, cancelOrderItemMutation, f7router }) => {
   const { data, status, refetch } = useQuery(ordersFromConsumer.list({ consumerId: currentUser.id }), () =>
     getOrdersFromConsumerAPI({ consumerId: currentUser.id }),
   );
@@ -57,6 +59,7 @@ const OrderConsumerList: React.FC<OrderConsumerListProps> = ({ currentUser, canc
                 userId={currentUser.id}
                 cancelOrderItemMutation={cancelOrderItemMutation}
                 onSuccess={onSuccess}
+                f7router={f7router}
               />
             ))}
           </Order>
