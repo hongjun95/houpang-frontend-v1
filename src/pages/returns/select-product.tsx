@@ -52,7 +52,7 @@ const SelectProdcutPage = ({
   };
 
   useEffect(() => {
-    createOptions(4);
+    createOptions(productCount);
   }, []);
 
   const nextStepBtn = async (values: SelectProductForm, setSubmitting: (isSubmitting: boolean) => void) => {
@@ -75,14 +75,14 @@ const SelectProdcutPage = ({
 
   return (
     <Page className="min-h-screen">
-      <Navbar title="주문목록" backLink={true}></Navbar>
+      <Navbar title="교환, 반품 신청" backLink={true}></Navbar>
       <div className="flex justify-center w-full px-2 py-4 text-base mx-auto text-gray-400">
         <div className="flex items-center">
           <div className="flex">
             <OuterCircle className="bg-blue-700">
               <CircleNumber className="text-white">1</CircleNumber>
             </OuterCircle>
-            <span className="text-blue-700 font-medium">상품 선택</span>
+            <span className="text-blue-700">상품 선택</span>
           </div>
           <hr className="w-4 mx-2 border-gray-400 border-1" />
 
@@ -102,13 +102,6 @@ const SelectProdcutPage = ({
         </div>
       </div>
 
-      {/* <Toolbar labels top className="mx-auto">
-        <div>상품 선택</div>
-        <div className="mx-2">-</div>
-        <div>사유 선택</div>
-        <div className="mx-2">-</div>
-        <div>해결방법 선택</div>
-      </Toolbar> */}
       <Formik
         initialValues={initialValues}
         validationSchema={SelectProductSchema}
