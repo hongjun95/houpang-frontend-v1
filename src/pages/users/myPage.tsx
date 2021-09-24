@@ -63,7 +63,7 @@ const MyPage = () => {
             </a>
           </div>
           <div className="text-center">
-            <a href="/like-list" className="text-sm text-gray-600 flex flex-col mypage_like">
+            <a href="/shopping-list" className="text-sm text-gray-600 flex flex-col mypage_like">
               <i className="mb-2 lar la-heart" style={{ fontSize: '42px', color: 'lightgray' }} />
               <span className="text-sm text-gray-600">좋아요</span>
             </a>
