@@ -21,8 +21,10 @@ import EditProductInfoPage from '@pages/products/edit-product-info';
 import OrderPage from '@pages/orders/order';
 import OrderListPage from '@pages/orders/order-list';
 
-import SelectProdcutPage from '@pages/returns/select-product';
-import ChooseReasonPage from '@pages/returns/choose-reason';
+import SelectProdcutPage from '@pages/refunds/select-product';
+import SelectReasonPage from '@pages/refunds/select-reason';
+import SelectSolutionPage from '@pages/refunds/select-solution';
+import RefundListPage from '@pages/refunds/refund-list';
 
 import ShoppingListPage from '@pages/shopping-lists/shopping-list';
 
@@ -65,12 +67,14 @@ const productPages = [
 
 const orderPages = [
   { path: '/order', component: OrderPage },
-  { path: '/order-list', component: OrderListPage },
+  { path: '/orders', component: OrderListPage },
 ];
 
-const returnPages = [
-  { path: '/orders/:orderItemId/return/select-product', component: SelectProdcutPage }, //
-  { path: '/orders/:orderItemId/return/choose-reason', component: ChooseReasonPage }, //
+const refundPages = [
+  { path: '/orders/:orderItemId/refund/select-product', component: SelectProdcutPage },
+  { path: '/orders/:orderItemId/refund/select-reason', component: SelectReasonPage },
+  { path: '/orders/:orderItemId/refund/select-solution', component: SelectSolutionPage },
+  { path: '/refunds', component: RefundListPage },
 ];
 
 const listPages = [{ path: '/shopping-list', component: ShoppingListPage }];
@@ -81,7 +85,7 @@ const routes: Router.RouteParameters[] = [
   ...productPages,
   ...listPages,
   ...orderPages,
-  ...returnPages,
+  ...refundPages,
 
   { path: '/posts', component: PostIndexPage },
   { path: '/posts/new', component: PostNewPage },

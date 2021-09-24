@@ -30,6 +30,12 @@ import {
   GetProductsFromProviderInput,
   GetProductsFromProviderOutput,
 } from '@interfaces/product.interface';
+import {
+  GetRefundsFromConsumerInput,
+  GetRefundsFromConsumerOutput,
+  RequestRefundInput,
+  RequestRefundOutput,
+} from '@interfaces/refund.interface';
 import { getToken } from '@store';
 import { AxiosResponse } from 'axios';
 import {
@@ -244,7 +250,7 @@ export const uploadImages = async (data) => {
   return result;
 };
 
-// order api
+// Order APIs
 
 export const getOrdersFromConsumerAPI = async ({
   consumerId,
@@ -320,7 +326,68 @@ export const updateOrderStatusAPI = async ({
   return result;
 };
 
-// like api
+// Refund APIs
+
+export const requestRefundAPI = async ({
+  orderItemId,
+  status,
+  count,
+  problemTitle,
+  problemDescription,
+  recallDay,
+  recallPlace,
+  recallTitle,
+  recallDescription,
+  refundPay,
+  sendDay,
+  sendPlace,
+}: RequestRefundInput): Promise<RequestRefundOutput> => {
+  let response: AxiosResponse<RequestRefundOutput>;
+  const body = {
+    count,
+    problemTitle,
+    problemDescription,
+    recallDay,
+    recallPlace,
+    recallTitle,
+    recallDescription,
+    refundPay,
+    sendDay,
+    sendPlace,
+  };
+  try {
+    response = await API.post<RequestRefundOutput>(`/refunds/order-item/${orderItemId}/refund`, body, {
+      params: {
+        status,
+      },
+    });
+  } catch (error) {
+    console.error(error);
+  }
+  const result = response.data;
+  return result;
+};
+
+export const getRefundsFromConsumerAPI = async ({
+  page = 1,
+  consumerId,
+}: GetRefundsFromConsumerInput): Promise<GetRefundsFromConsumerOutput> => {
+  let response: AxiosResponse<GetRefundsFromConsumerOutput>;
+  try {
+    response = await API.get<GetRefundsFromConsumerOutput>('/refunds/consumer', {
+      params: {
+        page,
+        consumerId,
+      },
+    });
+  } catch (error) {
+    console.error(error);
+  }
+  const result = response.data;
+  return result;
+};
+
+// Like APIs
 
 export const findLikeList = async (): Promise<FindLikeListOutput> => {
   let response: AxiosResponse<FindLikeListOutput>;

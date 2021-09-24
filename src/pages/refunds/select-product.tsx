@@ -1,21 +1,19 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import * as Yup from 'yup';
 import { Form, Formik, FormikHelpers } from 'formik';
-import { Icon, Navbar, Page, Toolbar } from 'framework7-react';
+import { Icon, Navbar, Page } from 'framework7-react';
 
 import { PageRouteProps } from '@constants';
 import { FormError } from '@components/form-error';
 import styled from 'styled-components';
+import { OrderItem } from '@interfaces/order.interface';
 
 interface SelectProductPageProps extends PageRouteProps {
-  productId: string;
-  productName: string;
-  productImage: string;
-  productCount: number;
+  orderItem: OrderItem;
 }
 
 interface SelectProductForm {
-  productCount: string;
+  productCount: number;
 }
 
 const OuterCircle = styled.div`
@@ -31,19 +29,12 @@ const CircleNumber = styled.span`
   left: 30%;
 `;
 
-const SelectProdcutPage = ({
-  productId,
-  productCount,
-  productImage,
-  productName,
-  f7route,
-  f7router,
-}: SelectProductPageProps) => {
+const SelectProdcutPage = ({ f7route, f7router, orderItem }: SelectProductPageProps) => {
   const orderItemId = f7route.params.orderItemId;
   const [options, setOptions] = useState<number[]>([]);
 
   const createOptions = (count: number) => {
-    let i: number = 1;
+    let i: number = 0;
     while (i < count) {
       i++;
       options.push(i);
@@ -52,20 +43,21 @@ const SelectProdcutPage = ({
   };
 
   useEffect(() => {
-    createOptions(4);
+    createOptions(orderItem.count);
   }, []);
 
   const nextStepBtn = async (values: SelectProductForm, setSubmitting: (isSubmitting: boolean) => void) => {
     setSubmitting(false);
-    f7router.navigate(`/orders/${orderItemId}/return/choose-reason`, {
+    f7router.navigate(`/orders/${orderItemId}/refund/select-reason`, {
       props: {
-        returnedCounts: values.productCount,
+        refundedCount: values.productCount,
+        orderItem,
       },
     });
   };
 
   const initialValues = {
-    productCount: '4',
+    productCount: orderItem.count,
   };
 
   const SelectProductSchema = Yup.object().shape({
@@ -75,14 +67,14 @@ const SelectProdcutPage = ({
 
   return (
     <Page className="min-h-screen">
-      <Navbar title="주문목록" backLink={true}></Navbar>
+      <Navbar title="교환, 반품 신청" backLink={true}></Navbar>
       <div className="flex justify-center w-full px-2 py-4 text-base mx-auto text-gray-400">
         <div className="flex items-center">
           <div className="flex">
             <OuterCircle className="bg-blue-700">
               <CircleNumber className="text-white">1</CircleNumber>
             </OuterCircle>
-            <span className="text-blue-700 font-medium">상품 선택</span>
+            <span className="text-blue-700">상품 선택</span>
           </div>
           <hr className="w-4 mx-2 border-gray-400 border-1" />
 
@@ -102,13 +94,6 @@ const SelectProdcutPage = ({
         </div>
       </div>
 
-      {/* <Toolbar labels top className="mx-auto">
-        <div>상품 선택</div>
-        <div className="mx-2">-</div>
-        <div>사유 선택</div>
-        <div className="mx-2">-</div>
-        <div>해결방법 선택</div>
-      </Toolbar> */}
       <Formik
         initialValues={initialValues}
         validationSchema={SelectProductSchema}
@@ -120,22 +105,38 @@ const SelectProdcutPage = ({
             <h2 className="text-2xl font-bold mb-4">상품을 선택해 주세요.</h2>
             <div className="pb-2 border-b bg-white rounded-lg p-4">
               <div className="flex">
-                <img src={productImage} alt="" className="w-24 h-24 mr-4" />
+                <img src={orderItem.product.images[0]} alt="" className="w-24 h-24 mr-4" />
                 <div className="font-bold mb-4 h-24 ">
-                  {productName.length > 140 ? `${productName.slice(0, 140)}...` : productName}
+                  {orderItem.product.name.length > 140
+                    ? `${orderItem.product.name.slice(0, 140)}...`
+                    : orderItem.product.name}
                 </div>
               </div>
-              <div className="flex text-base items-center">
-                <div className="ml-auto mr-4">{productCount}개 중</div>
-                <a className="item-link smart-select smart-select-init" data-open-in="popover">
+              <div className="flex text-base items-center relative">
+                <div className="ml-auto mr-4">{orderItem.count}개 중</div>
+                <select //
+                  name="productCount"
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  className="border w-8 py-1 px-2 border-gray-300 rounded-md"
+                >
+                  {options.map((option) => (
+                    <option value={option} key={option} selected={option === orderItem.count}>
+                      {option}
+                    </option>
+                  ))}
+                </select>
+                <FormError errorMessage={touched.productCount && errors.productCount} />
+                {/* <div className="flex items-center w-18 border border-gray-300 p-2 rounded-md absolute right-0">
+                  <div className="item-title"></div>
+                  <Icon className="ml-4 text-sm" f7="arrowtriangle_down_fill"></Icon>
+                </div> */}
+                {/* <a className="item-link smart-select smart-select-init" data-open-in="popover">
                   <select //
                     name="productCount"
                     onChange={handleChange}
                     onBlur={handleBlur}
                   >
-                    <option value={1} key={1} selected={false}>
-                      1
-                    </option>
                     {options.map((option) => (
                       <option value={option} key={option} selected={option === 2}>
                         {option}
@@ -149,7 +150,7 @@ const SelectProdcutPage = ({
                       <Icon className="ml-4 text-sm" f7="arrowtriangle_down_fill"></Icon>
                     </div>
                   </div>
-                </a>
+                </a> */}
               </div>
             </div>
             <button

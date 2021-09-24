@@ -36,14 +36,14 @@ const OrderPage = ({ items, totalPrice, f7router }: OrderProps) => {
     setSubmitting(false);
     f7.dialog.preloader('잠시만 기다려주세요...');
     try {
-      const { ok, error, orderId } = await createOrderAPI({
+      const { ok, error } = await createOrderAPI({
         deliverRequest: values.deliverRequest,
         destination: currentUser.address,
         createOrderItems,
       });
       if (ok) {
         f7.dialog.alert('성공적으로 주문하였습니다.');
-        f7router.navigate('/order-list');
+        f7router.navigate('/orders');
       } else {
         f7.dialog.alert(error);
       }

@@ -39,14 +39,8 @@ const OrderProviderList: React.FC<OrderProviderListProps> = ({ currentUser, canc
         data?.orderItems.map((orderItem) => (
           <OrderItem
             key={orderItem.id}
-            orderItemId={orderItem.id}
-            orderItemStatus={orderItem.status}
-            productId={orderItem?.product?.id}
-            productImage={orderItem?.product?.images[0]}
-            productName={orderItem?.product?.name}
-            productPrice={orderItem?.product?.price}
-            productCount={orderItem.count}
             userId={currentUser.id}
+            orderItem={orderItem}
             cancelOrderItemMutation={cancelOrderItemMutation}
             onSuccess={onSuccess}
             providerOrderListrefetch={refetch}

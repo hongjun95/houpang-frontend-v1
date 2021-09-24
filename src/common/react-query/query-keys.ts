@@ -36,3 +36,11 @@ export const ordersFromProvider = {
   details: () => [...ordersFromProvider.all, 'detail'] as const,
   detail: (orderId: string) => [...ordersFromProvider.details(), orderId] as const,
 };
+
+export const refundsFromConsumer = {
+  all: ['refunds', 'consumer'] as const,
+  lists: () => [...refundsFromConsumer.all, 'list'] as const,
+  list: ({ consumerId }: { consumerId: string }) => [...refundsFromConsumer.lists(), consumerId] as const,
+  details: () => [...refundsFromConsumer.all, 'detail'] as const,
+  detail: (orderId: string) => [...refundsFromConsumer.details(), orderId] as const,
+};
