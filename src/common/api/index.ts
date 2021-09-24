@@ -351,7 +351,7 @@ export const requestRefundAPI = async ({
     sendPlace,
   };
   try {
-    response = await API.post<RequestRefundOutput>(`/orders/order-item/${orderItemId}/return`, body, {
+    response = await API.post<RequestRefundOutput>(`/refunds/order-item/${orderItemId}/refund`, body, {
       params: {
         status,
       },
