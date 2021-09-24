@@ -13,7 +13,7 @@ interface SelectProductPageProps extends PageRouteProps {
 }
 
 interface SelectProductForm {
-  productCount: string;
+  productCount: number;
 }
 
 const OuterCircle = styled.div`
@@ -34,7 +34,7 @@ const SelectProdcutPage = ({ f7route, f7router, orderItem }: SelectProductPagePr
   const [options, setOptions] = useState<number[]>([]);
 
   const createOptions = (count: number) => {
-    let i: number = 1;
+    let i: number = 0;
     while (i < count) {
       i++;
       options.push(i);
@@ -48,16 +48,16 @@ const SelectProdcutPage = ({ f7route, f7router, orderItem }: SelectProductPagePr
 
   const nextStepBtn = async (values: SelectProductForm, setSubmitting: (isSubmitting: boolean) => void) => {
     setSubmitting(false);
-    f7router.navigate(`/orders/${orderItemId}/return/select-reason`, {
+    f7router.navigate(`/orders/${orderItemId}/refund/select-reason`, {
       props: {
-        returnedCounts: values.productCount,
+        refundedCount: values.productCount,
         orderItem,
       },
     });
   };
 
   const initialValues = {
-    productCount: '4',
+    productCount: orderItem.count,
   };
 
   const SelectProductSchema = Yup.object().shape({
@@ -112,17 +112,31 @@ const SelectProdcutPage = ({ f7route, f7router, orderItem }: SelectProductPagePr
                     : orderItem.product.name}
                 </div>
               </div>
-              <div className="flex text-base items-center">
+              <div className="flex text-base items-center relative">
                 <div className="ml-auto mr-4">{orderItem.count}개 중</div>
-                <a className="item-link smart-select smart-select-init" data-open-in="popover">
+                <select //
+                  name="productCount"
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  className="border w-8 py-1 px-2 border-gray-300 rounded-md"
+                >
+                  {options.map((option) => (
+                    <option value={option} key={option} selected={option === orderItem.count}>
+                      {option}
+                    </option>
+                  ))}
+                </select>
+                <FormError errorMessage={touched.productCount && errors.productCount} />
+                {/* <div className="flex items-center w-18 border border-gray-300 p-2 rounded-md absolute right-0">
+                  <div className="item-title"></div>
+                  <Icon className="ml-4 text-sm" f7="arrowtriangle_down_fill"></Icon>
+                </div> */}
+                {/* <a className="item-link smart-select smart-select-init" data-open-in="popover">
                   <select //
                     name="productCount"
                     onChange={handleChange}
                     onBlur={handleBlur}
                   >
-                    <option value={1} key={1} selected={false}>
-                      1
-                    </option>
                     {options.map((option) => (
                       <option value={option} key={option} selected={option === 2}>
                         {option}
@@ -136,7 +150,7 @@ const SelectProdcutPage = ({ f7route, f7router, orderItem }: SelectProductPagePr
                       <Icon className="ml-4 text-sm" f7="arrowtriangle_down_fill"></Icon>
                     </div>
                   </div>
-                </a>
+                </a> */}
               </div>
             </div>
             <button

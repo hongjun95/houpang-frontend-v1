@@ -10,11 +10,6 @@ export enum OrderStatus {
   Canceled = '주문 취소',
 }
 
-export enum ReturnStatus {
-  Exchanged = '교환',
-  Returned = '환불',
-}
-
 export interface Order extends CoreEntity {
   consumer: User;
   orderItems: OrderItem[];
@@ -32,19 +27,19 @@ export interface OrderItem extends CoreEntity {
 }
 
 // Get Orders from Consumer
+
 export interface GetOrdersFromConsumerInput {
   consumerId: string;
 }
-
 export interface GetOrdersFromConsumerOutput extends CoreOutput {
   orders?: Order[];
 }
 
 // Get Orders from Provider
+
 export interface GetOrdersFromProviderInput {
   providerId: string;
 }
-
 export interface GetOrdersFromProviderOutput extends CoreOutput {
   orderItems?: OrderItem[];
 }
@@ -54,7 +49,6 @@ export interface GetOrdersFromProviderOutput extends CoreOutput {
 export interface OrderForm {
   deliverRequest?: string;
 }
-
 export interface CreateOrderItemInput {
   productId: string;
   count: number;
@@ -83,7 +77,6 @@ export interface UpdateOrerStatusInput {
   orderItemId: string;
   orderStatus: OrderStatus;
 }
-
 export interface UpdateOrerStatusOutput extends CoreOutput {
   orderItem?: OrderItem;
 }

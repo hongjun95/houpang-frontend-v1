@@ -1,16 +1,18 @@
 import React, { useRef, useState } from 'react';
 import { Form, Formik } from 'formik';
-import { Checkbox, Navbar, Page } from 'framework7-react';
+import { Checkbox, f7, Navbar, Page } from 'framework7-react';
 import styled from 'styled-components';
 
 import { PageRouteProps } from '@constants';
 import { formmatPrice } from '@utils/index';
-import { OrderItem, ReturnStatus } from '@interfaces/order.interface';
+import { OrderItem } from '@interfaces/order.interface';
 import useAuth from '@hooks/useAuth';
+import { RefundStatus } from '@interfaces/refund.interface';
+import { requestRefundAPI } from '@api';
 
 interface SelectSolutionPageProps extends PageRouteProps {
   orderItem: OrderItem;
-  returnedCounts: number;
+  refundedCount: number;
   problemTitle: string;
   problemDescription: string;
 }
@@ -33,17 +35,6 @@ const ChevronDown = styled.i<{ returnedAddressOpen: boolean }>`
   transition: transform 0.2s linear;
 `;
 
-// const StyledWrapper = styled.div`
-//   width: 100px;
-//   height: 100px;
-//   background: #00bfb2;
-//   ${(props) =>
-//     props.active &&
-//     `
-//    animation: ${boxFade} 2s 1s infinite linear alternate;
-//   `}
-// `;
-
 export enum ERequestPlaces {
   requestPlaces1 = '문 앞',
   requestPlaces2 = '배송기사가 사전에 연락 후 문 앞',
@@ -55,13 +46,13 @@ const SelectSolutionPage = ({
   f7route,
   f7router,
   orderItem,
-  returnedCounts,
+  refundedCount,
   problemDescription,
   problemTitle,
 }: SelectSolutionPageProps) => {
   const { currentUser } = useAuth();
   const orderItemId = f7route.params.orderItemId;
-  const [status, setStatus] = useState<ReturnStatus>(ReturnStatus.Exchanged);
+  const [status, setStatus] = useState<RefundStatus>(RefundStatus.Exchanged);
   const [returnedAddressOpen, setReturnedAddressOpen] = useState<boolean>(false);
   const [requestPlaces, setRequestPlaces] = useState<ERequestPlaces[]>([]);
   const textareaRef = useRef<HTMLTextAreaElement>();
@@ -93,15 +84,37 @@ const SelectSolutionPage = ({
 
   const apply = async (values, setSubmitting: (isSubmitting: boolean) => void) => {
     setSubmitting(false);
-    // const problemTitle = textareaRef.current.parentNode.parentNode.parentNode.childNodes[0].childNodes[1].textContent;
-    // const problemDescription = textareaRef.current.value;
-    // console.log(problemTitle, problemDescription);
+    f7.dialog.preloader('잠시만 기다려주세요...');
+    try {
+      const date = new Date();
+      date.setDate(date.getDate() + 1);
 
-    console.log('requestPlaces');
-    console.log(requestPlaces);
-    console.log(textareaRef.current.value);
-    console.log('values');
-    console.log(values);
+      const { ok, error } = await requestRefundAPI({
+        orderItemId,
+        status,
+        count: refundedCount,
+        problemTitle,
+        problemDescription,
+        recallPlace: currentUser.address,
+        recallDay: date,
+        recallTitle: requestPlaces[0],
+        recallDescription: textareaRef?.current?.value || null,
+        sendPlace: currentUser.address,
+        sendDay: date,
+        refundPay: status === RefundStatus.Refunded ? orderItem.product.price * refundedCount : null,
+      });
+
+      if (ok) {
+        f7.dialog.alert('환불 신청을 되었습니다.');
+        f7router.navigate('/order-list');
+      } else {
+        f7.dialog.alert(error);
+      }
+      f7.dialog.close();
+    } catch (error) {
+      f7.dialog.close();
+      f7.dialog.alert(error?.response?.data || error?.message);
+    }
   };
 
   return (
@@ -148,9 +161,9 @@ const SelectSolutionPage = ({
                       : orderItem.product.name}
                   </div>
                   <div className="">
-                    <span>{returnedCounts}개</span>
+                    <span>{refundedCount}개</span>
                     <span className="mx-1">&#183;</span>
-                    <span>{formmatPrice(orderItem.product.price * returnedCounts)}원</span>
+                    <span>{formmatPrice(orderItem.product.price * refundedCount)}원</span>
                   </div>
                 </div>
               </div>
@@ -169,25 +182,25 @@ const SelectSolutionPage = ({
                   <ul className="pt-4">
                     <li className="px-4 pb-2 mb-2 border-b border-gray-200">
                       <Checkbox
-                        name={ReturnStatus.Exchanged} //
+                        name={RefundStatus.Exchanged} //
                         className="mr-2"
                         onChange={(e) => {
                           onSetStatus(e);
                           handleChange(e);
                         }}
-                        checked={status === ReturnStatus.Exchanged}
+                        checked={status === RefundStatus.Exchanged}
                       />
                       <span>교환</span>
                     </li>
                     <li className="px-4 mb-4">
                       <Checkbox
-                        name={ReturnStatus.Returned} //
+                        name={RefundStatus.Refunded} //
                         className="mr-2"
                         onChange={(e) => {
                           onSetStatus(e);
                           handleChange(e);
                         }}
-                        checked={status === ReturnStatus.Returned}
+                        checked={status === RefundStatus.Refunded}
                       />
                       <span>반품 후 환불</span>
                     </li>
@@ -196,7 +209,7 @@ const SelectSolutionPage = ({
               </div>
             </div>
 
-            {status === ReturnStatus.Exchanged ? (
+            {status === RefundStatus.Exchanged ? (
               <h2 className="text-2xl font-bold my-4">회수, 배송 정보를 확인해주세요.</h2>
             ) : (
               <h2 className="text-2xl font-bold my-4">회수, 환불 정보를 확인해주세요.</h2>
@@ -304,7 +317,7 @@ const SelectSolutionPage = ({
               </div>
             </div>
 
-            {status === ReturnStatus.Exchanged ? (
+            {status === RefundStatus.Exchanged ? (
               <div className="p-4 border-b bg-white rounded-lg mb-4">
                 <div className="mb-4 pb-4 border-b border-gray-200">
                   <h4 className="font-semibold text-base mb-2">상품 배송지</h4>
@@ -337,7 +350,7 @@ const SelectSolutionPage = ({
                   <h4 className="font-semibold text-base mb-2">환불정보</h4>
                   <div className="flex justify-between mb-2">
                     <div>상품금액</div>
-                    <div className="font-semibold">{formmatPrice(orderItem.product.price * returnedCounts)}원</div>
+                    <div className="font-semibold">{formmatPrice(orderItem.product.price * refundedCount)}원</div>
                   </div>
                   <div className="flex justify-between mb-2">
                     <div>배송비</div>
@@ -352,7 +365,7 @@ const SelectSolutionPage = ({
                   <div className="flex justify-between mb-2 pb-2">
                     <h4 className="font-semibold text-base mb-2">환불 예상금액</h4>
                     <div className="font-semibold text-red-500 text-base">
-                      {formmatPrice(orderItem.product.price * returnedCounts)}원
+                      {formmatPrice(orderItem.product.price * refundedCount)}원
                     </div>
                   </div>
                 </div>
@@ -361,8 +374,10 @@ const SelectSolutionPage = ({
 
             <button
               type="submit" //
-              className="w-full flex justify-center text-white bg-blue-600 rounded-md py-4 mt-4"
-              disabled={isSubmitting || !isValid}
+              className={`w-full flex justify-center text-white  rounded-md py-4 mt-4
+              ${isSubmitting || !isValid || !!!requestPlaces[0] ? 'bg-gray-700 pointer-events-none' : 'bg-blue-600'}
+              `}
+              disabled={isSubmitting || !isValid || !!!requestPlaces[0]}
             >
               신청하기
             </button>

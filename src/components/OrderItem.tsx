@@ -79,7 +79,7 @@ const OrderItemComponent: React.FC<OrderItemProps> = ({
 
   const onExchangeOrReturnOrderItemClick = async () => {
     if (f7router) {
-      f7router.navigate(`/orders/${orderItem.id}/return/select-product`, {
+      f7router.navigate(`/orders/${orderItem.id}/refund/select-product`, {
         props: {
           orderItem,
         },

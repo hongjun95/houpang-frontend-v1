@@ -7,7 +7,7 @@ import { PageRouteProps } from '@constants';
 import { OrderItem } from '@interfaces/order.interface';
 
 interface SelectReasonPageProps extends PageRouteProps {
-  returnedCounts: string;
+  refundedCount: string;
   orderItem: OrderItem;
 }
 
@@ -24,7 +24,7 @@ const CircleNumber = styled.span`
   left: 30%;
 `;
 
-const SelectReasonPage = ({ f7route, f7router, returnedCounts, orderItem }: SelectReasonPageProps) => {
+const SelectReasonPage = ({ f7route, f7router, refundedCount, orderItem }: SelectReasonPageProps) => {
   const orderItemId = f7route.params.orderItemId;
   const [changedMind, setChangedMind] = useState<boolean>(false);
   const [changedMinds, setChangedMinds] = useState<string[]>([]);
@@ -32,19 +32,15 @@ const SelectReasonPage = ({ f7route, f7router, returnedCounts, orderItem }: Sele
   const [deliverProblems, setDeliverProblems] = useState<string[]>([]);
   const textareaRef = useRef<HTMLTextAreaElement>();
 
-  console.log(`returnedCounts : ${returnedCounts}`);
-
   const nextStepBtn = async (values, setSubmitting: (isSubmitting: boolean) => void) => {
     setSubmitting(false);
     const problemTitle = textareaRef.current.parentNode.parentNode.parentNode.childNodes[0].childNodes[1].textContent;
     const problemDescription = textareaRef.current.value;
 
-    console.log(problemTitle, problemDescription);
-
-    f7router.navigate(`/orders/${orderItemId}/return/select-solution`, {
+    f7router.navigate(`/orders/${orderItemId}/refund/select-solution`, {
       props: {
         orderItem,
-        returnedCounts,
+        refundedCount,
         problemTitle,
         problemDescription,
       },
@@ -477,8 +473,14 @@ const SelectReasonPage = ({ f7route, f7router, returnedCounts, orderItem }: Sele
             </div>
             <button
               type="submit" //
-              className="w-full flex justify-center text-white bg-blue-600 rounded-md py-4 mt-4"
-              disabled={isSubmitting || !isValid}
+              className={`w-full flex justify-center text-white  rounded-md py-4 mt-4
+              ${
+                isSubmitting || !isValid || !!!textareaRef.current?.value
+                  ? 'bg-gray-700 pointer-events-none'
+                  : 'bg-blue-600'
+              }
+              `}
+              disabled={isSubmitting || !isValid || !!!textareaRef.current?.value}
             >
               <span>다음 단계</span>
               <div className="flex item justify-center">

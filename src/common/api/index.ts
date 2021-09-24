@@ -30,6 +30,7 @@ import {
   GetProductsFromProviderInput,
   GetProductsFromProviderOutput,
 } from '@interfaces/product.interface';
+import { RequestRefundInput, RequestRefundOutput } from '@interfaces/refund.interface';
 import { getToken } from '@store';
 import { AxiosResponse } from 'axios';
 import {
@@ -311,6 +312,48 @@ export const updateOrderStatusAPI = async ({
     response = await API.put<UpdateOrerStatusOutput>(`/orders/order-item/${orderItemId}/update`, null, {
       params: {
         orderStatus,
+      },
+    });
+  } catch (error) {
+    console.error(error);
+  }
+  const result = response.data;
+  return result;
+};
+
+// order api
+
+export const requestRefundAPI = async ({
+  orderItemId,
+  status,
+  count,
+  problemTitle,
+  problemDescription,
+  recallDay,
+  recallPlace,
+  recallTitle,
+  recallDescription,
+  refundPay,
+  sendDay,
+  sendPlace,
+}: RequestRefundInput): Promise<RequestRefundOutput> => {
+  let response: AxiosResponse<RequestRefundOutput>;
+  const body = {
+    count,
+    problemTitle,
+    problemDescription,
+    recallDay,
+    recallPlace,
+    recallTitle,
+    recallDescription,
+    refundPay,
+    sendDay,
+    sendPlace,
+  };
+  try {
+    response = await API.post<RequestRefundOutput>(`/orders/order-item/${orderItemId}/return`, body, {
+      params: {
+        status,
       },
     });
   } catch (error) {
