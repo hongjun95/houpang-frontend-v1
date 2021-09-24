@@ -11,6 +11,7 @@ import {
   CancelOrderItemInput,
   CancelOrderItemOutput,
   GetOrdersFromProviderOutput,
+  OrderItem,
   OrderStatus,
 } from '@interfaces/order.interface';
 import useAuth from '@hooks/useAuth';
@@ -32,9 +33,10 @@ interface OrderItemProps {
     options?: RefetchOptions,
   ): Promise<QueryObserverResult<GetOrdersFromProviderOutput, unknown>>;
   f7router?: Router.Router;
+  orderItem: OrderItem;
 }
 
-const OrderItem: React.FC<OrderItemProps> = ({
+const OrderItemComponent: React.FC<OrderItemProps> = ({
   userId,
   orderItemId,
   orderItemStatus,
@@ -47,6 +49,7 @@ const OrderItem: React.FC<OrderItemProps> = ({
   onSuccess,
   providerOrderListrefetch,
   f7router,
+  orderItem,
 }) => {
   const { currentUser } = useAuth();
   const [, setShoppingList] = useRecoilState<Array<IShoppingItem>>(shoppingListAtom);
@@ -96,6 +99,8 @@ const OrderItem: React.FC<OrderItemProps> = ({
           productImage,
           productName,
           productCount,
+          productPrice,
+          orderItem,
         },
       });
     }
@@ -207,4 +212,4 @@ const OrderItem: React.FC<OrderItemProps> = ({
   );
 };
 
-export default OrderItem;
+export default OrderItemComponent;

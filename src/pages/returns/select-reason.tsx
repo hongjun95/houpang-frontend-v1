@@ -1,14 +1,18 @@
-import React, { useEffect, useRef, useState } from 'react';
-import * as Yup from 'yup';
-import { Form, Formik, FormikHelpers } from 'formik';
-import { Checkbox, Icon, List, ListItem, Navbar, Page } from 'framework7-react';
+import React, { useRef, useState } from 'react';
+import { Form, Formik } from 'formik';
+import { Checkbox, Icon, Navbar, Page } from 'framework7-react';
 import styled from 'styled-components';
 
 import { PageRouteProps } from '@constants';
-import { FormError } from '@components/form-error';
+import { OrderItem } from '@interfaces/order.interface';
 
-interface ChooseReasonPageProps extends PageRouteProps {
+interface SelectReasonPageProps extends PageRouteProps {
   returnedCounts: string;
+  productName: string;
+  productImage: string;
+  productCount: number;
+  productPrice: number;
+  orderItem: OrderItem;
 }
 
 const OuterCircle = styled.div`
@@ -24,18 +28,24 @@ const CircleNumber = styled.span`
   left: 30%;
 `;
 
-const ChooseReasonSchema = Yup.object().shape({
-  productCount: Yup.string() //
-    .required('필수 입력사항 입니다'),
-});
-
-const SelectReasonPage = ({ returnedCounts, f7route, f7router }: ChooseReasonPageProps) => {
+const SelectReasonPage = ({
+  f7route,
+  f7router,
+  returnedCounts,
+  productName,
+  productImage,
+  productCount,
+  productPrice,
+  orderItem,
+}: SelectReasonPageProps) => {
   const orderItemId = f7route.params.orderItemId;
   const [changedMind, setChangedMind] = useState<boolean>(false);
   const [changedMinds, setChangedMinds] = useState<string[]>([]);
   const [productProblems, setProductProblems] = useState<string[]>([]);
   const [deliverProblems, setDeliverProblems] = useState<string[]>([]);
   const textareaRef = useRef<HTMLTextAreaElement>();
+
+  console.log(`returnedCounts : ${returnedCounts}`);
 
   const nextStepBtn = async (values, setSubmitting: (isSubmitting: boolean) => void) => {
     setSubmitting(false);
@@ -44,11 +54,15 @@ const SelectReasonPage = ({ returnedCounts, f7route, f7router }: ChooseReasonPag
 
     console.log(problemTitle, problemDescription);
 
-    f7router.navigate(`/orders/${orderItemId}/return/choose-reason`, {
+    f7router.navigate(`/orders/${orderItemId}/return/select-solution`, {
       props: {
+        productName,
+        productImage,
+        productPrice,
         returnedCounts,
         problemTitle,
         problemDescription,
+        orderItem,
       },
     });
   };
@@ -123,7 +137,6 @@ const SelectReasonPage = ({ returnedCounts, f7route, f7router }: ChooseReasonPag
       </div>
       <Formik
         initialValues={initialValues}
-        validationSchema={ChooseReasonSchema}
         onSubmit={(values, { setSubmitting }) => nextStepBtn(values, setSubmitting)}
         validateOnMount
       >

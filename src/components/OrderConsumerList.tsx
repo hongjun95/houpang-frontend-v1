@@ -4,11 +4,11 @@ import { UseMutationResult, useQuery, useQueryClient } from 'react-query';
 import { Router } from 'framework7/types';
 
 import { getOrdersFromConsumerAPI } from '@api';
-import OrderItem from '@components/OrderItem';
 import Order from '@components/Order';
 import { ordersFromConsumer } from '@reactQuery/query-keys';
 import { CancelOrderItemInput, CancelOrderItemOutput } from '@interfaces/order.interface';
 import { User } from '@interfaces/user.interface';
+import OrderItemComponent from '@components/OrderItem';
 
 interface OrderConsumerListProps {
   currentUser: User;
@@ -47,7 +47,7 @@ const OrderConsumerList: React.FC<OrderConsumerListProps> = ({ currentUser, canc
             deliverRequest={order.deliverRequest}
           >
             {order?.orderItems?.map((orderItem) => (
-              <OrderItem
+              <OrderItemComponent
                 key={orderItem.id}
                 orderItemId={orderItem.id}
                 orderItemStatus={orderItem.status}
@@ -57,6 +57,7 @@ const OrderConsumerList: React.FC<OrderConsumerListProps> = ({ currentUser, canc
                 productPrice={orderItem?.product?.price}
                 productCount={orderItem.count}
                 userId={currentUser.id}
+                orderItem={orderItem}
                 cancelOrderItemMutation={cancelOrderItemMutation}
                 onSuccess={onSuccess}
                 f7router={f7router}

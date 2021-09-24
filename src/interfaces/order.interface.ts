@@ -10,6 +10,11 @@ export enum OrderStatus {
   Canceled = '주문 취소',
 }
 
+export enum ReturnStatus {
+  Exchanged = '교환',
+  Returned = '환불',
+}
+
 export interface Order extends CoreEntity {
   consumer: User;
   orderItems: OrderItem[];

@@ -6,12 +6,15 @@ import { Icon, Navbar, Page, Toolbar } from 'framework7-react';
 import { PageRouteProps } from '@constants';
 import { FormError } from '@components/form-error';
 import styled from 'styled-components';
+import { OrderItem } from '@interfaces/order.interface';
 
 interface SelectProductPageProps extends PageRouteProps {
   productId: string;
   productName: string;
   productImage: string;
   productCount: number;
+  productPrice: number;
+  orderItem: OrderItem;
 }
 
 interface SelectProductForm {
@@ -32,12 +35,14 @@ const CircleNumber = styled.span`
 `;
 
 const SelectProdcutPage = ({
-  productId,
-  productCount,
-  productImage,
-  productName,
   f7route,
   f7router,
+  productId,
+  productName,
+  productCount,
+  productImage,
+  productPrice,
+  orderItem,
 }: SelectProductPageProps) => {
   const orderItemId = f7route.params.orderItemId;
   const [options, setOptions] = useState<number[]>([]);
@@ -57,9 +62,14 @@ const SelectProdcutPage = ({
 
   const nextStepBtn = async (values: SelectProductForm, setSubmitting: (isSubmitting: boolean) => void) => {
     setSubmitting(false);
-    f7router.navigate(`/orders/${orderItemId}/return/choose-reason`, {
+    f7router.navigate(`/orders/${orderItemId}/return/select-reason`, {
       props: {
         returnedCounts: values.productCount,
+        productName,
+        productCount,
+        productImage,
+        productPrice,
+        orderItem,
       },
     });
   };

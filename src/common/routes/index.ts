@@ -23,6 +23,7 @@ import OrderListPage from '@pages/orders/order-list';
 
 import SelectProdcutPage from '@pages/returns/select-product';
 import SelectReasonPage from '@pages/returns/select-reason';
+import SelectSolutionPage from '@pages/returns/select-solution';
 
 import ShoppingListPage from '@pages/shopping-lists/shopping-list';
 
@@ -69,8 +70,9 @@ const orderPages = [
 ];
 
 const returnPages = [
-  { path: '/orders/:orderItemId/return/select-product', component: SelectProdcutPage }, //
-  { path: '/orders/:orderItemId/return/choose-reason', component: SelectReasonPage }, //
+  { path: '/orders/:orderItemId/return/select-product', component: SelectProdcutPage },
+  { path: '/orders/:orderItemId/return/select-reason', component: SelectReasonPage },
+  { path: '/orders/:orderItemId/return/select-solution', component: SelectSolutionPage },
 ];
 
 const listPages = [{ path: '/shopping-list', component: ShoppingListPage }];
