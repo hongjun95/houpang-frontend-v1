@@ -106,7 +106,7 @@ const SelectSolutionPage = ({
 
       if (ok) {
         f7.dialog.alert('환불 신청을 되었습니다.');
-        f7router.navigate('/order-list');
+        f7router.navigate('/refunds');
       } else {
         f7.dialog.alert(error);
       }

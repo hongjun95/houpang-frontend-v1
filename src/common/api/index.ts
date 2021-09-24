@@ -30,7 +30,12 @@ import {
   GetProductsFromProviderInput,
   GetProductsFromProviderOutput,
 } from '@interfaces/product.interface';
-import { RequestRefundInput, RequestRefundOutput } from '@interfaces/refund.interface';
+import {
+  GetRefundsFromConsumerInput,
+  GetRefundsFromConsumerOutput,
+  RequestRefundInput,
+  RequestRefundOutput,
+} from '@interfaces/refund.interface';
 import { getToken } from '@store';
 import { AxiosResponse } from 'axios';
 import {
@@ -245,7 +250,7 @@ export const uploadImages = async (data) => {
   return result;
 };
 
-// order api
+// Order APIs
 
 export const getOrdersFromConsumerAPI = async ({
   consumerId,
@@ -321,7 +326,7 @@ export const updateOrderStatusAPI = async ({
   return result;
 };
 
-// order api
+// Refund APIs
 
 export const requestRefundAPI = async ({
   orderItemId,
@@ -363,7 +368,26 @@ export const requestRefundAPI = async ({
   return result;
 };
 
-// like api
+export const getRefundsFromConsumerAPI = async ({
+  page = 1,
+  consumerId,
+}: GetRefundsFromConsumerInput): Promise<GetRefundsFromConsumerOutput> => {
+  let response: AxiosResponse<GetRefundsFromConsumerOutput>;
+  try {
+    response = await API.get<GetRefundsFromConsumerOutput>('/refunds/consumer', {
+      params: {
+        page,
+        consumerId,
+      },
+    });
+  } catch (error) {
+    console.error(error);
+  }
+  const result = response.data;
+  return result;
+};
+
+// Like APIs
 
 export const findLikeList = async (): Promise<FindLikeListOutput> => {
   let response: AxiosResponse<FindLikeListOutput>;

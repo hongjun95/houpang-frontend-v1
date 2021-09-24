@@ -57,7 +57,7 @@ const MyPage = () => {
             </a>
           </div>
           <div className="text-center">
-            <a href="/order-list" className="text-sm flex flex-col mypage_order">
+            <a href="/orders" className="text-sm flex flex-col mypage_order">
               <i className="mb-2 las la-file-invoice" style={{ fontSize: '42px', color: 'lightgray' }} />
               <span className="text-sm text-gray-600">주문</span>
             </a>
@@ -128,7 +128,7 @@ const MyPage = () => {
               </a>
             </li>
             <li>
-              <a href="/order-list" className="block hover:bg-gray-50">
+              <a href="/orders" className="block hover:bg-gray-50">
                 <div className="flex items-center px-4 py-4 sm:px-6">
                   <div className="min-w-0 flex-1 flex items-center">
                     <div className="min-w-0 flex-1 px-4 md:grid md:grid-cols-2 md:gap-4">
@@ -141,7 +141,7 @@ const MyPage = () => {
               </a>
             </li>
             <li>
-              <a href="#" className="block hover:bg-gray-50">
+              <a href="/refunds" className="block hover:bg-gray-50">
                 <div className="flex items-center px-4 py-4 sm:px-6">
                   <div className="min-w-0 flex-1 flex items-center">
                     <div className="min-w-0 flex-1 px-4 md:grid md:grid-cols-2 md:gap-4">

@@ -1,6 +1,5 @@
-import { CoreEntity, CoreOutput } from './core.interface';
+import { CoreEntity, CoreOutput, PaginationInput, PaginationOutput } from './core.interface';
 import { OrderItem } from './order.interface';
-import { Product } from './product.interface';
 import { User } from './user.interface';
 
 export enum RefundStatus {
@@ -9,6 +8,7 @@ export enum RefundStatus {
 }
 
 export interface Refund extends CoreEntity {
+  refundedAt: string;
   orderItem: OrderItem;
   count: number;
   problemTitle: string;
@@ -42,4 +42,14 @@ export interface RequestRefundInput {
 }
 export interface RequestRefundOutput extends CoreOutput {
   orderItem?: OrderItem;
+}
+
+// Get Refunds from Consumer
+
+export interface GetRefundsFromConsumerInput extends PaginationInput {
+  consumerId: string;
+}
+
+export interface GetRefundsFromConsumerOutput extends PaginationOutput {
+  refundItems?: Refund[];
 }
