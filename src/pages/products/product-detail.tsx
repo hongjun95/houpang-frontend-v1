@@ -112,8 +112,7 @@ const ProductDetailPage = ({ f7route, f7router }: PageRouteProps) => {
       const ok = window.confirm('정말 삭제하시겠습니까?');
       if (ok) {
         await deleteProduct({ productId });
-        f7router.navigate(f7router.history.pop());
-        // f7router.refreshPage();
+        f7router.navigate(`/products?categoryId=${data.product.category.id}`);
       }
     } catch (error) {
       console.error(error);

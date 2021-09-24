@@ -176,7 +176,6 @@ export const getProductsFromProvider = async ({
 export const addProduct = async (data: AddProductInput): Promise<AddProductOutput> => {
   let response: AxiosResponse<AddProductOutput>;
   try {
-    console.log(data);
     response = await API.post<AddProductOutput>('/products', data);
   } catch (error) {
     console.error(error);

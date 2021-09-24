@@ -4,7 +4,6 @@ import { Form, Formik, FormikHelpers } from 'formik';
 import i18next from 'i18next';
 
 import { List, ListInput, ListItem, Navbar, Page } from 'framework7-react';
-import { PageRouteProps } from '@constants';
 import { getCategories } from '@api';
 import { AddProductForm } from '@interfaces/product.interface';
 import { useQuery } from 'react-query';
