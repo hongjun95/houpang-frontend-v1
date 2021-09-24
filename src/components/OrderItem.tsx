@@ -20,13 +20,6 @@ import { updateOrderStatusAPI } from '@api';
 
 interface OrderItemProps {
   userId: string;
-  orderItemId: string;
-  orderItemStatus: OrderStatus;
-  productId: string;
-  productName: string;
-  productPrice: number;
-  productImage: string;
-  productCount: number;
   cancelOrderItemMutation: UseMutationResult<CancelOrderItemOutput, Error, CancelOrderItemInput, CancelOrderItemOutput>;
   onSuccess({ ok, error, orderItem }: { ok: any; error: any; orderItem: any }): void;
   providerOrderListrefetch?(
@@ -38,13 +31,6 @@ interface OrderItemProps {
 
 const OrderItemComponent: React.FC<OrderItemProps> = ({
   userId,
-  orderItemId,
-  orderItemStatus,
-  productId,
-  productName,
-  productPrice,
-  productImage,
-  productCount,
   cancelOrderItemMutation,
   onSuccess,
   providerOrderListrefetch,
@@ -78,7 +64,7 @@ const OrderItemComponent: React.FC<OrderItemProps> = ({
     try {
       cancelOrderItemMutation.mutate(
         {
-          orderItemId,
+          orderItemId: orderItem.id,
         },
         {
           onSuccess,
@@ -93,13 +79,8 @@ const OrderItemComponent: React.FC<OrderItemProps> = ({
 
   const onExchangeOrReturnOrderItemClick = async () => {
     if (f7router) {
-      f7router.navigate(`/orders/${orderItemId}/return/select-product`, {
+      f7router.navigate(`/orders/${orderItem.id}/return/select-product`, {
         props: {
-          productId,
-          productImage,
-          productName,
-          productCount,
-          productPrice,
           orderItem,
         },
       });
@@ -109,7 +90,10 @@ const OrderItemComponent: React.FC<OrderItemProps> = ({
   const onAcceptOrderClick = async () => {
     f7.dialog.preloader('잠시만 기다려주세요...');
     try {
-      const { ok, error } = await updateOrderStatusAPI({ orderItemId, orderStatus: OrderStatus.Received });
+      const { ok, error } = await updateOrderStatusAPI({
+        orderItemId: orderItem.id,
+        orderStatus: OrderStatus.Received,
+      });
       if (ok) {
         f7.dialog.alert('주문을 수락하였습니다.');
         providerOrderListrefetch();
@@ -126,54 +110,54 @@ const OrderItemComponent: React.FC<OrderItemProps> = ({
   return (
     <div className="pb-2 border-b border-gray-400 mx-3 my-4">
       <div className="mb-4">
-        <span className="font-bold text-md">{orderItemStatus}</span>
+        <span className="font-bold text-md">{orderItem.status}</span>
       </div>
       <div className="flex">
-        <img src={productImage} alt="" className="w-24 h-24 mr-4" />
+        <img src={orderItem.product.images[0]} alt="" className="w-24 h-24 mr-4" />
         {/* <div
-          style={{ backgroundImage: `url(${productImage})` }}
+          style={{ backgroundImage: `url(${orderItem.product.images[0]})` }}
           className=" bg-gray-200 bg-center bg-cover w-24 h-24 mr-4"
         ></div> */}
         <div className="overflow-hidden w-3/4 flex flex-col justify-between h-full">
-          <div className="font-bold mb-4 h-12 truncate">{productName}</div>
+          <div className="font-bold mb-4 h-12 truncate">{orderItem.product.name}</div>
           <div className="flex justify-between items-center">
             <div className="flex text-gray-500 text-lg">
               <div>
-                <span>{formmatPrice(productPrice)}</span>
+                <span>{formmatPrice(orderItem.product.price)}</span>
                 <span>원</span>
               </div>
               <span className="mx-1">&#183;</span>
-              <span>{productCount}개</span>
+              <span>{orderItem.count}개</span>
             </div>
             {currentUser.role === UserRole.Consumer ? (
               <button
                 className={`w-1/2 py-2 px-3 rounded-md ml-2 ${
-                  existedProductOnShoppingList(userId, productId)
+                  existedProductOnShoppingList(userId, orderItem.product.id)
                     ? 'border border-gray-600 text-gray-600 pointer-events-none'
                     : 'border-2 border-blue-600 text-blue-600'
                 }`}
                 onClick={(e) =>
                   onAddProductToShoppingList(e, {
-                    id: productId,
-                    name: productName,
-                    price: productPrice,
+                    id: orderItem.product.id,
+                    name: orderItem.product.name,
+                    price: orderItem.product.price,
                     orderCount: 1,
-                    imageUrl: productImage,
+                    imageUrl: orderItem.product.images[0],
                   })
                 }
-                disabled={existedProductOnShoppingList(userId, productId)}
+                disabled={existedProductOnShoppingList(userId, orderItem.product.id)}
               >
                 장바구니 담기
               </button>
             ) : (
               <button
                 className={`w-1/2 py-2 px-3 rounded-md ml-2 ${
-                  orderItemStatus !== OrderStatus.Checking
+                  orderItem.status !== OrderStatus.Checking
                     ? 'border border-gray-600 text-gray-600 pointer-events-none'
                     : 'border-2 border-blue-600 text-blue-600'
                 }`}
                 onClick={onAcceptOrderClick}
-                disabled={orderItemStatus !== OrderStatus.Checking}
+                disabled={orderItem.status !== OrderStatus.Checking}
               >
                 주문 수락
               </button>
@@ -183,27 +167,27 @@ const OrderItemComponent: React.FC<OrderItemProps> = ({
         </div>
       </div>
       <div className="flex mt-2">
-        {currentUser.role === UserRole.Consumer && orderItemStatus === OrderStatus.Delivered ? (
+        {currentUser.role === UserRole.Consumer && orderItem.status === OrderStatus.Delivered ? (
           <button
             className="border-2 py-2 rounded-lg mr-2 border-gray-200 font-medium flex-1"
             onClick={onExchangeOrReturnOrderItemClick}
           >
             교환<span className="mx-1">&#183;</span>반품 신청
           </button>
-        ) : orderItemStatus === OrderStatus.Checking ? (
+        ) : orderItem.status === OrderStatus.Checking ? (
           <button
             className="border-2 py-2 rounded-lg mr-2 border-gray-200 font-medium flex-1"
             onClick={onCancelOrderItemClick}
           >
             주문<span className="mx-1">&#183;</span>배송 취소
           </button>
-        ) : orderItemStatus === OrderStatus.Canceled ? (
+        ) : orderItem.status === OrderStatus.Canceled ? (
           <div className="border-2 py-2 rounded-lg mr-2 border-gray-200 flex-1 font-medium w-1/2 text-center text-gray-500">
             주문 취소 완료
           </div>
         ) : (
           <div className="border-2 py-2 rounded-lg mr-2 border-gray-200 flex-1 font-medium w-1/2 text-center text-gray-500">
-            {orderItemStatus}
+            {orderItem.status}
           </div>
         )}
         <button className="border-2 border-blue-600 text-blue-600 py-2 rounded-lg font-medium flex-1">배송조회</button>

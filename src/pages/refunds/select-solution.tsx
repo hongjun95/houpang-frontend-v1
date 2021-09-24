@@ -1,23 +1,18 @@
 import React, { useRef, useState } from 'react';
-import * as Yup from 'yup';
 import { Form, Formik } from 'formik';
-import { Checkbox, Icon, Navbar, Page } from 'framework7-react';
-import styled, { keyframes } from 'styled-components';
+import { Checkbox, Navbar, Page } from 'framework7-react';
+import styled from 'styled-components';
 
 import { PageRouteProps } from '@constants';
-import { FormError } from '@components/form-error';
 import { formmatPrice } from '@utils/index';
 import { OrderItem, ReturnStatus } from '@interfaces/order.interface';
 import useAuth from '@hooks/useAuth';
 
 interface SelectSolutionPageProps extends PageRouteProps {
+  orderItem: OrderItem;
   returnedCounts: number;
-  productName: string;
-  productImage: string;
-  productPrice: number;
   problemTitle: string;
   problemDescription: string;
-  orderItem: OrderItem;
 }
 
 const OuterCircle = styled.div`
@@ -59,13 +54,10 @@ export enum ERequestPlaces {
 const SelectSolutionPage = ({
   f7route,
   f7router,
+  orderItem,
   returnedCounts,
-  productImage,
-  productName,
-  productPrice,
   problemDescription,
   problemTitle,
-  orderItem,
 }: SelectSolutionPageProps) => {
   const { currentUser } = useAuth();
   const orderItemId = f7route.params.orderItemId;
@@ -148,21 +140,24 @@ const SelectSolutionPage = ({
           <Form className="px-3 py-4 bg-gray-200 min-h-screen">
             <div className="pb-2 border-b bg-white rounded-lg p-4">
               <div className="flex mb-4 pb-4 border-b border-gray-400">
-                <img src={productImage} alt="" className="w-24 h-24 mr-4" />
+                <img src={orderItem.product.images[0]} alt="" className="w-24 h-24 mr-4" />
                 <div className="flex flex-col justify-between">
                   <div className="font-bold mb-2">
-                    {productName.length > 140 ? `${productName.slice(0, 140)}...` : productName}
+                    {orderItem.product.name.length > 140
+                      ? `${orderItem.product.name.slice(0, 140)}...`
+                      : orderItem.product.name}
                   </div>
                   <div className="">
                     <span>{returnedCounts}개</span>
                     <span className="mx-1">&#183;</span>
-                    <span>{formmatPrice(productPrice * returnedCounts)}원</span>
+                    <span>{formmatPrice(orderItem.product.price * returnedCounts)}원</span>
                   </div>
                 </div>
               </div>
               <div>
-                <h4 className="mb-3">선택한 사유</h4>
-                <span className="text-sm mb-2">{problemTitle}</span>
+                <h4 className="mb-3 font-semibold">선택한 사유</h4>
+                <div className="text-sm mb-2">{problemTitle}</div>
+                <div className="border p-2 rounded-md border-gray-300">{problemDescription}</div>
               </div>
             </div>
 
@@ -311,9 +306,25 @@ const SelectSolutionPage = ({
 
             {status === ReturnStatus.Exchanged ? (
               <div className="p-4 border-b bg-white rounded-lg mb-4">
-                <div>
+                <div className="mb-4 pb-4 border-b border-gray-200">
                   <h4 className="font-semibold text-base mb-2">상품 배송지</h4>
-                  <div className="mb-4 pb-4 border-b border-gray-200">{currentUser.username}</div>
+                  <div className="flex justify-between">
+                    <div>{currentUser.username}</div>
+                    <ChevronDown //
+                      className="text-base cursor-pointer icon f7-icons"
+                      onClick={arrowToggle}
+                      ref={chevronDown}
+                      returnedAddressOpen={returnedAddressOpen}
+                    >
+                      chevron_down
+                    </ChevronDown>
+                  </div>
+                  {returnedAddressOpen && (
+                    <div className="my-2">
+                      <div className="mb-2">{currentUser.address}</div>
+                      <div>{currentUser.phoneNumber}</div>
+                    </div>
+                  )}
                 </div>
                 <div>
                   <h4 className="font-semibold text-base mb-2">배송 예정일</h4>
@@ -326,7 +337,7 @@ const SelectSolutionPage = ({
                   <h4 className="font-semibold text-base mb-2">환불정보</h4>
                   <div className="flex justify-between mb-2">
                     <div>상품금액</div>
-                    <div className="font-semibold">{formmatPrice(productPrice * returnedCounts)}원</div>
+                    <div className="font-semibold">{formmatPrice(orderItem.product.price * returnedCounts)}원</div>
                   </div>
                   <div className="flex justify-between mb-2">
                     <div>배송비</div>
@@ -341,7 +352,7 @@ const SelectSolutionPage = ({
                   <div className="flex justify-between mb-2 pb-2">
                     <h4 className="font-semibold text-base mb-2">환불 예상금액</h4>
                     <div className="font-semibold text-red-500 text-base">
-                      {formmatPrice(productPrice * returnedCounts)}원
+                      {formmatPrice(orderItem.product.price * returnedCounts)}원
                     </div>
                   </div>
                 </div>

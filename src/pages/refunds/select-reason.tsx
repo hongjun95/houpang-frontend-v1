@@ -8,10 +8,6 @@ import { OrderItem } from '@interfaces/order.interface';
 
 interface SelectReasonPageProps extends PageRouteProps {
   returnedCounts: string;
-  productName: string;
-  productImage: string;
-  productCount: number;
-  productPrice: number;
   orderItem: OrderItem;
 }
 
@@ -28,16 +24,7 @@ const CircleNumber = styled.span`
   left: 30%;
 `;
 
-const SelectReasonPage = ({
-  f7route,
-  f7router,
-  returnedCounts,
-  productName,
-  productImage,
-  productCount,
-  productPrice,
-  orderItem,
-}: SelectReasonPageProps) => {
+const SelectReasonPage = ({ f7route, f7router, returnedCounts, orderItem }: SelectReasonPageProps) => {
   const orderItemId = f7route.params.orderItemId;
   const [changedMind, setChangedMind] = useState<boolean>(false);
   const [changedMinds, setChangedMinds] = useState<string[]>([]);
@@ -56,13 +43,10 @@ const SelectReasonPage = ({
 
     f7router.navigate(`/orders/${orderItemId}/return/select-solution`, {
       props: {
-        productName,
-        productImage,
-        productPrice,
+        orderItem,
         returnedCounts,
         problemTitle,
         problemDescription,
-        orderItem,
       },
     });
   };

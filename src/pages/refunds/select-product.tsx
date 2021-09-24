@@ -1,7 +1,7 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import * as Yup from 'yup';
 import { Form, Formik, FormikHelpers } from 'formik';
-import { Icon, Navbar, Page, Toolbar } from 'framework7-react';
+import { Icon, Navbar, Page } from 'framework7-react';
 
 import { PageRouteProps } from '@constants';
 import { FormError } from '@components/form-error';
@@ -9,11 +9,6 @@ import styled from 'styled-components';
 import { OrderItem } from '@interfaces/order.interface';
 
 interface SelectProductPageProps extends PageRouteProps {
-  productId: string;
-  productName: string;
-  productImage: string;
-  productCount: number;
-  productPrice: number;
   orderItem: OrderItem;
 }
 
@@ -34,16 +29,7 @@ const CircleNumber = styled.span`
   left: 30%;
 `;
 
-const SelectProdcutPage = ({
-  f7route,
-  f7router,
-  productId,
-  productName,
-  productCount,
-  productImage,
-  productPrice,
-  orderItem,
-}: SelectProductPageProps) => {
+const SelectProdcutPage = ({ f7route, f7router, orderItem }: SelectProductPageProps) => {
   const orderItemId = f7route.params.orderItemId;
   const [options, setOptions] = useState<number[]>([]);
 
@@ -57,7 +43,7 @@ const SelectProdcutPage = ({
   };
 
   useEffect(() => {
-    createOptions(productCount);
+    createOptions(orderItem.count);
   }, []);
 
   const nextStepBtn = async (values: SelectProductForm, setSubmitting: (isSubmitting: boolean) => void) => {
@@ -65,10 +51,6 @@ const SelectProdcutPage = ({
     f7router.navigate(`/orders/${orderItemId}/return/select-reason`, {
       props: {
         returnedCounts: values.productCount,
-        productName,
-        productCount,
-        productImage,
-        productPrice,
         orderItem,
       },
     });
@@ -123,13 +105,15 @@ const SelectProdcutPage = ({
             <h2 className="text-2xl font-bold mb-4">상품을 선택해 주세요.</h2>
             <div className="pb-2 border-b bg-white rounded-lg p-4">
               <div className="flex">
-                <img src={productImage} alt="" className="w-24 h-24 mr-4" />
+                <img src={orderItem.product.images[0]} alt="" className="w-24 h-24 mr-4" />
                 <div className="font-bold mb-4 h-24 ">
-                  {productName.length > 140 ? `${productName.slice(0, 140)}...` : productName}
+                  {orderItem.product.name.length > 140
+                    ? `${orderItem.product.name.slice(0, 140)}...`
+                    : orderItem.product.name}
                 </div>
               </div>
               <div className="flex text-base items-center">
-                <div className="ml-auto mr-4">{productCount}개 중</div>
+                <div className="ml-auto mr-4">{orderItem.count}개 중</div>
                 <a className="item-link smart-select smart-select-init" data-open-in="popover">
                   <select //
                     name="productCount"

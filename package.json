@@ -7,7 +7,7 @@
   "license": "UNLICENSED",
   "scripts": {
     "start": "npm run dev",
-    "dev": "cross-env NODE_ENV=development --max-old-space-size=8192 webpack serve --config ./build/webpack.config.js --host 0.0.0.0",
+    "dev": "cross-env NODE_ENV=development webpack serve --config ./build/webpack.config.js --host 0.0.0.0",
     "build": "cross-env NODE_ENV=production node ./build/build.js",
     "build-capacitor-ios": "cross-env NODE_ENV=production node ./build/build.js && npx cap copy ios",
     "build-capacitor-android": "cross-env NODE_ENV=production node ./build/build.js && npx cap copy android",
