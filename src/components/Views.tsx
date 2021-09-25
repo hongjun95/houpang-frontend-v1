@@ -1,18 +1,17 @@
 import { Link, Toolbar, View, Views } from 'framework7-react';
 import React, { useCallback, useEffect, useState } from 'react';
+import { useQuery } from 'react-query';
 
 import CustomPanel from '@components/shared/CustomPanel';
 import useAuth from '@hooks/useAuth';
 import LandingPage from '@pages/landing';
 import { destroyToken, getShoppingList, getToken, IShoppingItem } from '@store';
 import { sleep } from '@utils/index';
-import { useQuery } from 'react-query';
 import { likeKeys } from '@reactQuery/query-keys';
 import { FindLikeListOutput, Like } from '@interfaces/like.interface';
 import { findLikeList } from '@api';
 import { useSetRecoilState } from 'recoil';
 import { likeListAtom, shoppingListAtom } from '@atoms';
-import { UserRole } from '@interfaces/user.interface';
 import { PageRouteProps } from '@constants';
 
 const F7Views = ({ f7route }: PageRouteProps) => {

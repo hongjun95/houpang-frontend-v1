@@ -12,8 +12,8 @@ import LandingPage from '@pages/landing';
 import { saveShoppingList, existedProductOnShoppingList, getShoppingList, IShoppingItem } from '@store';
 import useAuth from '@hooks/useAuth';
 import { Like } from '@interfaces/like.interface';
-import { useRecoilState } from 'recoil';
-import { likeListAtom } from '@atoms';
+import { useRecoilState, useSetRecoilState } from 'recoil';
+import { likeListAtom, shoppingListAtom } from '@atoms';
 import { UserRole } from '@interfaces/user.interface';
 
 const ProductPrice = styled.div`
@@ -29,11 +29,13 @@ const ProductDeleteBtn = styled.button`
 `;
 
 const ProductDetailPage = ({ f7route, f7router }: PageRouteProps) => {
+  const { currentUser } = useAuth();
   const [sheetOpened, setSheetOpened] = useState(false);
   const [like, setLike] = useState(false);
   const [likeList, setLikeList] = useRecoilState<Like>(likeListAtom);
   const [orderCount, setOrderCount] = useState<number>(1);
-  const { currentUser } = useAuth();
+  const [items, setItems] = useState([]);
+  const setShoppingList = useSetRecoilState<Array<IShoppingItem>>(shoppingListAtom);
 
   const productId = f7route.params.id;
 
@@ -60,6 +62,7 @@ const ProductDetailPage = ({ f7route, f7router }: PageRouteProps) => {
       };
       shoppingList.push({ ...shoppingItem });
       saveShoppingList(currentUser.id, shoppingList);
+      setShoppingList(shoppingList);
     }
   };
 
@@ -117,6 +120,15 @@ const ProductDetailPage = ({ f7route, f7router }: PageRouteProps) => {
     } catch (error) {
       console.error(error);
     }
+  };
+
+  const onClickBuy = () => {
+    f7router.navigate('/order', {
+      props: {
+        items: [data.product.id],
+        totalPrice: data.product.price,
+      },
+    });
   };
 
   return (
@@ -228,7 +240,10 @@ const ProductDetailPage = ({ f7route, f7router }: PageRouteProps) => {
               >
                 장바구니에 담기
               </button>
-              <button className="outline-none border-none bg-blue-600 text-white font-bold text-base tracking-normal rounded-md p-2 ml-2">
+              <button //
+                className="outline-none border-none bg-blue-600 text-white font-bold text-base tracking-normal rounded-md p-2 ml-2"
+                onClick={onClickBuy}
+              >
                 바로구매
               </button>
             </div>

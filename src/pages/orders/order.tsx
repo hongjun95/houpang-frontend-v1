@@ -25,6 +25,8 @@ const OrderPage = ({ items, totalPrice, f7router }: OrderProps) => {
   const shoppingList = getShoppingList(currentUser.id);
   const orderList = shoppingList.filter((item) => items.includes(item.id));
 
+  console.log(items);
+
   const initialValues: OrderForm = {
     deliverRequest: '',
   };
