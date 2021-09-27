@@ -139,7 +139,7 @@ const AddProductInfoPage = ({ f7router }: PageRouteProps) => {
                 <div className="p-3 flex flex-col mb-10">
                   {infos.length !== 0 &&
                     infos.map((info) => (
-                      <div key={info.id} className="flex border border-gray-2">
+                      <ul key={info.id} className="flex border border-gray-2">
                         <ListInput
                           label={i18next.t('product.infoKey') as string}
                           type="text"
@@ -162,7 +162,7 @@ const AddProductInfoPage = ({ f7router }: PageRouteProps) => {
                             setFieldValue(`${info.id}-infoValue`, e.target.value);
                           }}
                         />
-                      </div>
+                      </ul>
                     ))}
                 </div>
               </List>

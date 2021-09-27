@@ -178,14 +178,16 @@ const ProductsOnCategoryPage = ({ f7route, f7router }) => {
               {data?.pages.map((page, index) => (
                 <React.Fragment key={index}>
                   {page.products.map((product: Product) => (
-                    <a className="flex m-1 w-full" onClick={(e) => onClickLink(e, product.id)} key={product.id}>
-                      <img src={product.images[0]} alt="" className="w-1/4 h-40 mr-4" />
-                      <div className="ml-2 mt-1 w-2/3">
-                        <div className="text-xl font-bold mt-1 truncate">{product.name}</div>
-                        <div className="text-red-700 text-2xl mb-6 font-bold">{formmatPrice(product.price)}원</div>
-                        <div>review stars(review number)</div>
-                      </div>
-                    </a>
+                    <div>
+                      <a className="flex gap-1 m-1" onClick={(e) => onClickLink(e, product.id)} key={product.id}>
+                        <img src={product.images[0]} alt="" className="w-1/4 h-40 mr-4" />
+                        <div className="w-3/4">
+                          <div className="text-xl font-bold mt-1 line-clamp-2">{product.name}</div>
+                          <div className="text-red-700 text-2xl mb-6 font-bold">{formmatPrice(product.price)}원</div>
+                          <div>review stars(review number)</div>
+                        </div>
+                      </a>
+                    </div>
                   ))}
                 </React.Fragment>
               ))}
