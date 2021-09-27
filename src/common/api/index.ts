@@ -125,14 +125,14 @@ export const logoutAPI = () => API.delete('/logout');
 
 export const getProductsByCategoryId = async ({
   categoryId,
-  order = 'createdAt desc',
+  sort = 'createdAt desc',
   page = 1,
 }: GetProductsByCategoryIdInput): Promise<GetProductsByCategoryIdOutput> => {
   let response: AxiosResponse<GetProductsByCategoryIdOutput>;
   try {
     response = await API.get<GetProductsByCategoryIdOutput>(`/categories/${categoryId}`, {
       params: {
-        order,
+        sort,
         page,
       },
     });

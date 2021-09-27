@@ -12,7 +12,7 @@ const MyPage = () => {
   }, [unAuthenticateUser]);
 
   return (
-    <Page name="mypage" >
+    <Page name="mypage">
       <Navbar>
         <NavTitle>마이페이지</NavTitle>
       </Navbar>

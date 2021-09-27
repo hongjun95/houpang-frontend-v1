@@ -35,6 +35,10 @@ const SelectProdcutPage = ({ f7route, f7router, orderItem }: SelectProductPagePr
 
   const createOptions = (count: number) => {
     let i: number = 0;
+    // for (const i of Array.from({ length: count })) {
+    //   options.push(i);
+    //   setOptions([...options]);
+    // }
     while (i < count) {
       i++;
       options.push(i);

@@ -16,4 +16,8 @@ export interface PaginationInput {
 export interface PaginationOutput extends CoreOutput {
   totalPages?: number;
   totalResults?: number;
+  prevtPage?: number;
+  hasPrevtPage?: boolean;
+  nextPage?: number;
+  hasNextPage?: boolean;
 }
