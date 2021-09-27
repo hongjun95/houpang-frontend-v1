@@ -113,13 +113,17 @@ const OrderItemComponent: React.FC<OrderItemProps> = ({
         <span className="font-bold text-md">{orderItem.status}</span>
       </div>
       <div className="flex">
-        <img src={orderItem.product.images[0]} alt="" className="w-24 h-24 mr-4" />
+        <a href={`/products/${orderItem.product.id}`}>
+          <img src={orderItem.product.images[0]} alt="" className="w-24 h-24 mr-4" />
+        </a>
         {/* <div
           style={{ backgroundImage: `url(${orderItem.product.images[0]})` }}
           className=" bg-gray-200 bg-center bg-cover w-24 h-24 mr-4"
         ></div> */}
         <div className="overflow-hidden w-3/4 flex flex-col justify-between h-full">
-          <div className="font-bold mb-4 h-12 truncate">{orderItem.product.name}</div>
+          <a href={`/products/${orderItem.product.id}`}>
+            <div className="font-bold mb-4 line-clamp-2 h-10">{orderItem.product.name}</div>
+          </a>
           <div className="flex justify-between items-center">
             <div className="flex text-gray-500 text-lg">
               <div>
