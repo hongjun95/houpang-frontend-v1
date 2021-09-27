@@ -32,7 +32,6 @@ const ChangePasswordSchema: Yup.SchemaOf<ChangePasswordInput> = Yup.object().sha
 });
 
 const ChangePasswordPage = ({ f7router }: PageRouteProps) => {
-  // const { authenticateUser } = useAuth();
   const initialValues: ChangePasswordInput = {
     currentPassword: '',
     newPassword: '',

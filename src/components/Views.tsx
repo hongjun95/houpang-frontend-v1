@@ -12,9 +12,8 @@ import { FindLikeListOutput, Like } from '@interfaces/like.interface';
 import { findLikeList } from '@api';
 import { useSetRecoilState } from 'recoil';
 import { likeListAtom, shoppingListAtom } from '@atoms';
-import { PageRouteProps } from '@constants';
 
-const F7Views = ({ f7route }: PageRouteProps) => {
+const F7Views = () => {
   const { currentUser, isAuthenticated, authenticateUser, unAuthenticateUser } = useAuth();
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const setLikeList = useSetRecoilState<Like>(likeListAtom);

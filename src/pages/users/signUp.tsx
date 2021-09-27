@@ -40,7 +40,6 @@ const SignUpSchema: Yup.SchemaOf<SignUpInput> = Yup.object().shape({
 });
 
 const SignUpPage = ({ f7router }: PageRouteProps) => {
-  // const { authenticateUser } = useAuth();
   const initialValues: SignUpInput = {
     username: '',
     email: '',

@@ -3,12 +3,14 @@ import { Navbar, NavTitle, Page } from 'framework7-react';
 
 import useAuth from '@hooks/useAuth';
 import { UserRole } from '@interfaces/user.interface';
+import { PageRouteProps } from '@constants';
 
-const MyPage = () => {
+const MyPage = ({ f7router }: PageRouteProps) => {
   const { currentUser, isAuthenticated, unAuthenticateUser } = useAuth();
 
   const logoutHandler = useCallback(async () => {
     unAuthenticateUser();
+    f7router.navigate('/');
   }, [unAuthenticateUser]);
 
   return (

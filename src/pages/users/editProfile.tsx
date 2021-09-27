@@ -32,7 +32,6 @@ const EditProfileSchema: Yup.SchemaOf<EditProfileInput> = Yup.object().shape({
 
 const EditProfilePage = ({ f7router }: PageRouteProps) => {
   const {
-    authenticateUser,
     currentUser: { username, email, language, address, phoneNumber, bio },
   } = useAuth();
   const initialValues: EditProfileInput = {

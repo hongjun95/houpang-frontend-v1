@@ -2,7 +2,7 @@ import axios from 'axios';
 import Qs from 'qs';
 import { configs } from '@config';
 import { getToken } from '@store';
-import { authenticateUserThroughPortal, unAuthenticateUserThroughPortal } from '@components/RecoilRootPortal';
+import { unAuthenticateUserThroughPortal } from '@components/RecoilRootPortal';
 
 const { API_URL, VERSION } = configs;
 
@@ -50,7 +50,7 @@ const refreshInterceptor = (axiosInstance) => (error) => {
         )
         .then((res) => {
           const { csrf, token } = res.data;
-          authenticateUserThroughPortal({ csrf, token });
+          // authenticateUserThroughPortal({ csrf, token });
           _axios.defaults.headers.common.Authorization = `Bearer ${token}`;
           originalRequest.headers.Authorization = `Bearer ${token}`;
           processQueue(null, token);

@@ -28,11 +28,11 @@ export const unAuthenticateUserThroughPortal = () => {
   setRecoilRootState(authState, { token: null, csrf: null, currentUser: null });
 };
 
-export const authenticateUserThroughPortal = ({ token, csrf }: Token) => {
-  try {
-    saveToken({ token, csrf });
-    setRecoilRootState(authState, { token, csrf, currentUser: getCurrentUserFromToken(token) });
-  } catch (err) {
-    unAuthenticateUserThroughPortal();
-  }
-};
+// export const authenticateUserThroughPortal = ({ token, csrf }: Token) => {
+//   try {
+//     saveToken({ token, csrf });
+//     setRecoilRootState(authState, { token, csrf, currentUser: getCurrentUserFromToken(token) });
+//   } catch (err) {
+//     unAuthenticateUserThroughPortal();
+//   }
+// };
