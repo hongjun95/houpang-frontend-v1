@@ -219,10 +219,10 @@ const ProductDetailPage = ({ f7route, f7router }: PageRouteProps) => {
                     />
                   ))}
                 </div>
-                <div className="text-blue-500">
+                <a href={`/reviews/write/products/${productId}`} className="text-blue-500">
                   <FontAwesomeIcon icon={faPen} className="mr-1 text-xs" />
                   <span>리뷰 작성하기</span>
-                </div>
+                </a>
               </div>
               <div>images</div>
             </div>

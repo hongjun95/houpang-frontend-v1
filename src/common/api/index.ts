@@ -36,6 +36,7 @@ import {
   RequestRefundInput,
   RequestRefundOutput,
 } from '@interfaces/refund.interface';
+import { CreateReviewInput, CreateReviewOutput } from '@interfaces/review.interface';
 import { getToken } from '@store';
 import { AxiosResponse } from 'axios';
 import {
@@ -412,6 +413,29 @@ export const unlikeProductAPI = async ({ productId }: UnlikeProductInput): Promi
   let response: AxiosResponse<UnlikeProductOutput>;
   try {
     response = await API.put<UnlikeProductOutput>(`/likes/products/${productId}/remove`);
+  } catch (error) {
+    console.error(error);
+  }
+  const result = response.data;
+  return result;
+};
+
+// review APIs
+
+export const createReviewAPI = async ({
+  productId,
+  content,
+  rating,
+  images,
+}: CreateReviewInput): Promise<CreateReviewOutput> => {
+  let response: AxiosResponse<CreateReviewOutput>;
+  const data = {
+    content,
+    rating,
+    images,
+  };
+  try {
+    response = await API.post<CreateReviewOutput>(`/reviews/products/${productId}`, data);
   } catch (error) {
     console.error(error);
   }
