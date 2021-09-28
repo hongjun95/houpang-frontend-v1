@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { f7, Navbar, Page, Sheet, Stepper, Swiper, SwiperSlide } from 'framework7-react';
 import { useQuery } from 'react-query';
 import styled from 'styled-components';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faChevronRight, faStar, faPen } from '@fortawesome/free-solid-svg-icons';
 
 import { PageRouteProps } from '@constants';
 import { FindProductByIdOutput } from '@interfaces/product.interface';
@@ -198,7 +200,33 @@ const ProductDetailPage = ({ f7route, f7router }: PageRouteProps) => {
               </tbody>
             </table>
           </div>
-          <div className="Review__sector pb-20">Review sector</div>
+          <div className="w-full h-3 bg-gray-300"></div>
+          <div className="pb-20">
+            <a href="#" className="flex justify-between items-center px-2 py-4 border-b border-gray-400">
+              <h3 className="font-bold text-lg">상품평</h3>
+              <FontAwesomeIcon //
+                icon={faChevronRight}
+                className="text-blue-500 font-bold text-lg"
+              />
+            </a>
+            <div className="px-2">
+              <div className="flex justify-between py-6">
+                <div>
+                  {Array.from({ length: 5 }).map(() => (
+                    <FontAwesomeIcon //
+                      icon={faStar}
+                      className="text-yellow-300 font-bold text-xl"
+                    />
+                  ))}
+                </div>
+                <a href={`/reviews/write/products/${productId}`} className="text-blue-500">
+                  <FontAwesomeIcon icon={faPen} className="mr-1 text-xs" />
+                  <span>리뷰 작성하기</span>
+                </a>
+              </div>
+              <div>images</div>
+            </div>
+          </div>
           <div className="flex fixed bottom-0 border-t-2 botder-gray-600 w-full p-2 bg-white">
             {like || likeList.products.find((product) => product.id === productId) ? (
               <i className="f7-icons cursor-pointer m-3 text-red-500" onClick={unlikeProduct}>

@@ -50,7 +50,6 @@ const AddProductInfoPage = ({ f7router }: PageRouteProps) => {
   const initialValues = {};
 
   const handleAddProduct = async (values, setSubmitting) => {
-    await sleep(400);
     setSubmitting(false);
     f7.dialog.preloader('잠시만 기다려주세요...');
     try {

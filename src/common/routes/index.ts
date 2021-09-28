@@ -28,6 +28,8 @@ import RefundListPage from '@pages/refunds/refund-list';
 
 import ShoppingListPage from '@pages/shopping-lists/shopping-list';
 
+import CreateReviewPage from '@pages/reviews/create-review';
+
 import PostIndexPage from '@pages/posts/index';
 import PostShowPage from '@pages/posts/show';
 import PostNewPage from '@pages/posts/new';
@@ -79,6 +81,16 @@ const refundPages = [
 
 const listPages = [{ path: '/shopping-list', component: ShoppingListPage }];
 
+const reviewPages = [
+  // { path: '/reviews', component: ProductsOnCategoryPage },
+  { path: '/reviews/write/products/:id', component: CreateReviewPage },
+  // { path: '/reviews/add-info', component: AddProductInfoPage },
+  // { path: '/reviews/manage', component: ManageProductsPage },
+  // { path: '/reviews/:id', component: ProductDetailPage },
+  // { path: '/reviews/:id/edit', component: EditProductPage },
+  // { path: '/reviews/:id/edit-info', component: EditProductInfoPage },
+];
+
 const routes: Router.RouteParameters[] = [
   ...commonPages,
   ...userPages,
@@ -86,6 +98,7 @@ const routes: Router.RouteParameters[] = [
   ...listPages,
   ...orderPages,
   ...refundPages,
+  ...reviewPages,
 
   { path: '/posts', component: PostIndexPage },
   { path: '/posts/new', component: PostNewPage },
