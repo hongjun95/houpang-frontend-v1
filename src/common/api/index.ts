@@ -36,7 +36,12 @@ import {
   RequestRefundInput,
   RequestRefundOutput,
 } from '@interfaces/refund.interface';
-import { CreateReviewInput, CreateReviewOutput } from '@interfaces/review.interface';
+import {
+  CreateReviewInput,
+  CreateReviewOutput,
+  GetReviewsOnProductInput,
+  GetReviewsOnProductOutput,
+} from '@interfaces/review.interface';
 import { getToken } from '@store';
 import { AxiosResponse } from 'axios';
 import {
@@ -436,6 +441,24 @@ export const createReviewAPI = async ({
   };
   try {
     response = await API.post<CreateReviewOutput>(`/reviews/products/${productId}`, data);
+  } catch (error) {
+    console.error(error);
+  }
+  const result = response.data;
+  return result;
+};
+
+export const getReviewOnProductAPI = async ({
+  page = 1,
+  productId,
+}: GetReviewsOnProductInput): Promise<GetReviewsOnProductOutput> => {
+  let response: AxiosResponse<GetReviewsOnProductOutput>;
+  try {
+    response = await API.get<GetReviewsOnProductOutput>(`/reviews/product/${productId}`, {
+      params: {
+        page,
+      },
+    });
   } catch (error) {
     console.error(error);
   }

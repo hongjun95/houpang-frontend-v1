@@ -1,4 +1,4 @@
-import { CoreEntity, CoreOutput } from './core.interface';
+import { CoreOutput, CoreEntity, PaginationInput, PaginationOutput } from './core.interface';
 import { Product } from './product.interface';
 import { User } from './user.interface';
 
@@ -19,4 +19,13 @@ export interface CreateReviewOutput extends CoreOutput {
 }
 export interface CreateReviewForm extends Pick<Review, 'content'> {
   images: Array<File>;
+}
+
+// Get Review on Product
+export interface GetReviewsOnProductInput extends PaginationInput {
+  productId: string;
+}
+export interface GetReviewsOnProductOutput extends PaginationOutput {
+  reviews?: Review[];
+  avgRating?: number;
 }

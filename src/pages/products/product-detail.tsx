@@ -3,20 +3,22 @@ import { f7, Navbar, Page, Sheet, Stepper, Swiper, SwiperSlide } from 'framework
 import { useQuery } from 'react-query';
 import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronRight, faStar, faPen } from '@fortawesome/free-solid-svg-icons';
+import { faChevronRight, faPen } from '@fortawesome/free-solid-svg-icons';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 
 import { PageRouteProps } from '@constants';
 import { FindProductByIdOutput } from '@interfaces/product.interface';
-import { productKeys } from '@reactQuery/query-keys';
-import { deleteProduct, findProductById, likeProductAPI, unlikeProductAPI } from '@api';
+import { productKeys, reviewKeys } from '@reactQuery/query-keys';
+import { deleteProduct, findProductById, getReviewOnProductAPI, likeProductAPI, unlikeProductAPI } from '@api';
 import { formmatPrice } from '@utils/index';
 import LandingPage from '@pages/landing';
 import { saveShoppingList, existedProductOnShoppingList, getShoppingList, IShoppingItem } from '@store';
 import useAuth from '@hooks/useAuth';
 import { Like } from '@interfaces/like.interface';
-import { useRecoilState, useSetRecoilState } from 'recoil';
 import { likeListAtom, shoppingListAtom } from '@atoms';
 import { UserRole } from '@interfaces/user.interface';
+import { GetReviewsOnProductOutput } from '@interfaces/review.interface';
+import StaticRatingStar from '@components/StaticRatingStar';
 
 const ProductPrice = styled.div`
   flex: 4 1;
@@ -31,22 +33,26 @@ const ProductDeleteBtn = styled.button`
 `;
 
 const ProductDetailPage = ({ f7route, f7router }: PageRouteProps) => {
-  const { currentUser } = useAuth();
   const [sheetOpened, setSheetOpened] = useState(false);
   const [like, setLike] = useState(false);
-  const [likeList, setLikeList] = useRecoilState<Like>(likeListAtom);
   const [orderCount, setOrderCount] = useState<number>(1);
-  const [items, setItems] = useState([]);
+  const [likeList, setLikeList] = useRecoilState<Like>(likeListAtom);
   const setShoppingList = useSetRecoilState<Array<IShoppingItem>>(shoppingListAtom);
 
+  const { currentUser } = useAuth();
   const productId = f7route.params.id;
 
-  const { data, status } = useQuery<FindProductByIdOutput, Error>(
+  const { data: productData, status: productStatus } = useQuery<FindProductByIdOutput, Error>(
     productKeys.detail(productId),
     () => findProductById({ productId }),
     {
       enabled: !!productId,
     },
+  );
+
+  const { data: reviewData, status: reviewStatus } = useQuery<GetReviewsOnProductOutput, Error>(
+    reviewKeys.list({ productId, page: 1 }),
+    () => getReviewOnProductAPI({ productId, page: 1 }),
   );
 
   const onAddProductToShoppingList = () => {
@@ -57,9 +63,9 @@ const ProductDetailPage = ({ f7route, f7router }: PageRouteProps) => {
       f7.dialog.alert('장바구니에 담았습니다.');
       const shoppingItem: IShoppingItem = {
         id: productId,
-        name: data.product.name,
-        price: data.product.price,
-        imageUrl: data.product.images[0],
+        name: productData.product.name,
+        price: productData.product.price,
+        imageUrl: productData.product.images[0],
         orderCount: 1,
       };
       shoppingList.push({ ...shoppingItem });
@@ -73,7 +79,7 @@ const ProductDetailPage = ({ f7route, f7router }: PageRouteProps) => {
     setLike(true);
     setLikeList((prev) => ({
       ...prev,
-      products: [...prev.products, { ...data.product }],
+      products: [...prev.products, { ...productData.product }],
     }));
     try {
       const { ok, error } = await likeProductAPI({ productId });
@@ -86,7 +92,7 @@ const ProductDetailPage = ({ f7route, f7router }: PageRouteProps) => {
       f7.dialog.close();
     } catch (error) {
       f7.dialog.close();
-      f7.dialog.alert(error?.response?.data || error?.message);
+      f7.dialog.alert(error?.response?.productData || error?.message);
     }
   };
   const unlikeProduct = async (e) => {
@@ -107,7 +113,7 @@ const ProductDetailPage = ({ f7route, f7router }: PageRouteProps) => {
       f7.dialog.close();
     } catch (error) {
       f7.dialog.close();
-      f7.dialog.alert(error?.response?.data || error?.message);
+      f7.dialog.alert(error?.response?.productData || error?.message);
     }
   };
 
@@ -117,7 +123,7 @@ const ProductDetailPage = ({ f7route, f7router }: PageRouteProps) => {
       const ok = window.confirm('정말 삭제하시겠습니까?');
       if (ok) {
         await deleteProduct({ productId });
-        f7router.navigate(`/products?categoryId=${data.product.category.id}`);
+        f7router.navigate(`/products?categoryId=${productData.product.category.id}`);
       }
     } catch (error) {
       console.error(error);
@@ -127,8 +133,8 @@ const ProductDetailPage = ({ f7route, f7router }: PageRouteProps) => {
   const onClickBuy = () => {
     f7router.navigate('/order', {
       props: {
-        items: [data.product.id],
-        totalPrice: data.product.price,
+        items: [productData.product.id],
+        totalPrice: productData.product.price,
       },
     });
   };
@@ -137,10 +143,10 @@ const ProductDetailPage = ({ f7route, f7router }: PageRouteProps) => {
     <Page noToolbar className="min-h-screen">
       <Navbar title="상품상세" backLink={true}></Navbar>
 
-      {status === 'success' ? (
+      {productStatus === 'success' ? (
         <>
           <Swiper pagination className="h-3/4">
-            {data?.product?.images.map((imageUrl) => (
+            {productData?.product?.images.map((imageUrl) => (
               <SwiperSlide key={Date.now() + imageUrl}>
                 <img src={imageUrl} alt="" className="h-full w-full" />
               </SwiperSlide>
@@ -149,20 +155,39 @@ const ProductDetailPage = ({ f7route, f7router }: PageRouteProps) => {
           <div className="Main__info mx-2 my-4">
             <div className="flex justify-between">
               <div className="flex items-center justify-center">
-                <img className="rounded-full w-10 h-10 mr-2" src={data.product.provider.userImg} alt="브랜드 이미지" />
+                <img
+                  className="rounded-full w-10 h-10 mr-2"
+                  src={productData.product.provider.userImg}
+                  alt="브랜드 이미지"
+                />
                 <div>
-                  <div>{data.product.provider.username}</div>
+                  <div>{productData.product.provider.username}</div>
                   <div className="text-gray-400 text-sm">브랜드</div>
                 </div>
               </div>
-              <div className="text-center">review stars (review number)</div>
+              {reviewStatus === 'success' && reviewData.reviews.length !== 0 && (
+                <a href="#" className="flex items-center">
+                  <div className="mr-1">
+                    <StaticRatingStar //
+                      count={5}
+                      rating={Math.ceil(reviewData.avgRating)}
+                      color={{
+                        filled: '#ffe259',
+                        unfilled: '#DCDCDC',
+                      }}
+                      className="text-xl"
+                    />
+                  </div>
+                  <div className="text-blue-500 text-base mb-1">({reviewData.totalResults})</div>
+                </a>
+              )}
             </div>
             <div className="flex my-4">
-              <h1 className="text-xl mr-1 truncate">{data.product.name}</h1>
+              <h1 className="text-xl mr-1 truncate">{productData.product.name}</h1>
             </div>
             <div className="flex">
               <ProductPrice className="text-red-700 text-xl font-bold">
-                {formmatPrice(data.product.price)}원
+                {formmatPrice(productData.product.price)}원
               </ProductPrice>
               {currentUser.role === UserRole.Provider && (
                 <ProductEditLink
@@ -187,15 +212,15 @@ const ProductDetailPage = ({ f7route, f7router }: PageRouteProps) => {
             <h2 className="text-lg font-bold border-b-2 border-gray-300 pb-4 mb-4">상품정보</h2>
             <table className="border border-gray-400 w-full">
               <tbody>
-                {data?.product?.infos?.map((aInfo) => (
-                  <tr key={data.product.id + aInfo.value}>
+                {productData?.product?.infos?.map((aInfo) => (
+                  <tr key={productData.product.id + aInfo.value}>
                     <td className="bg-gray-200 py-1 pl-2 text-gray-500">{aInfo.key}</td>
                     <td className="numeric-cell py-1 pl-2">{aInfo.value}</td>
                   </tr>
                 ))}
                 <tr>
                   <td className="bg-gray-200 py-1 pl-2 text-gray-500">후팡 상품 번호</td>
-                  <td className="numeric-cell py-1 pl-2">{data.product.id}</td>
+                  <td className="numeric-cell py-1 pl-2">{productData.product.id}</td>
                 </tr>
               </tbody>
             </table>
@@ -212,19 +237,40 @@ const ProductDetailPage = ({ f7route, f7router }: PageRouteProps) => {
             <div className="px-2">
               <div className="flex justify-between py-6">
                 <div>
-                  {Array.from({ length: 5 }).map(() => (
-                    <FontAwesomeIcon //
-                      icon={faStar}
-                      className="text-yellow-300 font-bold text-xl"
-                    />
-                  ))}
+                  {reviewStatus === 'success' && reviewData.reviews.length !== 0 && (
+                    <a href="#" className="flex items-center">
+                      <div className="mr-1">
+                        <StaticRatingStar //
+                          count={5}
+                          rating={Math.ceil(reviewData.avgRating)}
+                          color={{
+                            filled: '#ffe259',
+                            unfilled: '#DCDCDC',
+                          }}
+                          className="text-2xl"
+                        />
+                      </div>
+                      <div className="text-lg">{reviewData.totalResults}</div>
+                    </a>
+                  )}
                 </div>
                 <a href={`/reviews/write/products/${productId}`} className="text-blue-500">
                   <FontAwesomeIcon icon={faPen} className="mr-1 text-xs" />
                   <span>리뷰 작성하기</span>
                 </a>
               </div>
-              <div>images</div>
+
+              {reviewStatus === 'success' && reviewData.reviews.length !== 0 && (
+                <div className="grid grid-cols-4 gap-1">
+                  {reviewData.reviews.map((review) => (
+                    <img //
+                      src={review.images[0]}
+                      alt=""
+                      className="object-cover object-center h-28 w-full"
+                    />
+                  ))}
+                </div>
+              )}
             </div>
           </div>
           <div className="flex fixed bottom-0 border-t-2 botder-gray-600 w-full p-2 bg-white">
@@ -240,7 +286,7 @@ const ProductDetailPage = ({ f7route, f7router }: PageRouteProps) => {
 
             <button
               className="sheet-open border-none focus:outline-none mr-4 bg-blue-600 text-white font-bold text-base tracking-normal  rounded-md actions-open"
-              data-sheet=".buy"
+              productData-sheet=".buy"
             >
               구매하기
             </button>
@@ -253,8 +299,8 @@ const ProductDetailPage = ({ f7route, f7router }: PageRouteProps) => {
               setSheetOpened(false);
             }}
           >
-            <h3 className="text-lg font-bold mt-2 truncate">{data.product.name}</h3>
-            <div className="text-red-700 text-sm font-bold my-2">{formmatPrice(data.product.price)}원</div>
+            <h3 className="text-lg font-bold mt-2 truncate">{productData.product.name}</h3>
+            <div className="text-red-700 text-sm font-bold my-2">{formmatPrice(productData.product.price)}원</div>
             <Stepper
               value={orderCount}
               onStepperChange={setOrderCount}
