@@ -227,18 +227,18 @@ const ProductDetailPage = ({ f7route, f7router }: PageRouteProps) => {
           </div>
           <div className="w-full h-3 bg-gray-300"></div>
           <div className="pb-20">
-            <a href="#" className="flex justify-between items-center px-2 py-4 border-b border-gray-400">
+            <a href="#" className="flex justify-between items-center px-4 py-4 border-b border-gray-400">
               <h3 className="font-bold text-lg">상품평</h3>
               <FontAwesomeIcon //
                 icon={faChevronRight}
                 className="text-blue-500 font-bold text-lg"
               />
             </a>
-            <div className="px-2">
+            <div className="px-4 mb-10">
               <div className="flex justify-between py-6">
                 <div>
                   {reviewStatus === 'success' && reviewData.reviews.length !== 0 && (
-                    <a href="#" className="flex items-center">
+                    <div className="flex items-center">
                       <div className="mr-1">
                         <StaticRatingStar //
                           count={5}
@@ -251,7 +251,7 @@ const ProductDetailPage = ({ f7route, f7router }: PageRouteProps) => {
                         />
                       </div>
                       <div className="text-lg">{reviewData.totalResults}</div>
-                    </a>
+                    </div>
                   )}
                 </div>
                 <a href={`/reviews/write/products/${productId}`} className="text-blue-500">
@@ -261,17 +261,56 @@ const ProductDetailPage = ({ f7route, f7router }: PageRouteProps) => {
               </div>
 
               {reviewStatus === 'success' && reviewData.reviews.length !== 0 && (
-                <div className="grid grid-cols-4 gap-1">
-                  {reviewData.reviews.map((review) => (
-                    <img //
-                      src={review.images[0]}
-                      alt=""
-                      className="object-cover object-center h-28 w-full"
-                    />
-                  ))}
-                </div>
+                <>
+                  <div className="grid grid-cols-4 gap-1">
+                    {reviewData.reviews.map((review) => (
+                      <img //
+                        src={review.images[0]}
+                        alt=""
+                        className="object-cover object-center h-28 w-full"
+                      />
+                    ))}
+                  </div>
+                </>
               )}
             </div>
+            <div className="w-full h-5 bg-gray-200"></div>
+            {reviewStatus === 'success' && reviewData.reviews.length !== 0 && (
+              <>
+                <div>
+                  {reviewData.reviews.map((review) => (
+                    <a href="#" className="block py-3 px-4 border-b border-gray-300">
+                      <div className="font-semibold">{review.commenter.username}</div>
+                      <div className="flex items-center my-1">
+                        <div className="mr-1">
+                          <StaticRatingStar //
+                            count={5}
+                            rating={Math.ceil(review.rating)}
+                            color={{
+                              filled: '#ffe259',
+                              unfilled: '#DCDCDC',
+                            }}
+                            className="text-lg"
+                          />
+                        </div>
+                        <div className="text-sm">{review.createdAt}</div>
+                      </div>
+                      <div className="flex">
+                        <img //
+                          src={review.images[0]}
+                          alt=""
+                          className="object-cover object-center h-24 w-24 mr-1"
+                        />
+                        <p className="line-clamp-4 h-full">{review.content}</p>
+                      </div>
+                    </a>
+                  ))}
+                </div>
+                <div className="border-2 border-blue-500 text-blue-500 font-semibold mx-4 flex justify-center py-2 mb-2 mt-4">
+                  <a href="#">이 상품의 상품평 모두보기</a>
+                </div>
+              </>
+            )}
           </div>
           <div className="flex fixed bottom-0 border-t-2 botder-gray-600 w-full p-2 bg-white">
             {like || likeList.products.find((product) => product.id === productId) ? (
