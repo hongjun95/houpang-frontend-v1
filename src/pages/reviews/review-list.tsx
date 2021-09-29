@@ -115,7 +115,7 @@ const ReviewListPage = ({
                                 className="text-lg"
                               />
                             </div>
-                            <div className="text-sm">{review.createdAt}</div>
+                            <div className="text-sm">{review.reviewedAt}</div>
                           </div>
                         </div>
                       </div>

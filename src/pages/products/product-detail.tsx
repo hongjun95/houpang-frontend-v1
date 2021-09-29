@@ -345,7 +345,7 @@ const ProductDetailPage = ({ f7route, f7router }: PageRouteProps) => {
                               className="text-lg"
                             />
                           </div>
-                          <div className="text-sm">{review.createdAt}</div>
+                          <div className="text-sm">{review.reviewedAt}</div>
                         </div>
                         <div className="flex">
                           <img //
