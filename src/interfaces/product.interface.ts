@@ -15,6 +15,7 @@ export interface Product extends CoreEntity {
   provider: User;
   price: number;
   stock: number;
+  avgRating?: number;
   images: string[];
   category: Category;
   infos?: InfoItem[];

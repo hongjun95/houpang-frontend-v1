@@ -44,3 +44,12 @@ export const refundsFromConsumer = {
   details: () => [...refundsFromConsumer.all, 'detail'] as const,
   detail: (orderId: string) => [...refundsFromConsumer.details(), orderId] as const,
 };
+
+export const reviewKeys = {
+  all: ['reviews'] as const,
+  lists: () => [...reviewKeys.all, 'list'] as const,
+  list: ({ page, productId }: { page?: number; productId: string }) =>
+    [...reviewKeys.lists(), productId, page] as const,
+  details: () => [...reviewKeys.all, 'detail'] as const,
+  detail: (id: string) => [...reviewKeys.details(), id] as const,
+};

@@ -171,7 +171,7 @@ const CreateReviewPage = ({ f7router, f7route }) => {
                   previewImgUris.map((previewImgUri) => (
                     <PreviewImg //
                       previewImgUri={previewImgUri}
-                      className="object-cover h-20 w-24"
+                      className="object-cover object-center h-20 w-24"
                     />
                   ))}
               </div>

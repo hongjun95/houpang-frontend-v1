@@ -29,6 +29,7 @@ import RefundListPage from '@pages/refunds/refund-list';
 import ShoppingListPage from '@pages/shopping-lists/shopping-list';
 
 import CreateReviewPage from '@pages/reviews/create-review';
+import ReviewListPage from '@pages/reviews/review-list';
 
 import PostIndexPage from '@pages/posts/index';
 import PostShowPage from '@pages/posts/show';
@@ -84,6 +85,7 @@ const listPages = [{ path: '/shopping-list', component: ShoppingListPage }];
 const reviewPages = [
   // { path: '/reviews', component: ProductsOnCategoryPage },
   { path: '/reviews/write/products/:id', component: CreateReviewPage },
+  { path: '/reviews/products/:id', component: ReviewListPage },
   // { path: '/reviews/add-info', component: AddProductInfoPage },
   // { path: '/reviews/manage', component: ManageProductsPage },
   // { path: '/reviews/:id', component: ProductDetailPage },
