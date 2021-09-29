@@ -15,6 +15,7 @@ import { getShoppingList } from '@store';
 import useAuth from '@hooks/useAuth';
 import LandingPage from '@pages/landing';
 import { useInView } from 'react-intersection-observer';
+import StaticRatingStar from '@components/StaticRatingStar';
 
 interface ProductFilterProps {
   sort: SortState;
@@ -164,7 +165,20 @@ const ProductsOnCategoryPage = ({ f7route, f7router }) => {
                         <div className="m-1">
                           <div className="font-bold mt-1 truncate">{product.name}</div>
                           <div className="text-red-700 text-xl font-bold">{formmatPrice(product.price)}원</div>
-                          <div>review stars(review number)</div>
+                          <div className="flex items-center">
+                            <div className="mr-1">
+                              <StaticRatingStar //
+                                count={5}
+                                rating={Math.ceil(product.avgRating)}
+                                color={{
+                                  filled: '#ffe259',
+                                  unfilled: '#DCDCDC',
+                                }}
+                                className="text-xl"
+                              />
+                            </div>
+                            <div className="text-blue-500 text-base mb-1">({product.reviews.length})</div>
+                          </div>
                         </div>
                       </Link>
                     </div>
@@ -183,7 +197,20 @@ const ProductsOnCategoryPage = ({ f7route, f7router }) => {
                         <div className="w-3/4">
                           <div className="text-xl font-bold mt-1 line-clamp-2">{product.name}</div>
                           <div className="text-red-700 text-2xl mb-6 font-bold">{formmatPrice(product.price)}원</div>
-                          <div>review stars(review number)</div>
+                          <div className="flex items-center">
+                            <div className="mr-1">
+                              <StaticRatingStar //
+                                count={5}
+                                rating={Math.ceil(product.avgRating)}
+                                color={{
+                                  filled: '#ffe259',
+                                  unfilled: '#DCDCDC',
+                                }}
+                                className="text-xl"
+                              />
+                            </div>
+                            <div className="text-blue-500 text-base mb-1">({product.reviews.length})</div>
+                          </div>
                         </div>
                       </a>
                     </div>
