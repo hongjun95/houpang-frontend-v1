@@ -72,7 +72,6 @@ const ProductsOnCategoryPage = ({ f7route, f7router }) => {
       onSuccess: (data) => {
         setCategoryName(data.pages[data.pages.length - 1].categoryName);
         setTotalCount(data.pages[data.pages.length - 1].totalResults);
-        console.log(data.pages[data.pages.length - 1]);
       },
     },
   );

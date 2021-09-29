@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { f7, Navbar, Page, Sheet, Stepper, Swiper, SwiperSlide } from 'framework7-react';
-import { useQuery } from 'react-query';
+import { useInfiniteQuery, useQuery } from 'react-query';
 import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronRight, faPen } from '@fortawesome/free-solid-svg-icons';
@@ -50,9 +50,27 @@ const ProductDetailPage = ({ f7route, f7router }: PageRouteProps) => {
     },
   );
 
-  const { data: reviewData, status: reviewStatus } = useQuery<GetReviewsOnProductOutput, Error>(
+  const {
+    fetchNextPage, //
+    hasNextPage,
+    isFetchingNextPage,
+    isFetching,
+    data: reviewData,
+    error,
+    status: reviewStatus,
+  } = useInfiniteQuery<GetReviewsOnProductOutput, Error>(
     reviewKeys.list({ productId, page: 1 }),
-    () => getReviewOnProductAPI({ productId, page: 1 }),
+    ({ pageParam }) =>
+      getReviewOnProductAPI({
+        productId,
+        page: pageParam,
+      }),
+    {
+      getNextPageParam: (lastPage) => {
+        const hasNextPage = lastPage.hasNextPage;
+        return hasNextPage ? lastPage.nextPage : false;
+      },
+    },
   );
 
   const onAddProductToShoppingList = () => {
@@ -139,6 +157,17 @@ const ProductDetailPage = ({ f7route, f7router }: PageRouteProps) => {
     });
   };
 
+  const onClickLink = (e: any) => {
+    f7router.navigate(`/reviews/products/${productId}`, {
+      props: {
+        pHasNextPage: hasNextPage,
+        pIsFetching: isFetching,
+        pIsFetchingNextPage: isFetchingNextPage,
+        fetchNextPage,
+      },
+    });
+  };
+
   return (
     <Page noToolbar className="min-h-screen">
       <Navbar title="상품상세" backLink={true}></Navbar>
@@ -165,21 +194,26 @@ const ProductDetailPage = ({ f7route, f7router }: PageRouteProps) => {
                   <div className="text-gray-400 text-sm">브랜드</div>
                 </div>
               </div>
-              {reviewStatus === 'success' && reviewData.reviews.length !== 0 && (
-                <a href="#" className="flex items-center">
-                  <div className="mr-1">
-                    <StaticRatingStar //
-                      count={5}
-                      rating={Math.ceil(reviewData.avgRating)}
-                      color={{
-                        filled: '#ffe259',
-                        unfilled: '#DCDCDC',
-                      }}
-                      className="text-xl"
-                    />
-                  </div>
-                  <div className="text-blue-500 text-base mb-1">({reviewData.totalResults})</div>
-                </a>
+              {reviewStatus === 'error' ? (
+                <span>Error : {error.message}</span>
+              ) : (
+                reviewStatus === 'success' &&
+                reviewData.pages[0].reviews.length !== 0 && (
+                  <button onClick={onClickLink} className="flex items-center outline-none">
+                    <div className="mr-1">
+                      <StaticRatingStar //
+                        count={5}
+                        rating={Math.ceil(reviewData.pages[0].avgRating)}
+                        color={{
+                          filled: '#ffe259',
+                          unfilled: '#DCDCDC',
+                        }}
+                        className="text-xl"
+                      />
+                    </div>
+                    <div className="text-blue-500 text-base mb-1">({reviewData.pages[0].totalResults})</div>
+                  </button>
+                )
               )}
             </div>
             <div className="flex my-4">
@@ -227,31 +261,39 @@ const ProductDetailPage = ({ f7route, f7router }: PageRouteProps) => {
           </div>
           <div className="w-full h-3 bg-gray-300"></div>
           <div className="pb-20">
-            <a href="#" className="flex justify-between items-center px-4 py-4 border-b border-gray-400">
+            <button
+              onClick={onClickLink}
+              className="flex justify-between items-center px-4 py-4 border-b border-gray-400 outline-none"
+            >
               <h3 className="font-bold text-lg">상품평</h3>
               <FontAwesomeIcon //
                 icon={faChevronRight}
                 className="text-blue-500 font-bold text-lg"
               />
-            </a>
+            </button>
             <div className="px-4 mb-10">
               <div className="flex justify-between py-6">
                 <div>
-                  {reviewStatus === 'success' && reviewData.reviews.length !== 0 && (
-                    <div className="flex items-center">
-                      <div className="mr-1">
-                        <StaticRatingStar //
-                          count={5}
-                          rating={Math.ceil(reviewData.avgRating)}
-                          color={{
-                            filled: '#ffe259',
-                            unfilled: '#DCDCDC',
-                          }}
-                          className="text-2xl"
-                        />
+                  {reviewStatus === 'error' ? (
+                    <span>Error : {error.message}</span>
+                  ) : (
+                    reviewStatus === 'success' &&
+                    reviewData.pages[0].reviews.length !== 0 && (
+                      <div className="flex items-center">
+                        <div className="mr-1">
+                          <StaticRatingStar //
+                            count={5}
+                            rating={Math.ceil(reviewData.pages[0].avgRating)}
+                            color={{
+                              filled: '#ffe259',
+                              unfilled: '#DCDCDC',
+                            }}
+                            className="text-2xl"
+                          />
+                        </div>
+                        <div className="text-lg">{reviewData.pages[0].totalResults}</div>
                       </div>
-                      <div className="text-lg">{reviewData.totalResults}</div>
-                    </div>
+                    )
                   )}
                 </div>
                 <a href={`/reviews/write/products/${productId}`} className="text-blue-500">
@@ -260,56 +302,69 @@ const ProductDetailPage = ({ f7route, f7router }: PageRouteProps) => {
                 </a>
               </div>
 
-              {reviewStatus === 'success' && reviewData.reviews.length !== 0 && (
-                <>
-                  <div className="grid grid-cols-4 gap-1">
-                    {reviewData.reviews.map((review) => (
-                      <img //
-                        src={review.images[0]}
-                        alt=""
-                        className="object-cover object-center h-28 w-full"
-                      />
-                    ))}
-                  </div>
-                </>
+              {reviewStatus === 'error' ? (
+                <span>Error : {error.message}</span>
+              ) : (
+                reviewStatus === 'success' &&
+                reviewData.pages[0].reviews.length !== 0 && (
+                  <>
+                    <div className="grid grid-cols-4 gap-1">
+                      {reviewData.pages[0].reviews.map((review) => (
+                        <img //
+                          key={review.id + review.images[0]}
+                          src={review.images[0]}
+                          alt=""
+                          className="object-cover object-center h-28 w-full"
+                        />
+                      ))}
+                    </div>
+                  </>
+                )
               )}
             </div>
             <div className="w-full h-5 bg-gray-200"></div>
-            {reviewStatus === 'success' && reviewData.reviews.length !== 0 && (
-              <>
-                <div>
-                  {reviewData.reviews.map((review) => (
-                    <a href="#" className="block py-3 px-4 border-b border-gray-300">
-                      <div className="font-semibold">{review.commenter.username}</div>
-                      <div className="flex items-center my-1">
-                        <div className="mr-1">
-                          <StaticRatingStar //
-                            count={5}
-                            rating={Math.ceil(review.rating)}
-                            color={{
-                              filled: '#ffe259',
-                              unfilled: '#DCDCDC',
-                            }}
-                            className="text-lg"
-                          />
+            {reviewStatus === 'error' ? (
+              <span>Error : {error.message}</span>
+            ) : (
+              reviewStatus === 'success' &&
+              reviewData.pages[0].reviews.length !== 0 && (
+                <>
+                  <div>
+                    {reviewData.pages[0].reviews.map((review) => (
+                      <a key={review.id} href="#" className="block py-3 px-4 border-b border-gray-300">
+                        <div className="font-semibold">{review.commenter.username}</div>
+                        <div className="flex items-center my-1">
+                          <div className="mr-1">
+                            <StaticRatingStar //
+                              count={5}
+                              rating={Math.ceil(review.rating)}
+                              color={{
+                                filled: '#ffe259',
+                                unfilled: '#DCDCDC',
+                              }}
+                              className="text-lg"
+                            />
+                          </div>
+                          <div className="text-sm">{review.createdAt}</div>
                         </div>
-                        <div className="text-sm">{review.createdAt}</div>
-                      </div>
-                      <div className="flex">
-                        <img //
-                          src={review.images[0]}
-                          alt=""
-                          className="object-cover object-center h-24 w-24 mr-1"
-                        />
-                        <p className="line-clamp-4 h-full">{review.content}</p>
-                      </div>
-                    </a>
-                  ))}
-                </div>
-                <div className="border-2 border-blue-500 text-blue-500 font-semibold mx-4 flex justify-center py-2 mb-2 mt-4">
-                  <a href="#">이 상품의 상품평 모두보기</a>
-                </div>
-              </>
+                        <div className="flex">
+                          <img //
+                            src={review.images[0]}
+                            alt=""
+                            className="object-cover object-center h-24 w-24 mr-1"
+                          />
+                          <p className="line-clamp-4 h-full">{review.content}</p>
+                        </div>
+                      </a>
+                    ))}
+                  </div>
+                  <div className="border-2 border-blue-500 text-blue-500 font-semibold mx-4 flex justify-center py-2 mb-2 mt-4">
+                    <button onClick={onClickLink} className="outline-none">
+                      이 상품의 상품평 모두보기
+                    </button>
+                  </div>
+                </>
+              )
             )}
           </div>
           <div className="flex fixed bottom-0 border-t-2 botder-gray-600 w-full p-2 bg-white">
