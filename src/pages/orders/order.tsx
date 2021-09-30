@@ -4,7 +4,7 @@ import { f7, Navbar, Page } from 'framework7-react';
 import { Form, Formik, FormikHelpers } from 'formik';
 
 import useAuth from '@hooks/useAuth';
-import { getShoppingList } from '@store';
+import { IShoppingItem } from '@store';
 import { DELIVERY_FEE, PageRouteProps } from '@constants';
 import { formmatPrice, sleep } from '@utils/index';
 import { OrderForm } from '@interfaces/order.interface';
@@ -12,20 +12,16 @@ import { FormError } from '@components/form-error';
 import { createOrderAPI } from '@api';
 
 interface OrderProps extends PageRouteProps {
-  items: string[];
+  orderList: IShoppingItem[];
   totalPrice: number;
 }
 
-const OrderSchema: Yup.SchemaOf<OrderForm> = Yup.object().shape({
-  deliverRequest: Yup.string().min(0).max(50, '배송 요청사항은 최대 50 자까지 적을 수 있습니다.').optional(),
-});
-
-const OrderPage = ({ items, totalPrice, f7router }: OrderProps) => {
+const OrderPage = ({ orderList, totalPrice, f7router }: OrderProps) => {
   const { currentUser } = useAuth();
-  const shoppingList = getShoppingList(currentUser.id);
-  const orderList = shoppingList.filter((item) => items.includes(item.id));
 
-  console.log(items);
+  const OrderSchema: Yup.SchemaOf<OrderForm> = Yup.object().shape({
+    deliverRequest: Yup.string().min(0).max(50, '배송 요청사항은 최대 50 자까지 적을 수 있습니다.').optional(),
+  });
 
   const initialValues: OrderForm = {
     deliverRequest: '',
@@ -105,7 +101,7 @@ const OrderPage = ({ items, totalPrice, f7router }: OrderProps) => {
                           <span>수량 {orderItem.orderCount}개 / </span>
                           <span>배송비</span>
                         </div>
-                        <div>{formmatPrice(totalPrice)}원</div>
+                        <div>{formmatPrice(orderItem.price * orderItem.orderCount)}원</div>
                       </div>
                     ))}
                 </section>

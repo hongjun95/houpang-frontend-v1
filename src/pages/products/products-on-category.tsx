@@ -11,11 +11,12 @@ import { Product, SortState, SortStates } from '@interfaces/product.interface';
 import { GetProductsByCategoryIdOutput } from '@interfaces/category.interface';
 import { productKeys } from '@reactQuery/query-keys';
 import { formmatPrice } from '@utils/index';
-import { getShoppingList } from '@store';
-import useAuth from '@hooks/useAuth';
+import { IShoppingItem } from '@store';
 import LandingPage from '@pages/landing';
 import { useInView } from 'react-intersection-observer';
 import StaticRatingStar from '@components/StaticRatingStar';
+import { useRecoilValue } from 'recoil';
+import { shoppingListAtom } from '@atoms';
 
 interface ProductFilterProps {
   sort: SortState;
@@ -26,9 +27,8 @@ const ProductsOnCategoryPage = ({ f7route, f7router }) => {
   const [viewType, setViewType] = useState('grid');
   const [categoryName, setCategoryName] = useState('');
   const [totalCount, setTotalCount] = useState(0);
+  const shoppingList = useRecoilValue<Array<IShoppingItem>>(shoppingListAtom);
 
-  const { currentUser } = useAuth();
-  const shoppingList = getShoppingList(currentUser?.id);
   const { is_main, categoryId }: { is_main: boolean; categoryId: string } = f7route.query;
   const queryClient = useQueryClient();
   const { ref, inView, entry } = useInView({
@@ -220,10 +220,7 @@ const ProductsOnCategoryPage = ({ f7route, f7router }) => {
             </ul>
           )}
           <div className="flex justify-center font-bold mt-4">
-            <div //
-              ref={hasNextPage && !isFetching ? ref : null}
-              className=""
-            >
+            <div ref={hasNextPage && !isFetching ? ref : null}>
               {isFetchingNextPage ? 'Loading more...' : hasNextPage ? 'Load Newer' : 'Nothing more to load'}
             </div>
           </div>

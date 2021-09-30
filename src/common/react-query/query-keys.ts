@@ -40,9 +40,19 @@ export const ordersFromProvider = {
 export const refundsFromConsumer = {
   all: ['refunds', 'consumer'] as const,
   lists: () => [...refundsFromConsumer.all, 'list'] as const,
-  list: ({ consumerId }: { consumerId: string }) => [...refundsFromConsumer.lists(), consumerId] as const,
+  list: ({ page, consumerId }: { page?: number; consumerId: string }) =>
+    [...refundsFromConsumer.lists(), consumerId, page] as const,
   details: () => [...refundsFromConsumer.all, 'detail'] as const,
   detail: (orderId: string) => [...refundsFromConsumer.details(), orderId] as const,
+};
+
+export const refundsFromProvider = {
+  all: ['refunds', 'provider'] as const,
+  lists: () => [...refundsFromProvider.all, 'list'] as const,
+  list: ({ page, providerId }: { page?: number; providerId: string }) =>
+    [...refundsFromProvider.lists(), providerId, page] as const,
+  details: () => [...refundsFromProvider.all, 'detail'] as const,
+  detail: (orderId: string) => [...refundsFromProvider.details(), orderId] as const,
 };
 
 export const reviewKeys = {

@@ -1,13 +1,19 @@
+import React, { useEffect } from 'react';
+import { Link, Navbar, NavLeft, NavRight, NavTitle, Page } from 'framework7-react';
+import { useRecoilState } from 'recoil';
+
+import { shoppingListAtom } from '@atoms';
 import Categories from '@components/Categories';
 import useAuth from '@hooks/useAuth';
-import { getShoppingList } from '@store';
-import { Link, Navbar, NavLeft, NavRight, NavTitle, Page } from 'framework7-react';
-import React from 'react';
+import { getShoppingList, IShoppingItem } from '@store';
 
 const HomePage = () => {
   const { currentUser } = useAuth();
-  const shoppingList = getShoppingList(currentUser?.id);
+  const [shoppingList, setShoppingList] = useRecoilState<Array<IShoppingItem>>(shoppingListAtom);
 
+  useEffect(() => {
+    setShoppingList(getShoppingList(currentUser?.id));
+  }, []);
   return (
     <Page name="home">
       <Navbar>

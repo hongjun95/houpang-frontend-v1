@@ -53,3 +53,12 @@ export interface GetRefundsFromConsumerInput extends PaginationInput {
 export interface GetRefundsFromConsumerOutput extends PaginationOutput {
   refundItems?: Refund[];
 }
+
+// Get Refunds from Consumer
+
+export interface GetRefundsFromProviderInput extends PaginationInput {
+  providerId: string;
+}
+export interface GetRefundsFromProviderOutput extends PaginationOutput {
+  refundItems?: Refund[];
+}

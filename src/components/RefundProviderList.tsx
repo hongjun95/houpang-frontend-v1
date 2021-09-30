@@ -3,19 +3,19 @@ import { useInfiniteQuery } from 'react-query';
 import { Router } from 'framework7/types';
 import { useInView } from 'react-intersection-observer';
 
-import { getRefundsFromConsumerAPI } from '@api';
-import { refundsFromConsumer } from '@reactQuery/query-keys';
+import { getRefundsFromProviderAPI } from '@api';
+import { refundsFromProvider } from '@reactQuery/query-keys';
 import { User } from '@interfaces/user.interface';
 import RefundItem from './RefundItem';
-import { GetRefundsFromConsumerOutput, Refund } from '@interfaces/refund.interface';
+import { GetRefundsFromProviderOutput, Refund } from '@interfaces/refund.interface';
 import LandingPage from '@pages/landing';
 
-interface RefundConsumerListProps {
+interface RefundProviderListProps {
   currentUser: User;
   f7router: Router.Router;
 }
 
-const RefundConsumerList: React.FC<RefundConsumerListProps> = ({ currentUser }) => {
+const RefundProviderList: React.FC<RefundProviderListProps> = ({ currentUser }) => {
   const { ref, inView, entry } = useInView({
     threshold: 0,
   });
@@ -28,9 +28,9 @@ const RefundConsumerList: React.FC<RefundConsumerListProps> = ({ currentUser }) 
     data,
     error,
     status,
-  } = useInfiniteQuery<GetRefundsFromConsumerOutput, Error>(
-    refundsFromConsumer.list({ consumerId: currentUser.id, page: 1 }),
-    ({ pageParam }) => getRefundsFromConsumerAPI({ consumerId: currentUser.id, page: pageParam }),
+  } = useInfiniteQuery<GetRefundsFromProviderOutput, Error>(
+    refundsFromProvider.list({ providerId: currentUser.id, page: 1 }),
+    ({ pageParam }) => getRefundsFromProviderAPI({ providerId: currentUser.id, page: pageParam }),
     {
       getNextPageParam: (lastPage) => {
         const hasNextPage = lastPage.hasNextPage;
@@ -75,4 +75,4 @@ const RefundConsumerList: React.FC<RefundConsumerListProps> = ({ currentUser }) 
   );
 };
 
-export default React.memo(RefundConsumerList);
+export default React.memo(RefundProviderList);

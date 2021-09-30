@@ -78,9 +78,11 @@ const NormalBuying: React.FC<NormalBuyingProps> = ({ f7router, currentUser, shop
   };
 
   const onClickBuy = () => {
+    const orderList = shoppingList.filter((item) => items.includes(item.id));
+
     f7router.navigate('/order', {
       props: {
-        items,
+        orderList,
         totalPrice,
       },
     });
