@@ -39,8 +39,14 @@ export interface SignUpInput {
   phoneNumber: string;
   address: string;
   bio?: string;
+  userImg?: string;
 }
 export interface SignUpOutput extends CoreOutput {}
+export interface SignUpForm
+  extends Pick<User, 'email' | 'username' | 'password' | 'language' | 'phoneNumber' | 'address' | 'bio'> {
+  images?: Array<File>;
+  verifyPassword: string;
+}
 
 export interface SignInInput {
   email: string;
