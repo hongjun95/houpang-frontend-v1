@@ -1,23 +1,23 @@
 import React, { useState } from 'react';
-import { f7, Navbar, Page, Sheet, Stepper, Swiper, SwiperSlide } from 'framework7-react';
-import { useInfiniteQuery, useQuery } from 'react-query';
 import styled from 'styled-components';
+import { f7, Link, Navbar, Page, Sheet, Stepper, Swiper, SwiperSlide } from 'framework7-react';
+import { useInfiniteQuery, useQuery } from 'react-query';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronRight, faPen } from '@fortawesome/free-solid-svg-icons';
+import { faChevronRight, faPen, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 
 import { PageRouteProps } from '@constants';
 import { FindProductByIdOutput } from '@interfaces/product.interface';
+import { Like } from '@interfaces/like.interface';
+import { UserRole } from '@interfaces/user.interface';
+import { GetReviewsOnProductOutput } from '@interfaces/review.interface';
 import { productKeys, reviewKeys } from '@reactQuery/query-keys';
 import { deleteProduct, findProductById, getReviewOnProductAPI, likeProductAPI, unlikeProductAPI } from '@api';
 import { formmatPrice } from '@utils/index';
-import LandingPage from '@pages/landing';
 import { saveShoppingList, existedProductOnShoppingList, getShoppingList, IShoppingItem } from '@store';
-import useAuth from '@hooks/useAuth';
-import { Like } from '@interfaces/like.interface';
 import { likeListAtom, shoppingListAtom } from '@atoms';
-import { UserRole } from '@interfaces/user.interface';
-import { GetReviewsOnProductOutput } from '@interfaces/review.interface';
+import LandingPage from '@pages/landing';
+import useAuth from '@hooks/useAuth';
 import StaticRatingStar from '@components/StaticRatingStar';
 
 const ProductPrice = styled.div`
@@ -84,11 +84,14 @@ const ProductDetailPage = ({ f7route, f7router }: PageRouteProps) => {
         name: productData.product.name,
         price: productData.product.price,
         imageUrl: productData.product.images[0],
-        orderCount: 1,
+        orderCount,
       };
       shoppingList.push({ ...shoppingItem });
       saveShoppingList(currentUser.id, shoppingList);
       setShoppingList(shoppingList);
+      f7.dialog.confirm('장바구니로 가시겠습니가?', () => {
+        f7router.navigate('/shopping-list');
+      });
     }
   };
 
@@ -137,12 +140,15 @@ const ProductDetailPage = ({ f7route, f7router }: PageRouteProps) => {
 
   const onDeleteBtn = async () => {
     try {
-      // const ok = await f7.dialog.confirm('정말로 삭제하시겠습니까?');
-      const ok = window.confirm('정말 삭제하시겠습니까?');
-      if (ok) {
+      await f7.dialog.confirm('정말로 삭제하시겠습니까?', async () => {
         await deleteProduct({ productId });
         f7router.navigate(`/products?categoryId=${productData.product.category.id}`);
-      }
+      });
+      // const ok = window.confirm('정말 삭제하시겠습니까?');
+      // if (ok) {
+      //   await deleteProduct({ productId });
+      //   f7router.navigate(`/products?categoryId=${productData.product.category.id}`);
+      // }
     } catch (error) {
       console.error(error);
     }
@@ -151,7 +157,15 @@ const ProductDetailPage = ({ f7route, f7router }: PageRouteProps) => {
   const onClickBuy = () => {
     f7router.navigate('/order', {
       props: {
-        items: [productData.product.id],
+        orderList: [
+          {
+            id: productData.product.id,
+            imageUrl: productData.product.images[0],
+            name: productData.product.name,
+            orderCount,
+            price: productData.product.price,
+          },
+        ],
         totalPrice: productData.product.price,
       },
     });
@@ -380,7 +394,7 @@ const ProductDetailPage = ({ f7route, f7router }: PageRouteProps) => {
 
             <button
               className="sheet-open border-none focus:outline-none mr-4 bg-blue-600 text-white font-bold text-base tracking-normal  rounded-md actions-open"
-              productData-sheet=".buy"
+              data-sheet=".buy"
             >
               구매하기
             </button>
@@ -393,7 +407,12 @@ const ProductDetailPage = ({ f7route, f7router }: PageRouteProps) => {
               setSheetOpened(false);
             }}
           >
-            <h3 className="text-lg font-bold mt-2 truncate">{productData.product.name}</h3>
+            <div className="flex justify-between">
+              <h3 className="text-lg font-bold mt-2 truncate">{productData.product.name}</h3>
+              <Link sheetClose>
+                <FontAwesomeIcon icon={faTimes} className="text-lg" />
+              </Link>
+            </div>
             <div className="text-red-700 text-sm font-bold my-2">{formmatPrice(productData.product.price)}원</div>
             <Stepper
               value={orderCount}
@@ -402,7 +421,11 @@ const ProductDetailPage = ({ f7route, f7router }: PageRouteProps) => {
             />
             <div className="flex">
               <button
-                className="focus:outline-none outline-none border border-blue-600 text-blue-600 font-bold text-base tracking-normal rounded-md p-2 mr-2"
+                className={`outline-none border font-bold text-base tracking-normal rounded-md p-2 mr-2 ${
+                  existedProductOnShoppingList(currentUser.id, productId)
+                    ? 'border-gray-300 text-gray-300 pointer-events-none'
+                    : 'border-blue-600 text-blue-600'
+                }`}
                 onClick={onAddProductToShoppingList}
                 disabled={existedProductOnShoppingList(currentUser.id, productId)}
               >
