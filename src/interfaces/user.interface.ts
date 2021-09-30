@@ -30,15 +30,11 @@ export interface User extends CoreEntity {
   reviews: Review[];
 }
 
-export interface SignUpInput {
-  email: string;
-  username: string;
-  password: string;
+// sign up
+
+export interface SignUpInput
+  extends Pick<User, 'email' | 'username' | 'password' | 'language' | 'phoneNumber' | 'address' | 'bio'> {
   verifyPassword: string;
-  language: Language;
-  phoneNumber: string;
-  address: string;
-  bio?: string;
   userImg?: string;
 }
 export interface SignUpOutput extends CoreOutput {}
@@ -48,24 +44,29 @@ export interface SignUpForm
   verifyPassword: string;
 }
 
+// sign in
+
 export interface SignInInput {
   email: string;
   password: string;
 }
-
 export interface SignInOutput extends CoreOutput {
   token?: string;
 }
 
-export interface EditProfileInput {
-  email: string;
-  username: string;
-  language: Language;
-  phoneNumber: string;
-  address: string;
-  bio?: string;
+// edit profile
+
+export interface EditProfileInput
+  extends Pick<User, 'email' | 'username' | 'language' | 'phoneNumber' | 'address' | 'bio'> {
+  userImg?: string;
 }
 export interface EditProfileOutput extends CoreOutput {}
+export interface EditProfileForm
+  extends Pick<User, 'email' | 'username' | 'language' | 'phoneNumber' | 'address' | 'bio'> {
+  images?: Array<File>;
+}
+
+// Change password
 
 export interface ChangePasswordInput {
   currentPassword: string;
