@@ -193,13 +193,8 @@ const ProductDetailPage = ({ f7route, f7router }: PageRouteProps) => {
           <div className="Main__info mx-2 my-4">
             <div className="flex justify-between">
               <div className="flex items-center justify-center">
-                <img
-                  className={`rounded-full mr-2 object-cover ${
-                    productData.product.provider.userImg ? 'w-10 h-10' : 'p-10'
-                  }`}
-                  src={productData.product.provider.userImg}
-                />
-                <div>
+                <img className="rounded-full mr-2 object-cover w-10 h-10" src={productData.product.provider.userImg} />
+                <div className="w-full">
                   <div>{productData.product.provider.username}</div>
                   <div className="text-gray-400 text-sm">브랜드</div>
                 </div>
@@ -207,8 +202,7 @@ const ProductDetailPage = ({ f7route, f7router }: PageRouteProps) => {
               {reviewStatus === 'error' ? (
                 <span>Error : {error.message}</span>
               ) : (
-                reviewStatus === 'success' &&
-                reviewData.pages[0].reviews.length !== 0 && (
+                reviewStatus === 'success' && (
                   <button onClick={onClickLink} className="flex items-center outline-none">
                     <div className="mr-1">
                       <StaticRatingStar //
@@ -287,8 +281,7 @@ const ProductDetailPage = ({ f7route, f7router }: PageRouteProps) => {
                   {reviewStatus === 'error' ? (
                     <span>Error : {error.message}</span>
                   ) : (
-                    reviewStatus === 'success' &&
-                    reviewData.pages[0].reviews.length !== 0 && (
+                    reviewStatus === 'success' && (
                       <div className="flex items-center">
                         <div className="mr-1">
                           <StaticRatingStar //
