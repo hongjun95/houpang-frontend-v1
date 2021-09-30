@@ -1,17 +1,20 @@
-import React from 'react';
+import React, { useState } from 'react';
 import * as Yup from 'yup';
 import { Form, Formik, FormikHelpers } from 'formik';
 import i18next from 'i18next';
 
-// import useAuth from '@hooks/useAuth';
 import { sleep } from '@utils';
 import { f7, List, ListInput, ListItem, Navbar, Page } from 'framework7-react';
 import { PageRouteProps } from '@constants';
-import { editProfileAPI } from '@api';
+import { editProfileAPI, uploadImages } from '@api';
 import useAuth from '@hooks/useAuth';
-import { EditProfileInput } from 'src/interfaces/user.interface';
+import { EditProfileForm } from 'src/interfaces/user.interface';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCamera } from '@fortawesome/free-solid-svg-icons';
+import PreviewImg from '@components/PreviewImg';
+import { getToken } from '@store';
 
-const EditProfileSchema: Yup.SchemaOf<EditProfileInput> = Yup.object().shape({
+const EditProfileSchema: Yup.SchemaOf<EditProfileForm> = Yup.object().shape({
   username: Yup.string() //
     .required('필수 입력사항 입니다'),
   email: Yup.string() //
@@ -28,13 +31,18 @@ const EditProfileSchema: Yup.SchemaOf<EditProfileInput> = Yup.object().shape({
     })
     .required('필수 입력사항 입니다'),
   bio: Yup.string().optional(),
+  images: Yup.array(),
 });
 
 const EditProfilePage = ({ f7router }: PageRouteProps) => {
   const {
-    currentUser: { username, email, language, address, phoneNumber, bio },
+    currentUser: { username, email, language, address, phoneNumber, bio, userImg },
+    authenticateUser,
   } = useAuth();
-  const initialValues: EditProfileInput = {
+
+  const [previewImgUri, setPreviewImgUri] = useState<string | ArrayBuffer>(userImg);
+
+  const initialValues: EditProfileForm = {
     username,
     email,
     language,
@@ -43,23 +51,61 @@ const EditProfilePage = ({ f7router }: PageRouteProps) => {
     bio,
   };
 
-  const handleEditProfile = async (values: EditProfileInput, setSubmitting) => {
+  const handleEditProfile = async (values: EditProfileForm, setSubmitting) => {
     await sleep(400);
     setSubmitting(false);
     f7.dialog.preloader('잠시만 기다려주세요...');
     try {
-      const { ok, error } = await editProfileAPI({ ...values });
+      const { images } = values;
 
-      if (ok) {
-        f7.dialog.alert('계정이 성공적으로 수정되었습니다.');
-        f7router.navigate('/mypage');
+      let imageUrls: string[];
+      if (!!images) {
+        const formBody = new FormData();
+
+        for (const image of images) {
+          formBody.append('files', image);
+        }
+        const {
+          status,
+          data: { urls },
+        } = await uploadImages(formBody);
+        if (status === 200) {
+          imageUrls = urls;
+        }
       } else {
-        f7.dialog.alert(error);
+        imageUrls = [userImg];
       }
-      f7.dialog.close();
+
+      try {
+        const { ok, error } = await editProfileAPI({ ...values, userImg: imageUrls[0] });
+
+        if (ok) {
+          f7.dialog.alert('계정이 성공적으로 수정되었습니다.');
+          authenticateUser(getToken());
+          f7router.navigate('/mypage');
+        } else {
+          f7.dialog.alert(error);
+        }
+        f7.dialog.close();
+      } catch (error) {
+        f7.dialog.close();
+        f7.dialog.alert(error?.response?.data || error?.message);
+      }
     } catch (error) {
-      f7.dialog.close();
-      f7.dialog.alert(error?.response?.data || error?.message);
+      console.error(error);
+    }
+  };
+
+  const handlePreviewImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    const files = e.target.files;
+
+    if (files) {
+      let reader = new FileReader();
+      reader.onload = (ev) => {
+        setPreviewImgUri(ev.target.result);
+      };
+      reader.readAsDataURL(files[0]);
     }
   };
 
@@ -70,12 +116,12 @@ const EditProfilePage = ({ f7router }: PageRouteProps) => {
       <Formik
         initialValues={initialValues}
         validationSchema={EditProfileSchema}
-        onSubmit={(values, { setSubmitting }: FormikHelpers<EditProfileInput>) =>
+        onSubmit={(values, { setSubmitting }: FormikHelpers<EditProfileForm>) =>
           handleEditProfile(values, setSubmitting)
         }
         validateOnMount
       >
-        {({ handleChange, handleBlur, values, errors, touched, isSubmitting, isValid }) => (
+        {({ handleChange, handleBlur, setFieldValue, values, errors, touched, isSubmitting, isValid }) => (
           <Form>
             <List noHairlinesMd>
               <div className="p-3 font-semibold bg-white">기본 정보</div>
@@ -148,6 +194,38 @@ const EditProfilePage = ({ f7router }: PageRouteProps) => {
                   <option value="English">English</option>
                 </select>
               </ListItem>
+
+              <div className="flex relative mx-2 py-2">
+                <div className="flex justify-center border border-gray-300 mr-3 p-2 w-1/4">
+                  <label //
+                    htmlFor="upload-images"
+                    className="text-blue-500 cursor-pointer flex items-center px-2"
+                  >
+                    <FontAwesomeIcon icon={faCamera} className="h-full mr-1" />
+                    <span className="ml-2 text-justify mr w-2/3">프로필 이미지</span>
+                  </label>
+                  <input //
+                    type="file"
+                    name="images"
+                    id="upload-images"
+                    className="opacity-0 absolute z-0"
+                    accept="image/*"
+                    multiple
+                    onChange={(event) => {
+                      const images = event.target.files;
+                      const myFiles = Array.from(images);
+                      handlePreviewImage(event);
+                      setFieldValue('images', myFiles);
+                    }}
+                  />
+                </div>
+                {previewImgUri && (
+                  <PreviewImg //
+                    previewImgUri={previewImgUri}
+                    className="object-cover object-center h-20 w-24"
+                  />
+                )}
+              </div>
             </List>
 
             <div className="p-4">
