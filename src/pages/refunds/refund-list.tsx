@@ -4,6 +4,7 @@ import styled from 'styled-components';
 
 import useAuth from '@hooks/useAuth';
 import RefundConsumerList from '@components/RefundConsumerList';
+import RefundProviderList from '@components/RefundProviderList';
 import { UserRole } from '@interfaces/user.interface';
 import { PageRouteProps } from '@constants';
 
@@ -70,7 +71,7 @@ const RefundListPage = ({ f7router }: PageRouteProps) => {
           f7router={f7router}
         />
       ) : (
-        <RefundConsumerList //
+        <RefundProviderList //
           currentUser={currentUser}
           f7router={f7router}
         />

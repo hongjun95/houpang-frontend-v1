@@ -220,10 +220,7 @@ const ProductsOnCategoryPage = ({ f7route, f7router }) => {
             </ul>
           )}
           <div className="flex justify-center font-bold mt-4">
-            <div //
-              ref={hasNextPage && !isFetching ? ref : null}
-              className=""
-            >
+            <div ref={hasNextPage && !isFetching ? ref : null}>
               {isFetchingNextPage ? 'Loading more...' : hasNextPage ? 'Load Newer' : 'Nothing more to load'}
             </div>
           </div>

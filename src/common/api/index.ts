@@ -33,6 +33,8 @@ import {
 import {
   GetRefundsFromConsumerInput,
   GetRefundsFromConsumerOutput,
+  GetRefundsFromProviderInput,
+  GetRefundsFromProviderOutput,
   RequestRefundInput,
   RequestRefundOutput,
 } from '@interfaces/refund.interface';
@@ -383,6 +385,25 @@ export const getRefundsFromConsumerAPI = async ({
       params: {
         page,
         consumerId,
+      },
+    });
+  } catch (error) {
+    console.error(error);
+  }
+  const result = response.data;
+  return result;
+};
+
+export const getRefundsFromProviderAPI = async ({
+  page = 1,
+  providerId,
+}: GetRefundsFromProviderInput): Promise<GetRefundsFromProviderOutput> => {
+  let response: AxiosResponse<GetRefundsFromProviderOutput>;
+  try {
+    response = await API.get<GetRefundsFromProviderOutput>('/refunds/provider', {
+      params: {
+        page,
+        providerId,
       },
     });
   } catch (error) {

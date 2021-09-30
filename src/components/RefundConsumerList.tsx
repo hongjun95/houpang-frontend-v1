@@ -25,7 +25,7 @@ const RefundConsumerList: React.FC<RefundConsumerListProps> = ({ currentUser }) 
         </div>
       ) : (
         data?.refundItems.map((refundItem) => (
-          <RefundItem key={refundItem.id} userId={currentUser.id} refundItem={refundItem} />
+          <RefundItem key={refundItem.id} userId={currentUser.id} refundItem={refundItem} isProviderList={false}/>
         ))
       )}
     </>

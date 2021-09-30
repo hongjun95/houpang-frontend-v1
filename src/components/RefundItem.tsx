@@ -9,9 +9,10 @@ import { Refund } from '@interfaces/refund.interface';
 interface RefundItemProps {
   userId: string;
   refundItem: Refund;
+  isProviderList: boolean;
 }
 
-const RefundItemComponent: React.FC<RefundItemProps> = ({ userId, refundItem }) => {
+const RefundItemComponent: React.FC<RefundItemProps> = ({ userId, refundItem, isProviderList }) => {
   const [, setShoppingList] = useRecoilState<Array<IShoppingItem>>(shoppingListAtom);
 
   const onAddProductToShoppingList = (e: any, data: IShoppingItem) => {
@@ -41,30 +42,30 @@ const RefundItemComponent: React.FC<RefundItemProps> = ({ userId, refundItem }) 
         <div className="flex justify-between">
           <div>
             <span className="text-red-500 font-semibold mr-1">{refundItem.status}완료</span>
-            <span>
-              {refundItem.refundedAt}
-              {refundItem.status} 접수
-            </span>
+            <span className="mr-1">{refundItem.refundedAt}</span>
+            <span>{refundItem.status} 접수</span>
           </div>
-          <button
-            className={`w-1/3 py-2 px-3 rounded-md ml-2 ${
-              existedProductOnShoppingList(userId, refundItem.orderItem.product.id)
-                ? 'border border-gray-600 text-gray-600 pointer-events-none'
-                : 'border-2 border-blue-600 text-blue-600'
-            }`}
-            onClick={(e) =>
-              onAddProductToShoppingList(e, {
-                id: refundItem.orderItem.product.id,
-                name: refundItem.orderItem.product.name,
-                price: refundItem.orderItem.product.price,
-                orderCount: 1,
-                imageUrl: refundItem.orderItem.product.images[0],
-              })
-            }
-            disabled={existedProductOnShoppingList(userId, refundItem.orderItem.product.id)}
-          >
-            장바구니 담기
-          </button>
+          {!isProviderList && (
+            <button
+              className={`w-1/3 py-2 px-3 rounded-md ml-2 ${
+                existedProductOnShoppingList(userId, refundItem.orderItem.product.id)
+                  ? 'border border-gray-600 text-gray-600 pointer-events-none'
+                  : 'border-2 border-blue-600 text-blue-600'
+              }`}
+              onClick={(e) =>
+                onAddProductToShoppingList(e, {
+                  id: refundItem.orderItem.product.id,
+                  name: refundItem.orderItem.product.name,
+                  price: refundItem.orderItem.product.price,
+                  orderCount: 1,
+                  imageUrl: refundItem.orderItem.product.images[0],
+                })
+              }
+              disabled={existedProductOnShoppingList(userId, refundItem.orderItem.product.id)}
+            >
+              장바구니 담기
+            </button>
+          )}
         </div>
       </div>
     </div>
