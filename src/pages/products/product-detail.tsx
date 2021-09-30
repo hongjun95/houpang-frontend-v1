@@ -144,11 +144,6 @@ const ProductDetailPage = ({ f7route, f7router }: PageRouteProps) => {
         await deleteProduct({ productId });
         f7router.navigate(`/products?categoryId=${productData.product.category.id}`);
       });
-      // const ok = window.confirm('정말 삭제하시겠습니까?');
-      // if (ok) {
-      //   await deleteProduct({ productId });
-      //   f7router.navigate(`/products?categoryId=${productData.product.category.id}`);
-      // }
     } catch (error) {
       console.error(error);
     }
@@ -199,9 +194,10 @@ const ProductDetailPage = ({ f7route, f7router }: PageRouteProps) => {
             <div className="flex justify-between">
               <div className="flex items-center justify-center">
                 <img
-                  className="rounded-full w-10 h-10 mr-2"
+                  className={`rounded-full mr-2 object-cover ${
+                    productData.product.provider.userImg ? 'w-10 h-10' : 'p-10'
+                  }`}
                   src={productData.product.provider.userImg}
-                  alt="브랜드 이미지"
                 />
                 <div>
                   <div>{productData.product.provider.username}</div>
@@ -237,21 +233,21 @@ const ProductDetailPage = ({ f7route, f7router }: PageRouteProps) => {
               <ProductPrice className="text-red-700 text-xl font-bold">
                 {formmatPrice(productData.product.price)}원
               </ProductPrice>
-              {currentUser.role === UserRole.Provider && (
-                <ProductEditLink
-                  className="block w-2 py-1 text-center text-white bg-blue-600 rounded-md mr-2"
-                  href={`/products/${productId}/edit`}
-                >
-                  수정
-                </ProductEditLink>
-              )}
-              {currentUser.role === UserRole.Provider && (
-                <ProductDeleteBtn
-                  className="block w-2 py-1 text-center text-white bg-red-600 rounded-md"
-                  onClick={onDeleteBtn}
-                >
-                  삭제
-                </ProductDeleteBtn>
+              {currentUser.id === productData.product.provider.id && currentUser.role === UserRole.Provider && (
+                <>
+                  <ProductEditLink
+                    className="block w-2 py-1 text-center text-white bg-blue-600 rounded-md mr-2"
+                    href={`/products/${productId}/edit`}
+                  >
+                    수정
+                  </ProductEditLink>
+                  <ProductDeleteBtn
+                    className="block w-2 py-1 text-center text-white bg-red-600 rounded-md"
+                    onClick={onDeleteBtn}
+                  >
+                    삭제
+                  </ProductDeleteBtn>
+                </>
               )}
             </div>
           </div>
