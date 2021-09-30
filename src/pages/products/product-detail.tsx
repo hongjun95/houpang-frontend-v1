@@ -192,7 +192,7 @@ const ProductDetailPage = ({ f7route, f7router }: PageRouteProps) => {
           </Swiper>
           <div className="Main__info mx-2 my-4">
             <div className="flex justify-between">
-              <div className="flex items-center justify-center">
+              <div className="flex items-center justify-center w-32">
                 <img className="rounded-full mr-2 object-cover w-10 h-10" src={productData.product.provider.userImg} />
                 <div className="w-full">
                   <div>{productData.product.provider.username}</div>
