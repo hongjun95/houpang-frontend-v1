@@ -146,7 +146,7 @@ const ReviewListPage = ({
           </>
         )}
       </div>
-      <div className="flex justify-center font-bold mt-4">
+      <div className="flex justify-center font-bold mt-4 pb-10">
         <div //
           ref={hasNextPage && !isFetching ? ref : null}
           className=""
@@ -155,12 +155,12 @@ const ReviewListPage = ({
         </div>
       </div>
       <div className="flex fixed bottom-0 border-t-2 botder-gray-600 w-full p-2 bg-white">
-        <button
-          className="sheet-open border-none focus:outline-none mr-4 bg-blue-600 text-white font-bold text-base tracking-normal  rounded-md actions-open"
-          productData-sheet=".buy"
+        <a
+          href={`/reviews/write/products/${productId}`}
+          className="flex items-center justify-center h-10 w-full border-none outline-none bg-blue-600 text-white font-bold text-base tracking-normal rounded-md"
         >
-          리뷰 작성하기
-        </button>
+          <span>리뷰 작성하기</span>
+        </a>
       </div>
     </Page>
   );

@@ -356,7 +356,7 @@ const ProductDetailPage = ({ f7route, f7router }: PageRouteProps) => {
                             alt=""
                             className="object-cover object-center h-24 w-24 mr-1"
                           />
-                          <p className="line-clamp-4 h-full">{review.content}</p>
+                          <p className="line-clamp-4 ml-2 h-full">{review.content}</p>
                         </div>
                       </a>
                     ))}
