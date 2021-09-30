@@ -4,24 +4,7 @@ import { getCategories } from '@api';
 import { Link } from 'framework7-react';
 import { Category } from '@interfaces/category.interface';
 
-// import { useQuery } from 'react-query';
-
-// const categoriesSkeletonPlaceholder = (size) => new Array(size).fill({});
-
 const Categories = () => {
-  // const { data: categories, isLoading, isError, isFetching } = useQuery<Category[], Error>(
-  //   'categories',
-  //   getCategories({ q: { s: ['title asc'] } }),
-  //   { placeholderData: categoriesSkeletonPlaceholder(16) },
-  // );
-
-  // if (isError) {
-  //   return (
-  //     <div className="h-32 flex items-center justify-center">
-  //       <span className="text-gray-400">서버에 문제가 발생 했습니다. </span>
-  //     </div>
-  //   );
-  // }
   const [categories, setCategories] = useState([]);
   useEffect(() => {
     (async () => {

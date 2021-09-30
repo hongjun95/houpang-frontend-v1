@@ -22,7 +22,7 @@ const MyPage = ({ f7router }: PageRouteProps) => {
         <div className="max-w-3xl mx-auto px-4 sm:px-6 md:flex md:items-center md:justify-between md:space-x-5 lg:max-w-7xl lg:px-8">
           <div className="flex items-center space-x-5">
             <div className="flex-shrink-0">
-              <a href={`/users/${currentUser?.id}`}>
+              <a href="/users/edit-profile">
                 <div className="relative">
                   {currentUser?.username ? (
                     <img className="h-24 w-24 rounded-full" src={currentUser?.userImg} alt="프로필 이미지" />
@@ -37,7 +37,7 @@ const MyPage = ({ f7router }: PageRouteProps) => {
               </a>
             </div>
             <div className="w-full">
-              <a href={`/users/${currentUser?.id}`}>
+              <a href="/users/edit-profile">
                 <h1 className="text-xl font-bold text-gray-900">
                   {isAuthenticated ? currentUser.username : '인썸니아'}
                 </h1>
@@ -46,7 +46,7 @@ const MyPage = ({ f7router }: PageRouteProps) => {
                 </p>
               </a>
             </div>
-            <a href={`/users/${currentUser?.id}`}>
+            <a href="/users/edit-profile">
               <i className="las la-angle-right" style={{ fontSize: '24px', color: 'gray' }} />
             </a>
           </div>
