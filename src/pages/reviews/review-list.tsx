@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { Navbar, Page } from 'framework7-react';
 import { FetchNextPageOptions, InfiniteData, InfiniteQueryObserverResult, useQueryClient } from 'react-query';
+import { useInView } from 'react-intersection-observer';
 
 import { PageRouteProps } from '@constants';
 import { FindProductByIdOutput } from '@interfaces/product.interface';
 import { productKeys, reviewKeys } from '@reactQuery/query-keys';
 import { GetReviewsOnProductOutput } from '@interfaces/review.interface';
 import StaticRatingStar from '@components/StaticRatingStar';
-import { useInView } from 'react-intersection-observer';
 
 interface ReviewListPageProps extends PageRouteProps {
   pHasNextPage: boolean;
@@ -20,7 +20,6 @@ interface ReviewListPageProps extends PageRouteProps {
 
 const ReviewListPage = ({
   f7route,
-  f7router,
   pHasNextPage,
   pIsFetching,
   pIsFetchingNextPage,

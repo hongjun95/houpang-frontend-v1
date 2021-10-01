@@ -261,12 +261,14 @@ export const uploadImages = async (data) => {
 
 export const getOrdersFromConsumerAPI = async ({
   consumerId,
+  page = 1,
 }: GetOrdersFromConsumerInput): Promise<GetOrdersFromConsumerOutput> => {
   let response: AxiosResponse<GetOrdersFromConsumerOutput>;
   try {
     response = await API.get<GetOrdersFromConsumerOutput>('/orders/consumer', {
       params: {
         consumerId,
+        page,
       },
     });
   } catch (error) {
@@ -278,12 +280,14 @@ export const getOrdersFromConsumerAPI = async ({
 
 export const getOrdersFromProviderAPI = async ({
   providerId,
+  page = 1,
 }: GetOrdersFromProviderInput): Promise<GetOrdersFromProviderOutput> => {
   let response: AxiosResponse<GetOrdersFromProviderOutput>;
   try {
     response = await API.get<GetOrdersFromProviderOutput>('/orders/provider', {
       params: {
         providerId,
+        page,
       },
     });
   } catch (error) {
