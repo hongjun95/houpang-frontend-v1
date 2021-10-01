@@ -70,7 +70,7 @@ const OrderListPage = ({ f7router }: PageRouteProps) => {
           <Indicator className="indicator absolute left-0 bottom-0 w-1/2 bg-blue-700"></Indicator>
         </div>
       )}
-      <div className="pt-20">
+      <div className={`${currentUser.role === UserRole.Provider ? 'pt-20' : ''} `}>
         {page === 'ConsumerOrders' ? (
           <OrderConsumerList
             currentUser={currentUser}
