@@ -1,4 +1,4 @@
-import { CoreEntity, CoreOutput } from './core.interface';
+import { CoreEntity, CoreOutput, PaginationInput, PaginationOutput } from './core.interface';
 import { Product } from './product.interface';
 import { User } from './user.interface';
 
@@ -28,10 +28,10 @@ export interface OrderItem extends CoreEntity {
 
 // Get Orders from Consumer
 
-export interface GetOrdersFromConsumerInput {
+export interface GetOrdersFromConsumerInput extends PaginationInput {
   consumerId: string;
 }
-export interface GetOrdersFromConsumerOutput extends CoreOutput {
+export interface GetOrdersFromConsumerOutput extends PaginationOutput {
   orders?: Order[];
 }
 
