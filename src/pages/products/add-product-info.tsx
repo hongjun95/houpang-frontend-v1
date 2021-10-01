@@ -143,7 +143,7 @@ const AddProductInfoPage = ({ f7router }: PageRouteProps) => {
                           label={i18next.t('product.infoKey') as string}
                           type="text"
                           name={`${info.id}-infoKey`}
-                          placeholder="상품 정보의 이름을 입력해주세요"
+                          placeholder="상품 정보 이름 입력"
                           clearButton
                           onChange={(e) => {
                             setFieldValue(`${info.id}-infoKey`, e.target.value);
@@ -154,7 +154,7 @@ const AddProductInfoPage = ({ f7router }: PageRouteProps) => {
                           label={i18next.t('product.infoValue') as string}
                           type="text"
                           name={`${info.id}-infoValue`}
-                          placeholder="상품 정보 내용을 입력해주세요"
+                          placeholder="상품 정보 내용 입력"
                           clearButton
                           onBlur={handleBlur}
                           onChange={(e) => {
