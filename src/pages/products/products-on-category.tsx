@@ -20,13 +20,13 @@ import { shoppingListAtom } from '@atoms';
 
 interface ProductFilterProps {
   sort: SortState;
-  categoryId: string;
 }
 
+type ViewType = 'grid' | 'list';
+
 const ProductsOnCategoryPage = ({ f7route, f7router }) => {
-  const [viewType, setViewType] = useState('grid');
+  const [viewType, setViewType] = useState<ViewType>('grid');
   const [categoryName, setCategoryName] = useState('');
-  const [totalCount, setTotalCount] = useState(0);
   const shoppingList = useRecoilValue<Array<IShoppingItem>>(shoppingListAtom);
 
   const { is_main, categoryId }: { is_main: boolean; categoryId: string } = f7route.query;
@@ -38,7 +38,6 @@ const ProductsOnCategoryPage = ({ f7route, f7router }) => {
   const filterForm = useFormik<ProductFilterProps>({
     initialValues: {
       sort: 'createdAt desc',
-      categoryId,
     },
 
     onSubmit: async () => {
@@ -46,7 +45,7 @@ const ProductsOnCategoryPage = ({ f7route, f7router }) => {
       await refetch();
     },
   });
-  const PRODUCT_KEY = productKeys.list({ ...filterForm.values });
+  const PRODUCT_KEY = productKeys.list({ sort: filterForm.values.sort, categoryId });
 
   const {
     fetchNextPage, //
@@ -61,7 +60,7 @@ const ProductsOnCategoryPage = ({ f7route, f7router }) => {
     PRODUCT_KEY, //
     ({ pageParam }) =>
       getProductsByCategoryId({
-        categoryId: filterForm.values.categoryId,
+        categoryId,
         sort: filterForm.values.sort,
         page: pageParam,
       }),
@@ -72,7 +71,6 @@ const ProductsOnCategoryPage = ({ f7route, f7router }) => {
       },
       onSuccess: (data) => {
         setCategoryName(data.pages[data.pages.length - 1].categoryName);
-        setTotalCount(data.pages[data.pages.length - 1].totalResults);
       },
     },
   );
@@ -112,7 +110,7 @@ const ProductsOnCategoryPage = ({ f7route, f7router }) => {
 
       <form onSubmit={filterForm.handleSubmit} className="item-list-form p-3 table w-full border-b">
         <div className="float-left">
-          총 <b>{currency((data?.pages[0].totalResults && totalCount) || 0)}</b>개 상품
+          총 <b>{currency(data?.pages[0].totalResults || 0)}</b>개 상품
         </div>
         <ListInput
           type="select"

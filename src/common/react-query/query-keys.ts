@@ -1,8 +1,14 @@
+// Like Keys
+
+import { SortState } from '@interfaces/product.interface';
+
 export const likeKeys = {
   all: ['likeLists'] as const,
   details: () => [...likeKeys.all, 'detail'] as const,
   detail: (id: string) => [...likeKeys.details(), id] as const,
 };
+
+// Product Keys
 
 export const productKeys = {
   all: ['products'] as const,
@@ -11,6 +17,8 @@ export const productKeys = {
     [...productKeys.lists(), sort, categoryId] as const,
   details: () => [...productKeys.all, 'detail'] as const,
   detail: (id: string) => [...productKeys.details(), id] as const,
+  search: ({ sort, page, query }: { sort: SortState; page?: number; query: string }) =>
+    [...productKeys.lists(), sort, page, query] as const,
 };
 
 export const productsFromProviderKeys = {
@@ -20,6 +28,8 @@ export const productsFromProviderKeys = {
   details: () => [...productsFromProviderKeys.all, 'detail'] as const,
   detail: (id: string) => [...productsFromProviderKeys.details(), id] as const,
 };
+
+// Order Keys
 
 export const ordersFromConsumer = {
   all: ['orders', 'consumer'] as const,
@@ -36,6 +46,8 @@ export const ordersFromProvider = {
   details: () => [...ordersFromProvider.all, 'detail'] as const,
   detail: (orderId: string) => [...ordersFromProvider.details(), orderId] as const,
 };
+
+// Refund Keys
 
 export const refundsFromConsumer = {
   all: ['refunds', 'consumer'] as const,
@@ -54,6 +66,8 @@ export const refundsFromProvider = {
   details: () => [...refundsFromProvider.all, 'detail'] as const,
   detail: (orderId: string) => [...refundsFromProvider.details(), orderId] as const,
 };
+
+// Review Keys
 
 export const reviewKeys = {
   all: ['reviews'] as const,

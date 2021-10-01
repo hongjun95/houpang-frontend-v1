@@ -4,7 +4,6 @@ import { Form, Formik, FormikHelpers } from 'formik';
 import { f7, List, ListInput, ListItem, Navbar, Page } from 'framework7-react';
 
 import i18next from 'i18next';
-import { sleep } from '@utils';
 import { PageRouteProps } from '@constants';
 import { signupAPI, uploadImages } from '@api';
 import { Language, SignUpForm } from '@interfaces/user.interface';
@@ -58,7 +57,6 @@ const SignUpPage = ({ f7router }: PageRouteProps) => {
   };
 
   const handleSignUp = async (values, setSubmitting) => {
-    await sleep(400);
     setSubmitting(false);
     f7.dialog.preloader('잠시만 기다려주세요...');
     try {
