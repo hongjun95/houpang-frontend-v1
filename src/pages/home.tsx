@@ -105,7 +105,7 @@ const HomePage = ({ f7router }) => {
       />
       <div className="flex justify-center font-bold mt-4">
         <div ref={hasNextPage && !isFetching ? ref : null}>
-          {isFetchingNextPage ? 'Loading more...' : hasNextPage ? 'Load Newer' : 'Nothing more to load'}
+          {isFetchingNextPage ? 'Loading more...' : hasNextPage ? 'Load Newer' : ''}
         </div>
       </div>
     </Page>
