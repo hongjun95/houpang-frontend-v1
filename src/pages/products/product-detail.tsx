@@ -51,13 +51,14 @@ const ProductDetailPage = ({ f7route, f7router }: PageRouteProps) => {
   );
 
   const {
-    fetchNextPage, //
     hasNextPage,
     isFetchingNextPage,
     isFetching,
     data: reviewData,
     error,
     status: reviewStatus,
+    fetchNextPage,
+    refetch,
   } = useInfiniteQuery<GetReviewsOnProductOutput, Error>(
     reviewKeys.list({ productId, page: 1 }),
     ({ pageParam }) =>
@@ -173,6 +174,15 @@ const ProductDetailPage = ({ f7route, f7router }: PageRouteProps) => {
         pIsFetching: isFetching,
         pIsFetchingNextPage: isFetchingNextPage,
         fetchNextPage,
+        refetch,
+      },
+    });
+  };
+
+  const onClickWriteReviewLink = (e: any) => {
+    f7router.navigate(`/reviews/write/products/${productId}`, {
+      props: {
+        refetch,
       },
     });
   };
@@ -299,10 +309,12 @@ const ProductDetailPage = ({ f7route, f7router }: PageRouteProps) => {
                     )
                   )}
                 </div>
-                <a href={`/reviews/write/products/${productId}`} className="text-blue-500">
-                  <FontAwesomeIcon icon={faPen} className="mr-1 text-xs" />
-                  <span>리뷰 작성하기</span>
-                </a>
+                <div>
+                  <button onClick={onClickWriteReviewLink} className="outline-none text-blue-500">
+                    <FontAwesomeIcon icon={faPen} className="mr-1 text-xs" />
+                    <span>리뷰 작성하기</span>
+                  </button>
+                </div>
               </div>
 
               {reviewStatus === 'error' ? (

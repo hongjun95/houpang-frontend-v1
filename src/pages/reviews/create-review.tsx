@@ -1,24 +1,30 @@
 import React, { useState } from 'react';
 import * as Yup from 'yup';
 import { Form, Formik, FormikHelpers } from 'formik';
-import { useQueryClient } from 'react-query';
+import { InfiniteData, QueryObserverResult, RefetchOptions, useQueryClient } from 'react-query';
 import { f7, List, Navbar, Page } from 'framework7-react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCamera } from '@fortawesome/free-solid-svg-icons';
 
 import RatingStar from '@components/RatingStar';
 import PreviewImg from '@components/PreviewImg';
 import { uploadImages, createReviewAPI } from '@api';
-import { CreateReviewForm } from '@interfaces/review.interface';
+import { CreateReviewForm, GetReviewsOnProductOutput } from '@interfaces/review.interface';
 import { productKeys } from '@reactQuery/query-keys';
 import { FindProductByIdOutput } from '@interfaces/product.interface';
 import { formmatPrice } from '@utils/index';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCamera } from '@fortawesome/free-solid-svg-icons';
+import { PageRouteProps } from '@constants';
 
-const CreateReviewPage = ({ f7router, f7route }) => {
+interface CreateReviewPageProps extends PageRouteProps {
+  refetch(options?: RefetchOptions): Promise<QueryObserverResult<InfiniteData<GetReviewsOnProductOutput>, Error>>;
+}
+
+const CreateReviewPage = ({ f7router, f7route, refetch }: CreateReviewPageProps) => {
   const [rating, setRating] = useState(0);
   const [previewImgUris, setPreviewImgUris] = useState<(string | ArrayBuffer)[]>([]);
 
   const productId = f7route.params.id;
+  // @ts-ignore
   const { is_main }: { is_main: boolean } = f7route.query;
   const initialValues: CreateReviewForm = {
     content: '',
@@ -61,6 +67,7 @@ const CreateReviewPage = ({ f7router, f7route }) => {
 
         if (ok) {
           f7.dialog.alert('리뷰를 작성했습니다.');
+          refetch();
           f7router.navigate(`/products/${productId}`);
         } else {
           f7.dialog.alert(error);

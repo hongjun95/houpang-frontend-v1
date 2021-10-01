@@ -28,7 +28,6 @@ const SearchBar = ({ query, setQuery, refetch }: SearchBarProps) => {
 
   const handleGetProductsBySearchTerm = async (values, setSubmitting) => {
     setSubmitting(false);
-    console.log(values.query);
     setQuery(values.query);
   };
 

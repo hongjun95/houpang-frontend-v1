@@ -44,13 +44,13 @@ const HomePage = ({ f7router }) => {
   const PRODUCT_KEY = productKeys.search({ sort: filterForm.values.sort, page, query });
 
   const {
-    fetchNextPage, //
-    hasNextPage,
+    hasNextPage, //
     isFetchingNextPage,
     isFetching,
     data,
     error,
     status,
+    fetchNextPage,
     refetch,
   } = useInfiniteQuery<GetProductsBySearchTermOutput, Error>(
     PRODUCT_KEY,
@@ -81,9 +81,6 @@ const HomePage = ({ f7router }) => {
     await refetch();
     done();
   };
-
-  console.log(status);
-  console.log(data);
 
   return (
     <Page name="home" onPtrRefresh={onRefresh} ptr>
