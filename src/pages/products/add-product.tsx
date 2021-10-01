@@ -153,20 +153,6 @@ const AddProductPage = ({ f7router, f7route }) => {
                   </select>
                 </ListItem>
               )}
-              {/* <ListInput
-                label={i18next.t('product.image') as string}
-                type="file"
-                name="images"
-                className="pb-4"
-                clearButton
-                multiple
-                onChange={(event) => {
-                  const images = event.target.files;
-                  const myFiles = Array.from(images);
-                  setFieldValue('images', myFiles);
-                }}
-              /> */}
-              {/* <div className="flex relative mx-2 py-2"> */}
               <div className="flex justify-center py-2 border-b border-gray-400 relative">
                 <label //
                   htmlFor="upload-images"

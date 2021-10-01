@@ -163,7 +163,7 @@ const EditProductInfoPage = ({ f7router, productId, productInfos, currentImageUr
                 <div className="p-3 flex flex-col mb-10">
                   {infos.length !== 0 &&
                     infos.map((info, index) => (
-                      <div key={info.id} className="flex border border-gray-2">
+                      <ul key={info.id} className="flex border border-gray-2">
                         <ListInput
                           label={i18next.t('product.infoKey') as string}
                           type="text"
@@ -190,7 +190,7 @@ const EditProductInfoPage = ({ f7router, productId, productInfos, currentImageUr
                           }}
                           onBlur={handleBlur}
                         />
-                      </div>
+                      </ul>
                     ))}
                 </div>
               </List>
