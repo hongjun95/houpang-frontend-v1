@@ -76,8 +76,17 @@ const HomePage = ({ f7router }) => {
     }
   }, [inView, hasNextPage, isFetching, currentUser?.id]);
 
+  const onRefresh = async (done) => {
+    await queryClient.removeQueries(PRODUCT_KEY);
+    await refetch();
+    done();
+  };
+
+  console.log(status);
+  console.log(data);
+
   return (
-    <Page name="home">
+    <Page name="home" onPtrRefresh={onRefresh} ptr>
       <Navbar>
         <NavLeft>
           <Link icon="las la-bars" panelOpen="left" />
