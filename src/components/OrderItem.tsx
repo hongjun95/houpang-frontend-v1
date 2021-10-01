@@ -1,5 +1,5 @@
 import React from 'react';
-import { QueryObserverResult, RefetchOptions, UseMutationResult } from 'react-query';
+import { InfiniteData, QueryObserverResult, RefetchOptions, UseMutationResult } from 'react-query';
 import { f7 } from 'framework7-react';
 import { useRecoilState } from 'recoil';
 import { Router } from 'framework7/types';
@@ -24,7 +24,7 @@ interface OrderItemProps {
   onSuccess({ ok, error, orderItem }: { ok: any; error: any; orderItem: any }): void;
   providerOrderListrefetch?(
     options?: RefetchOptions,
-  ): Promise<QueryObserverResult<GetOrdersFromProviderOutput, unknown>>;
+  ): Promise<QueryObserverResult<InfiniteData<GetOrdersFromProviderOutput>, Error>>;
   f7router?: Router.Router;
   orderItem: OrderItem;
 }

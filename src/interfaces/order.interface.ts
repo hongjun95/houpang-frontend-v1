@@ -37,10 +37,10 @@ export interface GetOrdersFromConsumerOutput extends PaginationOutput {
 
 // Get Orders from Provider
 
-export interface GetOrdersFromProviderInput {
+export interface GetOrdersFromProviderInput extends PaginationInput {
   providerId: string;
 }
-export interface GetOrdersFromProviderOutput extends CoreOutput {
+export interface GetOrdersFromProviderOutput extends PaginationOutput {
   orderItems?: OrderItem[];
 }
 
