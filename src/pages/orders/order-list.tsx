@@ -50,7 +50,7 @@ const OrderListPage = ({ f7router }: PageRouteProps) => {
       <Navbar title="주문목록" backLink={true}></Navbar>
 
       {currentUser.role !== UserRole.Consumer && (
-        <div className="flex w-full relative">
+        <div className="flex w-full fixed bg-white">
           <ToggleButton
             className={`outline-none flex items-center justify-center font-bold px-6 text-base ${
               page === 'ConsumerOrders' ? 'text-blue-700  py-4 current_page' : '!text-black hover:text-blue-700'
@@ -70,18 +70,20 @@ const OrderListPage = ({ f7router }: PageRouteProps) => {
           <Indicator className="indicator absolute left-0 bottom-0 w-1/2 bg-blue-700"></Indicator>
         </div>
       )}
-      {page === 'ConsumerOrders' ? (
-        <OrderConsumerList
-          currentUser={currentUser}
-          cancelOrderItemMutation={cancelOrderItemMutation}
-          f7router={f7router}
-        />
-      ) : (
-        <OrderProviderList //
-          currentUser={currentUser}
-          cancelOrderItemMutation={cancelOrderItemMutation}
-        />
-      )}
+      <div className="pt-20">
+        {page === 'ConsumerOrders' ? (
+          <OrderConsumerList
+            currentUser={currentUser}
+            cancelOrderItemMutation={cancelOrderItemMutation}
+            f7router={f7router}
+          />
+        ) : (
+          <OrderProviderList //
+            currentUser={currentUser}
+            cancelOrderItemMutation={cancelOrderItemMutation}
+          />
+        )}
+      </div>
     </Page>
   );
 };
