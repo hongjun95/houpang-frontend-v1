@@ -27,6 +27,7 @@ interface OrderItemProps {
   ): Promise<QueryObserverResult<InfiniteData<GetOrdersFromProviderOutput>, Error>>;
   f7router?: Router.Router;
   orderItem: OrderItem;
+  isOnMyOrders: boolean;
 }
 
 const OrderItemComponent: React.FC<OrderItemProps> = ({
@@ -36,6 +37,7 @@ const OrderItemComponent: React.FC<OrderItemProps> = ({
   providerOrderListrefetch,
   f7router,
   orderItem,
+  isOnMyOrders,
 }) => {
   const { currentUser } = useAuth();
   const [, setShoppingList] = useRecoilState<Array<IShoppingItem>>(shoppingListAtom);
@@ -154,17 +156,19 @@ const OrderItemComponent: React.FC<OrderItemProps> = ({
                 장바구니 담기
               </button>
             ) : (
-              <button
-                className={`w-1/2 py-2 px-3 rounded-md ml-2 ${
-                  orderItem.status !== OrderStatus.Checking
-                    ? 'border border-gray-600 text-gray-600 pointer-events-none'
-                    : 'border-2 border-blue-600 text-blue-600'
-                }`}
-                onClick={onAcceptOrderClick}
-                disabled={orderItem.status !== OrderStatus.Checking}
-              >
-                주문 수락
-              </button>
+              !isOnMyOrders && (
+                <button
+                  className={`w-1/2 py-2 px-3 rounded-md ml-2 ${
+                    orderItem.status !== OrderStatus.Checking
+                      ? 'border border-gray-600 text-gray-600 pointer-events-none'
+                      : 'border-2 border-blue-600 text-blue-600'
+                  }`}
+                  onClick={onAcceptOrderClick}
+                  disabled={orderItem.status !== OrderStatus.Checking}
+                >
+                  주문 수락
+                </button>
+              )
             )}
           </div>
           <div className="flex items-center"></div>

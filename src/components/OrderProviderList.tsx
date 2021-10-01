@@ -82,6 +82,7 @@ const OrderProviderList: React.FC<OrderProviderListProps> = ({ currentUser, canc
                   cancelOrderItemMutation={cancelOrderItemMutation}
                   onSuccess={onSuccess}
                   providerOrderListrefetch={refetch}
+                  isOnMyOrders={false}
                 />
               ))}
             </React.Fragment>

@@ -5,7 +5,7 @@ import { Router } from 'framework7/types';
 import { useInView } from 'react-intersection-observer';
 
 import Order from '@components/Order';
-import OrderItemComponent from '@components/OrderItem';
+import OrderItem from '@components/OrderItem';
 import LandingPage from '@pages/landing';
 import { getOrdersFromConsumerAPI } from '@api';
 import { ordersFromConsumer } from '@reactQuery/query-keys';
@@ -85,13 +85,14 @@ const OrderConsumerList: React.FC<OrderConsumerListProps> = ({ currentUser, canc
                   deliverRequest={order.deliverRequest}
                 >
                   {order?.orderItems?.map((orderItem) => (
-                    <OrderItemComponent
+                    <OrderItem
                       key={orderItem.id}
                       userId={currentUser.id}
                       orderItem={orderItem}
                       cancelOrderItemMutation={cancelOrderItemMutation}
                       onSuccess={onSuccess}
                       f7router={f7router}
+                      isOnMyOrders={true}
                     />
                   ))}
                 </Order>
