@@ -15,11 +15,15 @@ import routes from '@routes/index';
 const F7App = () => {
   const device = getDevice();
 
+  const twentyFourHoursInMs = 1000 * 60 * 60 * 24;
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
         refetchOnWindowFocus: IS_PRODUCTION,
+        refetchOnMount: IS_PRODUCTION,
         refetchOnReconnect: IS_PRODUCTION,
+        retry: false,
+        staleTime: twentyFourHoursInMs,
       },
     },
   });

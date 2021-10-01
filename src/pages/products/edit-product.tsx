@@ -1,14 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
+import i18next from 'i18next';
 import * as Yup from 'yup';
 import { Form, Formik, FormikHelpers } from 'formik';
-import i18next from 'i18next';
-
+import { useSetRecoilState } from 'recoil';
+import { useQuery, useQueryClient } from 'react-query';
 import { List, ListInput, ListItem, Navbar, Page } from 'framework7-react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCamera } from '@fortawesome/free-solid-svg-icons';
+
 import { getCategories } from '@api';
 import { EditProductForm, FindProductByIdOutput } from '@interfaces/product.interface';
-import { useQuery, useQueryClient } from 'react-query';
 import { GetAllCategoriesOutput } from '@interfaces/category.interface';
-import { useSetRecoilState } from 'recoil';
 import {
   productCategoryNameAtom,
   productImgFilesAtom,
@@ -17,20 +19,7 @@ import {
   productStockAtom,
 } from '@atoms';
 import { productKeys } from '@reactQuery/query-keys';
-
-const EditProductSchema: Yup.SchemaOf<EditProductForm> = Yup.object().shape({
-  name: Yup.string() //
-    .required('필수 입력사항 입니다'),
-  price: Yup.number() //
-    .min(0)
-    .required('필수 입력사항 입니다'),
-  categoryName: Yup.string() //
-    .required('필수 입력사항 입니다'),
-  stock: Yup.number() //
-    .min(0)
-    .required('필수 입력사항 입니다'),
-  images: Yup.array(),
-});
+import PreviewImg from '@components/PreviewImg';
 
 const EditProductInfoPage = ({ f7router, f7route }) => {
   const setProducthName = useSetRecoilState(productNameAtom);
@@ -38,13 +27,26 @@ const EditProductInfoPage = ({ f7router, f7route }) => {
   const setProductCategoryName = useSetRecoilState(productCategoryNameAtom);
   const setStockAtom = useSetRecoilState(productStockAtom);
   const setProductImgFile = useSetRecoilState(productImgFilesAtom);
+  const [previewImgUris, setPreviewImgUris] = useState<(string | ArrayBuffer)[]>([]);
 
   const queryClient = useQueryClient();
   const productId = f7route.params.id;
-
   const productData = queryClient.getQueryData<FindProductByIdOutput>(productKeys.detail(productId));
-
   const { is_main }: { is_main: boolean } = f7route.query;
+
+  const EditProductSchema: Yup.SchemaOf<EditProductForm> = Yup.object().shape({
+    name: Yup.string() //
+      .required('필수 입력사항 입니다'),
+    price: Yup.number() //
+      .min(0)
+      .required('필수 입력사항 입니다'),
+    categoryName: Yup.string() //
+      .required('필수 입력사항 입니다'),
+    stock: Yup.number() //
+      .min(0)
+      .required('필수 입력사항 입니다'),
+    images: Yup.array(),
+  });
 
   const initialValues: EditProductForm = {
     name: productData.product.name,
@@ -78,6 +80,23 @@ const EditProductInfoPage = ({ f7router, f7route }) => {
       });
     } catch (e) {
       console.error(e);
+    }
+  };
+
+  const handlePreviewImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    const files = e.target.files;
+
+    if (files) {
+      const fileArr = Array.from(files);
+      fileArr.forEach((file) => {
+        let reader = new FileReader();
+        reader.onload = (ev) => {
+          console.log(ev.target);
+          setPreviewImgUris((prev) => [...prev, ev.target.result]);
+        };
+        reader.readAsDataURL(file);
+      });
     }
   };
 
@@ -144,19 +163,38 @@ const EditProductInfoPage = ({ f7router, f7route }) => {
                   </select>
                 </ListItem>
               )}
-              <ListInput
-                label={i18next.t('product.image') as string}
-                type="file"
-                name="images"
-                className="pb-4"
-                clearButton
-                multiple
-                onChange={(event) => {
-                  const images = event.target.files;
-                  const myFiles = Array.from(images);
-                  setFieldValue('images', myFiles);
-                }}
-              />
+              <div className="flex justify-center py-2 border-b border-gray-400 relative">
+                <label //
+                  htmlFor="upload-images"
+                  className="text-blue-500 cursor-pointer"
+                >
+                  <FontAwesomeIcon icon={faCamera} />
+                  첨부하기
+                </label>
+                <input //
+                  type="file"
+                  name="images"
+                  id="upload-images"
+                  className="opacity-0 absolute z-0"
+                  accept="image/*"
+                  multiple
+                  onChange={(event) => {
+                    const images = event.target.files;
+                    const myFiles = Array.from(images);
+                    handlePreviewImage(event);
+                    setFieldValue('images', myFiles);
+                  }}
+                />
+              </div>
+              <div className="grid grid-cols-5 grid-flow-row mt-3 gap-3 mx-4">
+                {previewImgUris &&
+                  previewImgUris.map((previewImgUri) => (
+                    <PreviewImg //
+                      previewImgUri={previewImgUri}
+                      className="object-cover object-center h-20 w-24 rounded-sm"
+                    />
+                  ))}
+              </div>
             </List>
             <div className="p-4">
               <button

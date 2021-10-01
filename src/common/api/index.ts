@@ -27,6 +27,8 @@ import {
   EditProductOutput,
   FindProductByIdInput,
   FindProductByIdOutput,
+  GetProductsBySearchTermInput,
+  GetProductsBySearchTermOutput,
   GetProductsFromProviderInput,
   GetProductsFromProviderOutput,
 } from '@interfaces/product.interface';
@@ -70,7 +72,7 @@ export const refresh = (): Promise<{ data: Token }> =>
 
 export const get = (url: string, params: any) => PlainAPI.get(url, params);
 
-// user APIs
+// User APIs
 
 export const signupAPI = async (data: SignUpInput) => {
   let response: AxiosResponse<SignUpOutput>;
@@ -118,18 +120,7 @@ export const changePasswordAPI = async (data: ChangePasswordInput) => {
 
 export const logoutAPI = () => API.delete('/logout');
 
-// export const {
-//   query: getItems,
-//   get: getItem,
-//   create: createItem,
-//   update: updateItem,
-//   destroy: destroyItem,
-// } = ApiService('items');
-
-// export const { query: getUsers, get: getUser } = ApiService('users');
-// export const { query: getCategories, get: getCategory } = ApiService('categories');
-
-// product APIs
+// Product APIs
 
 export const getProductsByCategoryId = async ({
   categoryId,
@@ -142,6 +133,27 @@ export const getProductsByCategoryId = async ({
       params: {
         sort,
         page,
+      },
+    });
+  } catch (error) {
+    console.error(error);
+  }
+  const result = response.data;
+  return result;
+};
+
+export const getProductsBySearchTermAPI = async ({
+  page = 1,
+  query,
+  sort,
+}: GetProductsBySearchTermInput): Promise<GetProductsBySearchTermOutput> => {
+  let response: AxiosResponse<GetProductsBySearchTermOutput>;
+  try {
+    response = await API.get<GetProductsBySearchTermOutput>(`/products`, {
+      params: {
+        page,
+        query,
+        sort,
       },
     });
   } catch (error) {

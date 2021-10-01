@@ -1,6 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { Navbar, Page } from 'framework7-react';
-import { FetchNextPageOptions, InfiniteData, InfiniteQueryObserverResult, useQueryClient } from 'react-query';
+import {
+  FetchNextPageOptions,
+  InfiniteData,
+  InfiniteQueryObserverResult,
+  QueryObserverResult,
+  RefetchOptions,
+  useQueryClient,
+} from 'react-query';
 import { useInView } from 'react-intersection-observer';
 
 import { PageRouteProps } from '@constants';
@@ -16,6 +23,7 @@ interface ReviewListPageProps extends PageRouteProps {
   fetchNextPage: (
     options?: FetchNextPageOptions,
   ) => Promise<InfiniteQueryObserverResult<GetReviewsOnProductOutput, Error>>;
+  refetch(options?: RefetchOptions): Promise<QueryObserverResult<InfiniteData<GetReviewsOnProductOutput>, Error>>;
 }
 
 const ReviewListPage = ({
@@ -23,7 +31,9 @@ const ReviewListPage = ({
   pHasNextPage,
   pIsFetching,
   pIsFetchingNextPage,
+  f7router,
   fetchNextPage,
+  refetch,
 }: ReviewListPageProps) => {
   const [hasNextPage, setHasNextPage] = useState<boolean>(pHasNextPage);
   const [isFetching, setIsFetching] = useState<boolean>(pIsFetching);
@@ -48,6 +58,14 @@ const ReviewListPage = ({
       });
     }
   }, [inView, hasNextPage, isFetching]);
+
+  const onClickWriteReviewLink = (e: any) => {
+    f7router.navigate(`/reviews/write/products/${productId}`, {
+      props: {
+        refetch,
+      },
+    });
+  };
 
   return (
     <Page noToolbar className="min-h-screen">
@@ -154,12 +172,13 @@ const ReviewListPage = ({
         </div>
       </div>
       <div className="flex fixed bottom-0 border-t-2 botder-gray-600 w-full p-2 bg-white">
-        <a
-          href={`/reviews/write/products/${productId}`}
+        <button
+          // href={`/reviews/write/products/${productId}`}
+          onClick={onClickWriteReviewLink}
           className="flex items-center justify-center h-10 w-full border-none outline-none bg-blue-600 text-white font-bold text-base tracking-normal rounded-md"
         >
           <span>리뷰 작성하기</span>
-        </a>
+        </button>
       </div>
     </Page>
   );

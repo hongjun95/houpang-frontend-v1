@@ -56,6 +56,17 @@ export interface FindProductByIdOutput extends CoreOutput {
   product?: Product;
 }
 
+// Get Products by Search Term
+
+export interface GetProductsBySearchTermInput extends PaginationInput {
+  sort: SortState;
+  query: string;
+}
+
+export interface GetProductsBySearchTermOutput extends PaginationOutput {
+  products?: Product[];
+}
+
 // Get products from provider
 
 export const SortStates = [
