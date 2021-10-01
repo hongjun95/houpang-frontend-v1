@@ -38,7 +38,17 @@ const RefundItemComponent: React.FC<RefundItemProps> = ({ userId, refundItem, is
     <div className="border border-gray-400 mx-3 my-4">
       <div className="mb-4 bg-gray-200 p-2">{refundItem.refundedAt}</div>
       <div className="p-2">
-        <div className="font-bold mb-4 truncate">{refundItem.orderItem.product.name}</div>
+        {isProviderList ? (
+          <div className="mb-4">
+            <div className="font-bold truncate mr-3">상품명 : {refundItem.orderItem.product.name}</div>
+            <div className="mt-2">고객 이름 : {refundItem.refundee.username}</div>
+            <div>고객 주소 : {refundItem.refundee.address}</div>
+            <div>고객 번호 : {refundItem.refundee.phoneNumber}</div>
+          </div>
+        ) : (
+          <div className="font-bold truncate mb-4">{refundItem.orderItem.product.name}</div>
+        )}
+
         <div className="flex justify-between">
           <div>
             <span className="text-red-500 font-semibold mr-1">{refundItem.status}완료</span>

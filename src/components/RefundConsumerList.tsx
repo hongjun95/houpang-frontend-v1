@@ -60,7 +60,12 @@ const RefundConsumerList: React.FC<RefundConsumerListProps> = ({ currentUser }) 
           {data?.pages.map((page, index) => (
             <React.Fragment key={index}>
               {page.refundItems.map((refundItem: Refund) => (
-                <RefundItem key={refundItem.id} userId={currentUser.id} refundItem={refundItem} isProviderList={true} />
+                <RefundItem
+                  key={refundItem.id}
+                  userId={currentUser.id}
+                  refundItem={refundItem}
+                  isProviderList={false}
+                />
               ))}
             </React.Fragment>
           ))}

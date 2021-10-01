@@ -45,7 +45,7 @@ const RefundListPage = ({ f7router }: PageRouteProps) => {
       <Navbar title={entityToChar(`취소&#183;반품&#183;교환목록`)} backLink={true}></Navbar>
 
       {currentUser.role !== UserRole.Consumer && (
-        <div className="flex w-full relative">
+        <div className="flex w-full fixed bg-white">
           <ToggleButton
             className={`outline-none flex items-center justify-center font-bold px-6 text-base ${
               page === 'ConsumerRefunds' ? 'text-blue-700  py-4 current_page' : '!text-black hover:text-blue-700'
@@ -65,17 +65,19 @@ const RefundListPage = ({ f7router }: PageRouteProps) => {
           <Indicator className="indicator absolute left-0 bottom-0 w-1/2 bg-blue-700"></Indicator>
         </div>
       )}
-      {page === 'ConsumerRefunds' ? (
-        <RefundConsumerList //
-          currentUser={currentUser}
-          f7router={f7router}
-        />
-      ) : (
-        <RefundProviderList //
-          currentUser={currentUser}
-          f7router={f7router}
-        />
-      )}
+      <div className="pt-20">
+        {page === 'ConsumerRefunds' ? (
+          <RefundConsumerList //
+            currentUser={currentUser}
+            f7router={f7router}
+          />
+        ) : (
+          <RefundProviderList //
+            currentUser={currentUser}
+            f7router={f7router}
+          />
+        )}
+      </div>
     </Page>
   );
 };
