@@ -175,7 +175,7 @@ const OrderItemComponent: React.FC<OrderItemProps> = ({
         </div>
       </div>
       <div className="flex mt-2">
-        {currentUser.role === UserRole.Consumer && orderItem.status === OrderStatus.Delivered ? (
+        {orderItem.status === OrderStatus.Delivered ? (
           <button
             className="border-2 py-2 rounded-lg mr-2 border-gray-200 font-medium flex-1"
             onClick={onExchangeOrReturnOrderItemClick}
