@@ -110,7 +110,7 @@ const EditProfilePage = ({ f7router }: PageRouteProps) => {
   };
 
   return (
-    <Page>
+    <Page noToolbar>
       <Navbar title="회원 정보 수정" backLink sliding={false} />
       <p className="font-semibole text-4xl text-center mt-5">Houpang</p>
       <Formik

@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react';
 import * as Yup from 'yup';
 import { Form, Formik, FormikHelpers } from 'formik';
 import { Icon, Navbar, Page } from 'framework7-react';
+import styled from 'styled-components';
 
 import { PageRouteProps } from '@constants';
 import { FormError } from '@components/form-error';
-import styled from 'styled-components';
 import { OrderItem } from '@interfaces/order.interface';
 
 interface SelectProductPageProps extends PageRouteProps {
@@ -35,10 +35,6 @@ const SelectProdcutPage = ({ f7route, f7router, orderItem }: SelectProductPagePr
 
   const createOptions = (count: number) => {
     let i: number = 0;
-    // for (const i of Array.from({ length: count })) {
-    //   options.push(i);
-    //   setOptions([...options]);
-    // }
     while (i < count) {
       i++;
       options.push(i);
@@ -131,30 +127,6 @@ const SelectProdcutPage = ({ f7route, f7router, orderItem }: SelectProductPagePr
                   ))}
                 </select>
                 <FormError errorMessage={touched.productCount && errors.productCount} />
-                {/* <div className="flex items-center w-18 border border-gray-300 p-2 rounded-md absolute right-0">
-                  <div className="item-title"></div>
-                  <Icon className="ml-4 text-sm" f7="arrowtriangle_down_fill"></Icon>
-                </div> */}
-                {/* <a className="item-link smart-select smart-select-init" data-open-in="popover">
-                  <select //
-                    name="productCount"
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                  >
-                    {options.map((option) => (
-                      <option value={option} key={option} selected={option === 2}>
-                        {option}
-                      </option>
-                    ))}
-                  </select>
-                  <FormError errorMessage={touched.productCount && errors.productCount} />
-                  <div className="item-content">
-                    <div className="item-inner flex items-center w-18 border border-gray-300 p-2 rounded-md">
-                      <div className="item-title"></div>
-                      <Icon className="ml-4 text-sm" f7="arrowtriangle_down_fill"></Icon>
-                    </div>
-                  </div>
-                </a> */}
               </div>
             </div>
             <button

@@ -59,7 +59,7 @@ const ChangePasswordPage = ({ f7router }: PageRouteProps) => {
   };
 
   return (
-    <Page>
+    <Page noToolbar>
       <Navbar title="비밀번호 변경" backLink sliding={false} />
       <p className="font-semibole text-4xl text-center mt-5">Houpang</p>
       <Formik

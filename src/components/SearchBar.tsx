@@ -7,8 +7,10 @@ import { GetProductsBySearchTermOutput } from '@interfaces/product.interface';
 
 interface SearchBarProps {
   query: string;
-  setQuery: React.Dispatch<React.SetStateAction<string>>;
-  refetch(options?: RefetchOptions): Promise<QueryObserverResult<InfiniteData<GetProductsBySearchTermOutput>, Error>>;
+  setQuery: Function;
+  refetch: Function;
+  // setQuery: React.Dispatch<React.SetStateAction<string>>;
+  // refetch(options?: RefetchOptions): Promise<QueryObserverResult<InfiniteData<GetProductsBySearchTermOutput>, Error>>;
 }
 
 const SearchBar = ({ query, setQuery, refetch }: SearchBarProps) => {
@@ -26,7 +28,7 @@ const SearchBar = ({ query, setQuery, refetch }: SearchBarProps) => {
     query: Yup.string(),
   });
 
-  const handleGetProductsBySearchTerm = async (values, setSubmitting) => {
+  const handleGetProductsBySearchTerm = (values, setSubmitting) => {
     setSubmitting(false);
     setQuery(values.query);
   };

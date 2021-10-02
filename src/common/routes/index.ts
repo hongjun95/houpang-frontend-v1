@@ -6,9 +6,9 @@ import IntroPage from '@pages/intro';
 
 import SignUpPage from '@pages/users/signUp';
 import LoginPage from '@pages/users/signIn';
-import MyPage from '@pages/users/myPage';
-import EditProfilePage from '@pages/users/editProfile';
-import ChangePassword from '@pages/users/changePassword';
+import MyPage from '@pages/users/my-page';
+import EditProfilePage from '@pages/users/edit-profile';
+import ChangePassword from '@pages/users/change-password';
 
 import ProductsOnCategoryPage from '@pages/products/products-on-category';
 import ProductDetailPage from '@pages/products/product-detail';

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Link, Navbar, NavLeft, NavRight, NavTitle, Page } from 'framework7-react';
 import { useRecoilState } from 'recoil';
 import { useInfiniteQuery, useQueryClient } from 'react-query';
@@ -69,6 +69,14 @@ const HomePage = ({ f7router }) => {
     },
   );
 
+  const productsRefetch = useCallback(() => {
+    refetch();
+  }, []);
+
+  const useSetQuery = useCallback((query) => {
+    setQuery(query);
+  }, []);
+
   useEffect(() => {
     setShoppingList(getShoppingList(currentUser?.id));
     if (inView && hasNextPage && !isFetching && entry.isIntersecting) {
@@ -78,7 +86,7 @@ const HomePage = ({ f7router }) => {
 
   const onRefresh = async (done) => {
     await queryClient.removeQueries(PRODUCT_KEY);
-    await refetch();
+    await productsRefetch();
     done();
   };
 
@@ -93,7 +101,7 @@ const HomePage = ({ f7router }) => {
           <Link href="/shopping-list" iconF7="cart" iconBadge={shoppingList.length} badgeColor="red" />
         </NavRight>
       </Navbar>
-      <SearchBar query={query} setQuery={setQuery} refetch={refetch} />
+      <SearchBar query={query} setQuery={useSetQuery} refetch={productsRefetch} />
       <Categories />
       <ProductsList //
         f7router={f7router}
