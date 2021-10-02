@@ -58,11 +58,11 @@ const HomePage = ({ f7router }) => {
     {
       getNextPageParam: (lastPage) => {
         const hasNextPage = lastPage.hasNextPage;
+        return hasNextPage ? lastPage.nextPage : false;
+      },
+      onSuccess: (data) => {
         if (hasNextPage) {
-          setPage(lastPage.nextPage);
-          return lastPage.nextPage;
-        } else {
-          return false;
+          setPage(data.pages[0].nextPage);
         }
       },
       enabled: !!query,
